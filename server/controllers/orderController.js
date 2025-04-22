@@ -1,0 +1,86 @@
+const Order = require("../models/Order");
+const Menu = require("../models/Menu");
+
+exports.placeOrder = async (req, res) => {
+  try {
+    const menuItems = await Menu.find({ _id: { $in: req.body.items } });
+
+    if (!menuItems.length) {
+      return res.status(400).json({ message: "No valid items found." });
+    }
+
+    // Optional: You can let user pass item quantities
+    const itemQuantities = req.body.quantities || {}; // e.g. { "menuId1": 2 }
+
+    const orderItems = menuItems.map((item) => {
+      const quantity = itemQuantities[item._id] || 1;
+      return {
+        name: item.name,
+        price: item.price,
+        quantity, // ✅ Required
+        menuItem: item._id,
+      };
+    });
+
+    const totalPrice = orderItems.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+
+    const order = await Order.create({
+      user: req.user.id,
+      items: orderItems,
+      totalPrice, // ✅ Required
+      deliveryAddress: req.body.deliveryAddress || "Default Address", // ✅ Required
+      status: "pending",
+    });
+
+    res.status(201).json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(
+      req.params.orderId,
+      { status },
+      { new: true }
+    ).populate("user shopkeeper deliveryBoy");
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Emit real-time update to specific order room
+    req.io.to(order._id.toString()).emit("orderUpdate", order);
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Additional order-related controller functions
+exports.getOrderDetails = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.orderId).populate(
+      "user shopkeeper deliveryBoy"
+    );
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+// Get orders for the logged-in user
+exports.getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user.id })
+      .populate("shopkeeper deliveryBoy")
+      .sort("-createdAt");
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

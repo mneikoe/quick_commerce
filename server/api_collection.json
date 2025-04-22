@@ -1,0 +1,384 @@
+{
+  "info": {
+    "name": "QuickCommerce API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "quick-commerce-full-testing"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get Menu",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/user/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["user", "menu"]
+            }
+          }
+        },
+        {
+          "name": "Place Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"menuItem\": \"68006e0b413852d9a5b10118\",\n      \"quantity\": 2\n    }\n  ],\n  \"totalPrice\": 25.98,\n  \"deliveryAddress\": \"Room 102, Hostel A\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["user", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get My Orders (User)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/user/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["user", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Track Order",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/user/orders/:orderId/track",
+              "host": ["{{baseUrl}}"],
+              "path": ["user", "orders", ":orderId", "track"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Verify User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/verify/:userId",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "verify", ":userId"]
+            }
+          }
+        },
+        {
+          "name": "Create Menu Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Burger\",\n  \"price\": 50,\n  \"description\": \"Tasty burger\",\n  \"isAvailable\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "menu"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Order (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/confirm/:orderId",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "confirm", ":orderId"]
+            }
+          }
+        },
+        {
+          "name": "Assign Order (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shopkeeperId\": \"68006aa51eb29af4ad5f1234\",\n  \"deliveryBoyId\": \"68006aa51eb29af4ad5e5678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/assign/:orderId",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "assign", ":orderId"]
+            }
+          }
+        },
+        {
+          "name": "Get All Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shopkeeper",
+      "item": [
+        {
+          "name": "Get My Orders (Shopkeeper)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{shopkeeperToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shopkeeper/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["shopkeeper", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Mark Ready (Shopkeeper)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{shopkeeperToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shopkeeper/orders/:orderId/ready",
+              "host": ["{{baseUrl}}"],
+              "path": ["shopkeeper", "orders", ":orderId", "ready"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DeliveryBoy",
+      "item": [
+        {
+          "name": "Get My Orders (DeliveryBoy)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{deliveryboyToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/delivery/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["delivery", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Pickup (DeliveryBoy)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{deliveryboyToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/delivery/orders/:orderId/pickup",
+              "host": ["{{baseUrl}}"],
+              "path": ["delivery", "orders", ":orderId", "pickup"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Delivery (DeliveryBoy)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{deliveryboyToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/delivery/orders/:orderId/deliver",
+              "host": ["{{baseUrl}}"],
+              "path": ["delivery", "orders", ":orderId", "deliver"]
+            }
+          }
+        },
+        {
+          "name": "Update Location (DeliveryBoy)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{deliveryboyToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"68008414a7c32dc518d5c822\",\n  \"lat\": 12.9716,\n  \"lng\": 77.5946\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/delivery/location",
+              "host": ["{{baseUrl}}"],
+              "path": ["delivery", "location"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
