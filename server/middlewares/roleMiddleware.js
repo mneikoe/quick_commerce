@@ -1,7 +1,12 @@
-module.exports = (allowedRoles) => {
+export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
-    if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Access denied" });
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      res.status(403);
+      throw new Error(
+        `Access denied: ${
+          req.user?.role || "unknown"
+        } role is not allowed. Allowed roles: ${allowedRoles.join(", ")}`
+      );
     }
     next();
   };
