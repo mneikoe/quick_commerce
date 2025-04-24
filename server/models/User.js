@@ -1,11 +1,19 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import { Constants } from "../constants/constants.js";
+
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
+  name: { type: String },
+  email: { type: String, unique: true, sparse: true },
   password: String,
-  phone: { type: Number, unique: true },
+  phone: { type: Number, unique: true, sparse: true },
   address: String,
-  role: { type: String, enum: ["admin", "user", "shopkeeper", "deliveryboy"] },
+  role: { type: String, enum: Object.values(Constants.USER) },
   isVerified: { type: Boolean, default: false },
+  status: {
+    type: String,
+    enum: Object.values(Constants.STATUS),
+    default: Constants.STATUS.ACTIVE,
+  },
 });
-module.exports = mongoose.model("User", userSchema);
+
+export default mongoose.model("User", userSchema); // Using export default instead of module.exports

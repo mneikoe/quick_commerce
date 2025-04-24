@@ -1,15 +1,24 @@
-const express = require("express");
-const router = express.Router();
-const userController = require("../controllers/userController");
-const authMiddleware = require("../middlewares/authMiddleware");
-const roleMiddleware = require("../middlewares/roleMiddleware");
+import express from "express";
+import {
+  getMenu,
+  placeOrder,
+  getMyOrders,
+  trackOrder,
+} from "../controllers/userController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import { Constants } from "../constants/constants.js";
 
-router.use(authMiddleware);
-router.use(roleMiddleware(["user"]));
+const userRoutes = express.Router();
 
-router.get("/menu", userController.getMenu);
-router.post("/orders", userController.placeOrder);
-router.get("/orders", userController.getMyOrders);
-router.get("/orders/:orderId/track", userController.trackOrder);
+// Apply auth and role-based authorization middleware
+userRoutes.use(protect);
+userRoutes.use(authorizeRoles(Constants.USER.USER));
 
-module.exports = router;
+// Routes for user actions
+userRoutes.get("/menu", getMenu);
+userRoutes.post("/orders", placeOrder);
+userRoutes.get("/orders", getMyOrders);
+userRoutes.get("/orders/:orderId/track", trackOrder);
+
+export default userRoutes;

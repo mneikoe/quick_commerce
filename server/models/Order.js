@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import { Constants } from "../constants/constants.js"; // Assuming you have a constants file
+
 const orderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -16,15 +18,8 @@ const orderSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: [
-        "pending",
-        "confirmed",
-        "assigned",
-        "ready",
-        "pickedup",
-        "delivered",
-      ],
-      default: "pending",
+      enum: Object.values(Constants.ORDER_STATUS),
+      default: Constants.ORDER_STATUS.PENDING,
     },
     totalPrice: { type: Number, required: true },
     deliveryAddress: { type: String, required: true },
@@ -32,4 +27,5 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-module.exports = mongoose.model("Order", orderSchema);
+
+export default mongoose.model("Order", orderSchema); // Using export default instead of module.exports

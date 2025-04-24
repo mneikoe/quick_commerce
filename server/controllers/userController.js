@@ -1,7 +1,10 @@
-const Menu = require("../models/Menu");
-const Order = require("../models/Order");
+import Menu from "../models/Menu.js";
+import Order from "../models/Order.js";
 
-exports.getMenu = async (req, res) => {
+// @desc    Get all available menu items
+// @route   GET /api/menu
+// @access  Public
+export const getMenu = async (req, res) => {
   try {
     const menuItems = await Menu.find({ isAvailable: true });
     res.json(menuItems);
@@ -10,7 +13,10 @@ exports.getMenu = async (req, res) => {
   }
 };
 
-exports.placeOrder = async (req, res) => {
+// @desc    Place an order
+// @route   POST /api/orders
+// @access  Private
+export const placeOrder = async (req, res) => {
   try {
     const order = await Order.create({
       user: req.user.id,
@@ -24,7 +30,10 @@ exports.placeOrder = async (req, res) => {
   }
 };
 
-exports.getMyOrders = async (req, res) => {
+// @desc    Get all orders of the logged-in user
+// @route   GET /api/orders/myorders
+// @access  Private
+export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
       .populate("shopkeeper deliveryBoy")
@@ -35,7 +44,10 @@ exports.getMyOrders = async (req, res) => {
   }
 };
 
-exports.trackOrder = async (req, res) => {
+// @desc    Track an order
+// @route   GET /api/orders/:orderId/track
+// @access  Private
+export const trackOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId).populate(
       "shopkeeper deliveryBoy"

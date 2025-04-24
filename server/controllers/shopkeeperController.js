@@ -1,6 +1,9 @@
-const Order = require("../models/Order");
+import Order from "../models/Order.js";
 
-exports.getMyOrders = async (req, res) => {
+// @desc    Get all orders for the logged-in shopkeeper
+// @route   GET /api/orders/shopkeeper/myorders
+// @access  Private (Role: Shopkeeper)
+export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ shopkeeper: req.user.id })
       .populate("user deliveryBoy")
@@ -11,13 +14,17 @@ exports.getMyOrders = async (req, res) => {
   }
 };
 
-exports.confirmOrderReady = async (req, res) => {
+// @desc    Confirm order is ready for pickup
+// @route   PUT /api/orders/shopkeeper/:orderId/ready
+// @access  Private (Role: Shopkeeper)
+export const confirmOrderReady = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
       req.params.orderId,
       { status: "ready" },
       { new: true }
     ).populate("user deliveryBoy");
+
     req.io.emit("orderUpdate", order);
     res.json(order);
   } catch (err) {

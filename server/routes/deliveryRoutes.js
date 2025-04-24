@@ -1,15 +1,24 @@
-const express = require("express");
-const router = express.Router();
-const deliveryController = require("../controllers/deliveryBoyController");
-const authMiddleware = require("../middlewares/authMiddleware");
-const roleMiddleware = require("../middlewares/roleMiddleware");
+import express from "express";
+import {
+  getMyOrders,
+  confirmPickup,
+  confirmDelivery,
+  updateLocation,
+} from "../controllers/deliveryBoyController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+import { Constants } from "../constants/constants.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
-router.use(authMiddleware);
-router.use(roleMiddleware(["deliveryboy"]));
+const deliveryRoutes = express.Router();
 
-router.get("/orders", deliveryController.getMyOrders);
-router.put("/orders/:orderId/pickup", deliveryController.confirmPickup);
-router.put("/orders/:orderId/deliver", deliveryController.confirmDelivery);
-router.post("/location", deliveryController.updateLocation);
+// Apply authentication and role-based authorization middleware
+deliveryRoutes.use(protect);
+deliveryRoutes.use(authorizeRoles(Constants.USER.DELIVERYBOY));
 
-module.exports = router;
+// Routes for delivery boy actions
+deliveryRoutes.get("/orders", getMyOrders);
+deliveryRoutes.put("/orders/:orderId/pickup", confirmPickup);
+deliveryRoutes.put("/orders/:orderId/deliver", confirmDelivery);
+deliveryRoutes.post("/location", updateLocation);
+
+export default deliveryRoutes;

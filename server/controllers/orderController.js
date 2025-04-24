@@ -1,7 +1,10 @@
-const Order = require("../models/Order");
-const Menu = require("../models/Menu");
+import Order from "../models/Order.js";
+import Menu from "../models/Menu.js";
 
-exports.placeOrder = async (req, res) => {
+// @desc    Place a new order
+// @route   POST /api/orders/place
+// @access  Private (Role: User)
+export const placeOrder = async (req, res) => {
   try {
     const menuItems = await Menu.find({ _id: { $in: req.body.items } });
 
@@ -41,7 +44,10 @@ exports.placeOrder = async (req, res) => {
   }
 };
 
-exports.updateOrderStatus = async (req, res) => {
+// @desc    Update the order status
+// @route   PUT /api/orders/:orderId/status
+// @access  Private (Role: Admin/Shopkeeper)
+export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const order = await Order.findByIdAndUpdate(
@@ -60,8 +66,10 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
-// Additional order-related controller functions
-exports.getOrderDetails = async (req, res) => {
+// @desc    Get details of a specific order
+// @route   GET /api/orders/:orderId
+// @access  Private (Role: User/Admin)
+export const getOrderDetails = async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId).populate(
       "user shopkeeper deliveryBoy"
@@ -72,8 +80,11 @@ exports.getOrderDetails = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-// Get orders for the logged-in user
-exports.getMyOrders = async (req, res) => {
+
+// @desc    Get all orders for the logged-in user
+// @route   GET /api/orders/myorders
+// @access  Private (Role: User)
+export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
       .populate("shopkeeper deliveryBoy")

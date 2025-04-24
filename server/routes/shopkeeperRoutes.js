@@ -1,13 +1,19 @@
-const express = require("express");
-const router = express.Router();
-const shopkeeperController = require("../controllers/shopkeeperController");
-const authMiddleware = require("../middlewares/authMiddleware");
-const roleMiddleware = require("../middlewares/roleMiddleware");
+import express from "express";
+import {
+  getMyOrders,
+  confirmOrderReady,
+} from "../controllers/shopkeeperController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
-router.use(authMiddleware);
-router.use(roleMiddleware(["shopkeeper"]));
+const shopkeeperRoutes = express.Router();
 
-router.get("/orders", shopkeeperController.getMyOrders);
-router.put("/orders/:orderId/ready", shopkeeperController.confirmOrderReady);
+// Apply auth and role-based authorization middleware
+shopkeeperRoutes.use(protect);
+shopkeeperRoutes.use(authorizeRoles(["shopkeeper"]));
 
-module.exports = router;
+// Routes for shopkeeper actions
+shopkeeperRoutes.get("/orders", getMyOrders);
+shopkeeperRoutes.put("/orders/:orderId/ready", confirmOrderReady);
+
+export default shopkeeperRoutes;

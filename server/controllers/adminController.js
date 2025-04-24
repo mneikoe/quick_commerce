@@ -1,76 +1,179 @@
-const User = require("../models/User");
-const Menu = require("../models/Menu");
-const Order = require("../models/Order");
+import asyncHandler from "express-async-handler";
+import User from "../models/User.js";
+import Menu from "../models/Menu.js";
+import Order from "../models/Order.js";
+// import { ErrorHandler } from "../utils/errorHandlerUtils.js";
+import { Constants } from "../constants/constants.js";
+import { ErrorHandler } from "../utils/errorHandler.js";
+import APIFeatures from "../utils/apiFeatures.js";
+// import { ErrorHandler } from "../middlewares/errorMiddleware.js";
 
-exports.verifyUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.params.userId,
-      { isVerified: true },
-      { new: true }
-    );
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json({ message: `$(user.role) is verified `, user });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+// @desc    Get all users (admin only)
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const features = new APIFeatures(User.find(), req.query)
+    .search(["name", "email"])
+    .filter()
+    .dateRange("createdAt")
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const users = await features.query;
+  const total = await User.countDocuments();
+
+  res.json({
+    success: true,
+    total,
+    count: users.length,
+    users,
+  });
+});
+
+// @desc    Verify user
+export const verifyUser = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.params.userId,
+    { isVerified: true },
+    { new: true }
+  );
+
+  if (!user) {
+    throw new ErrorHandler("User not found", 404);
   }
-};
 
-exports.createMenuItem = async (req, res) => {
+  res.json({ message: `${user.role} is verified`, user });
+});
+
+// @desc    Create menu item
+export const createMenuItem = asyncHandler(async (req, res) => {
   try {
+    // Create the menu item
     const menuItem = await Menu.create({
       ...req.body,
-      createdBy: req.user.id,
+      createdBy: req.user.id, // Assuming `req.user` is populated from your `protect` middleware
     });
+
+    if (!menuItem) {
+      throw new ErrorHandler("Menu item creation failed", 400); // Custom error if menuItem creation fails
+    }
+
+    // Successfully created the menu item, send it in the response
     res.status(201).json(menuItem);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    // If an error occurs during creation, it will be caught here
+    throw new ErrorHandler(err.message || "Server error", 500); // Catch any unexpected errors
   }
-};
+});
 
-exports.confirmOrder = async (req, res) => {
-  try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.orderId,
-      { status: "confirmed" },
-      { new: true }
-    );
-    req.io.emit("orderUpdate", order);
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+// Get all menu items
+export const getAllMenuItems = asyncHandler(async (req, res) => {
+  const menuItems = await Menu.find().populate("createdBy", "name email");
+  res.status(200).json({
+    success: true,
+    data: menuItems,
+  });
+});
+
+// Get a single menu item by ID
+export const getMenuItemById = asyncHandler(async (req, res, next) => {
+  const menuItem = await Menu.findById(req.params.id);
+
+  if (!menuItem) {
+    return next(new ErrorHandler("Menu item not found", 404));
   }
-};
 
-exports.assignOrder = async (req, res) => {
-  try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.orderId,
-      {
-        status: "assigned",
-        shopkeeper: req.body.shopkeeperId,
-        deliveryBoy: req.body.deliveryBoyId,
-        assignedBy: req.user.id,
-      },
-      { new: true }
-    ).populate("shopkeeper deliveryBoy");
+  res.status(200).json({
+    success: true,
+    data: menuItem,
+  });
+});
 
-    // Use the io instance from app locals
-    req.io.emit("orderUpdate", order);
+// Update a menu item
+export const updateMenuItem = asyncHandler(async (req, res, next) => {
+  const menuItem = await Menu.findById(req.params.id);
 
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  if (!menuItem) {
+    return next(new ErrorHandler("Menu item not found", 404));
   }
-};
 
-exports.getAllOrders = async (req, res) => {
-  try {
-    const orders = await Order.find()
-      .populate("user shopkeeper deliveryBoy")
-      .sort("-createdAt");
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  const updatedFields = req.body;
+
+  const updatedItem = await Menu.findByIdAndUpdate(
+    req.params.id,
+    { $set: updatedFields },
+    { new: true, runValidators: true }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Menu item updated successfully",
+    data: updatedItem,
+  });
+});
+
+// Delete a menu item
+export const deleteMenuItem = asyncHandler(async (req, res, next) => {
+  const menuItem = await Menu.findById(req.params.id);
+
+  if (!menuItem) {
+    return next(new ErrorHandler("Menu item not found", 404));
   }
-};
+
+  await menuItem.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: "Menu item deleted successfully",
+  });
+});
+
+// @desc    Confirm order
+export const confirmOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findByIdAndUpdate(
+    req.params.orderId,
+    { status: Constants.ORDER_STATUS.CONFIRMED },
+    { new: true }
+  );
+  console.log(ErrorHandler);
+
+  if (!order) {
+    throw new ErrorHandler("Order not found", 404);
+  }
+
+  req.io.emit("orderUpdate", order);
+
+  res.json(order);
+});
+
+// @desc    Assign order to shopkeeper and delivery boy
+export const assignOrder = asyncHandler(async (req, res) => {
+  const { shopkeeperId, deliveryBoyId } = req.body;
+
+  const order = await Order.findByIdAndUpdate(
+    req.params.orderId,
+    {
+      status: Constants.ORDER_STATUS.ASSIGNED,
+      shopkeeper: shopkeeperId,
+      deliveryBoy: deliveryBoyId,
+      assignedBy: req.user.id,
+    },
+    { new: true }
+  ).populate("shopkeeper deliveryBoy");
+
+  if (!order) {
+    throw new ErrorHandler("Order not found", 404);
+  }
+
+  req.io.emit("orderUpdate", order);
+
+  res.json(order);
+});
+
+// @desc    Get all orders
+export const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find()
+    .populate("user shopkeeper deliveryBoy")
+    .sort("-createdAt");
+
+  res.json(orders);
+});

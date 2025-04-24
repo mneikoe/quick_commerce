@@ -1,27 +1,28 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   placeOrder,
   updateOrderStatus,
   getOrderDetails,
   getMyOrders,
-} = require("../controllers/orderController");
+} from "../controllers/orderController.js";
 
-const verifyToken = require("../middlewares/authMiddleware");
+// import { verifyToken } from "../middlewares/authMiddleware.js";
+
+const orderRoutes = express.Router();
 
 // Apply auth middleware to all routes below
-router.use(verifyToken);
+// orderRoutes.use(verifyToken);
 
 // Place new order
-router.post("/", placeOrder);
+orderRoutes.post("/", placeOrder);
 
 // Get user's own orders
-router.get("/my", getMyOrders);
+orderRoutes.get("/my", getMyOrders);
 
 // Update status of an order
-router.put("/:orderId/status", updateOrderStatus);
+orderRoutes.put("/:orderId/status", updateOrderStatus);
 
 // (Optional) Get single order details
-router.get("/:orderId", getOrderDetails);
+orderRoutes.get("/:orderId", getOrderDetails);
 
-module.exports = router;
+export default orderRoutes;

@@ -1,20 +1,20 @@
-require("dotenv").config();
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const shopkeeperRoutes = require("./routes/shopkeeperRoutes");
-const deliveryRoutes = require("./routes/deliveryRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const userRoutes = require("./routes/userRoutes");
-const socketHandler = require("./sockets/socketHandler");
-const errorMiddleware = require("./middlewares/errorMiddleware");
+import "dotenv/config"; // Load environment variables from .env file
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import { connectToDb } from "./config/db.js";
+
+import socketHandler from "./sockets/socketHandler.js";
+// import { ErrorHandler } from "./middlewares/errorMiddleware.js";
+import router from "./routes/index.js";
+// import {ErrorHandler}  from "./utils/errorHandler.js";
+import errorHandler from "./middlewares/errorMiddleware.js";
+import { ErrorHandler } from "./utils/errorHandler.js";
+import cors from "cors"; // ⬅️ ADD THIS
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, { cors: { origin: "http://localhost:5173" } });
 
 // Middleware
 app.use(express.json());
@@ -23,19 +23,23 @@ app.use((req, res, next) => {
   next();
 });
 
+// CORS middleware
+app.use(
+  cors({
+    origin: "http://localhost:5173", // your frontend origin
+    credentials: true, // only if using cookies/auth
+  })
+);
+
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/shopkeeper", shopkeeperRoutes);
-app.use("/api/delivery", deliveryRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/v1", router);
 
-// Error handling
-app.use(errorMiddleware);
-
+// Error handling middleware
+// app.use(ErrorHandler);
+app.use(errorHandler);
+// 404 Error handling for undefined routes
 // Database & Socket
-connectDB();
+connectToDb();
 socketHandler(io);
 
 // Start server
