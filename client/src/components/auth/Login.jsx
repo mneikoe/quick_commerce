@@ -1,8 +1,12 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import { ShoppingBag, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+
+import { AuthContext } from "../../context/AuthContext";
+
+import TextInput from "../ui/TextInput";
+import { showToast } from "../ui/ShowToast";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -23,9 +27,10 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const userData = await login(formData.email, formData.password);
+      console.log(userData);
+      showToast("login successfully", "success");
       switch (userData.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -37,7 +42,7 @@ const Login = () => {
           navigate("/delivery/dashboard");
           break;
         default:
-          navigate("/user/dashboard");
+          navigate("/");
       }
     } catch (error) {
       setError(error.toString());
@@ -47,21 +52,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
+    <div className="flex items-center justify-center min-h-screen px-6 py-8 bg-gray-100 ">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden border border-gray-200"
+        className="w-full overflow-hidden bg-white border border-gray-300 shadow-lg max-w-7xl rounded-2xl"
       >
         <div className="flex flex-col md:flex-row">
           {/* Feature Panel */}
-          <div className="w-full md:w-1/2 bg-gradient-to-br from-green-600 to-amber-500 p-8 md:p-12">
+          <div className="flex flex-col justify-center w-full p-8 space-y-6 text-white max-md:hidden md:w-1/2 bg-gradient-to-br from-green-600 to-amber-500 md:p-12">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="h-full flex flex-col justify-center text-white space-y-6"
+              className="space-y-4"
             >
-              <h2 className="text-2xl font-bold">Why Choose Quick Commerce?</h2>
               <div className="space-y-4">
                 {[
                   "10-Minute Grocery Delivery",
@@ -77,8 +81,8 @@ const Login = () => {
                     transition={{ delay: index * 0.1 }}
                     className="flex items-center gap-3"
                   >
-                    <CheckCircle size={20} className="flex-shrink-0" />
-                    <span className="font-medium">{feature}</span>
+                    <CheckCircle size={20} className="text-white" />
+                    <span className="text-lg">{feature}</span>
                   </motion.div>
                 ))}
               </div>
@@ -86,21 +90,21 @@ const Login = () => {
           </div>
 
           {/* Login Form */}
-          <div className="w-full md:w-1/2 p-8 md:p-12">
+          <div className="flex flex-col justify-center w-full p-8 md:w-1/2 md:p-12">
             <motion.div
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              className="text-center mb-8"
+              className="mb-8 text-center"
             >
               <div className="mb-4">
                 <motion.div
                   whileHover={{ rotate: -10 }}
-                  className="inline-block bg-green-600 p-3 rounded-2xl shadow-lg"
+                  className="inline-block p-3 bg-green-600 shadow-lg rounded-xl"
                 >
                   <ShoppingBag size={40} className="text-white" />
                 </motion.div>
               </div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              <h1 className="mb-2 text-4xl font-extrabold text-gray-800">
                 Welcome Back!
               </h1>
               <p className="text-gray-600">
@@ -112,7 +116,7 @@ const Login = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg"
+                className="p-3 mb-6 text-red-600 border border-red-300 rounded-lg bg-red-50"
               >
                 {error}
               </motion.div>
@@ -120,37 +124,29 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
+                <TextInput
+                  label="Email Address"
                   name="email"
+                  type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Enter your email"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
+                <TextInput
                   type="password"
+                  label="Enter your password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Enter your password"
                 />
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading}
@@ -158,7 +154,7 @@ const Login = () => {
               >
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 rounded-full border-white/30 border-t-white animate-spin" />
                     Authenticating...
                   </div>
                 ) : (
@@ -167,11 +163,11 @@ const Login = () => {
               </motion.button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
+            <div className="mt-6 text-sm text-center text-gray-600">
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="text-green-600 hover:text-green-700 font-semibold"
+                className="font-semibold text-green-600 hover:text-green-700"
               >
                 Create account
               </Link>

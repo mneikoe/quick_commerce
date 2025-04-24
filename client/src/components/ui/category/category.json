@@ -1,0 +1,95 @@
+[
+    {
+      "name": "Fruits & Vegetables",
+      "image":"/Cauliflower.jpg",
+      "subcategories": ["Fresh Fruits", "Fresh Vegetables", "Organic Produce", "Exotic Fruits & Veggies"]
+    },
+    {
+      "name": "Dairy, Bread & Eggs",
+      "image":"/milk.jpg",
+      "subcategories": ["Milk", "Cheese", "Butter", "Yogurt", "Bread", "Eggs", "Paneer"]
+    },
+    {
+      "name": "Snacks & Branded Foods",
+      "image":"/Samosas.jpg",
+      "subcategories": ["Chips", "Biscuits", "Namkeen", "Chocolates", "Sweets", "Instant Noodles"]
+    },
+    {
+      "name": "Beverages",
+      "image":"/strawberryJuice.jpg",
+      "subcategories": ["Soft Drinks", "Juices", "Energy Drinks", "Tea", "Coffee", "Health Drinks"]
+    },
+    {
+      "name": "Breakfast & Instant Food",
+         "image":"/maggie.jpg",
+      "subcategories": ["Cereals", "Oats", "Ready-to-Eat Meals", "Instant Mixes", "Spreads"]
+    },
+    {
+      "name": "Grain",
+      "subcategories": ["Wheat Flour", "Basmati Rice", "Pulses", "Lentils", "Millets"]
+    },
+    {
+      "name": "Masala, Oil & More",
+      "subcategories": ["Cooking Oils", "Spices", "Salt", "Sugar", "Ghee", "Vinegar"]
+    },
+    {
+      "name": "Bakery & Biscuits",
+      "subcategories": ["Breads", "Cakes", "Cookies", "Rusks", "Buns"]
+    },
+    {
+      "name": "Sweet Tooth",
+      "subcategories": ["Chocolates", "Candies", "Ice Creams", "Indian Sweets"]
+    },
+    {
+      "name": "Personal Care",
+      "subcategories": ["Soaps", "Shampoos", "Hair Oils", "Deodorants", "Oral Care", "Feminine Hygiene"]
+    },
+    {
+      "name": "Beauty & Cosmetics",
+      "subcategories": ["Makeup", "Skincare", "Haircare", "Fragrances", "Grooming Tools"]
+    },
+    {
+      "name": "Cleaning Essentials",
+      "subcategories": ["Detergents", "Dishwashing Liquids", "Floor Cleaners", "Air Fresheners"]
+    },
+    {
+      "name": "Home & Kitchen",
+      "subcategories": ["Kitchen Tools", "Storage Containers", "Utensils", "Appliances"]
+    },
+    {
+      "name": "Baby Care",
+      "subcategories": ["Diapers", "Baby Food", "Wipes", "Bath & Body", "Feeding Accessories"]
+    },
+    {
+      "name": "Pet Care",
+      "subcategories": ["Pet Food", "Grooming Products", "Toys", "Health Supplements"]
+    },
+    {
+      "name": "Pharma & Wellness",
+      "subcategories": ["Over-the-Counter Medicines", "Supplements", "First Aid", "Health Devices"]
+    },
+    {
+      "name": "Stationery & Books",
+      "subcategories": ["Notebooks", "Pens", "Office Supplies", "Children's Books", "Novels"]
+    },
+    {
+      "name": "Toys & Games",
+      "subcategories": ["Educational Toys", "Board Games", "Action Figures", "Puzzles"]
+    },
+    {
+      "name": "Electronics & Accessories",
+      "subcategories": ["Earphones", "Chargers", "Batteries", "Small Appliances"]
+    },
+    {
+      "name": "Clothing & Accessories",
+      "subcategories": ["Men's Wear", "Women's Wear", "Footwear", "Bags"]
+    },
+    {
+      "name": "Sports & Fitness",
+      "subcategories": ["Gym Equipment", "Yoga Mats", "Sportswear", "Supplements"]
+    },
+    {
+      "name": "Gifting & Festive Needs",
+      "subcategories": ["Gift Hampers", "Greeting Cards", "Decorative Items", "Festive Essentials"]
+    }
+  ]

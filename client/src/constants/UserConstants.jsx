@@ -1,0 +1,14 @@
+const USER = {
+  LIST: {
+    REQUEST: "USER_LIST_REQUEST",
+    SUCCESS: "USER_LIST_SUCCESS",
+    FAIL: "USER_LIST_FAIL",
+  },
+  VERIFY: {
+    REQUEST: "USER_VERIFY_REQUEST",
+    SUCCESS: "USER_VERIFY_SUCCESS",
+    FAIL: "USER_VERIFY_FAIL",
+  },
+};
+
+export default USER;

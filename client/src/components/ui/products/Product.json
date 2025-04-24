@@ -1,0 +1,178 @@
+[
+  {
+    "id": 1,
+    "title": "Organic Face Cream",
+    "image": "https://images.unsplash.com/photo-1613489716914-92acdfe372fb?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 299,
+    "mrp": 499,
+    "size": "50ml",
+    "category": ""
+  },
+  {
+    "id": 2,
+    "title": "Herbal Hair Oil",
+    "image": "https://images.unsplash.com/photo-1611253468024-df921701df4c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "price": 199,
+    "mrp": 299,
+    "size": "100ml"
+  },
+  {
+    "id": 3,
+    "title": "Organic Face Cream",
+    "brand": "GlowNaturals",
+    "price": 299,
+    "mrp": 499,
+    "discount": 40,
+    "unit": "50ml",
+    "rating": 4.5,
+    "reviews": 120,
+    "image": "https://images.unsplash.com/photo-1613489716914-92acdfe372fb?q=80&w=2006&auto=format&fit=crop",
+    "images": [
+      "https://images.unsplash.com/photo-1613489716914-92acdfe372fb?q=80&w=2006&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1613489716914-92acdfe372fb?q=80&w=2006&auto=format&fit=crop"
+    ],
+    "description": "GlowNaturals Organic Face Cream is formulated with natural ingredients to nourish and hydrate your skin, leaving it smooth and glowing.",
+    "ingredients": [
+      "Aloe Vera",
+      "Vitamin E",
+      "Shea Butter"
+    ],
+    "usage_instructions": "Apply a small amount to your face and neck. Gently massage in circular motions until absorbed.",
+    "delivery_details": {
+      "availability": "In stock",
+      "estimated_delivery": "2-3 days",
+      "delivery_fee": "₹50"
+    },
+    "quantity": ["50ml", "100ml"],
+    "offers": [
+      "10% off on orders above ₹500",
+      "Free delivery on prepaid orders"
+    ],
+    "related_products": [
+      {
+        "id": 4,
+        "name": "Herbal Hair Oil",
+        "image": "https://source.unsplash.com/featured/?hairoil",
+        "price": 199
+      },
+      {
+        "id": 5,
+        "name": "Aloe Vera Gel",
+        "image": "https://source.unsplash.com/featured/?aloevera",
+        "price": 149
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Aloe Vera Gel",
+    "image": "https://images.unsplash.com/photo-1589615452253-b1db690dcc12?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "price": 149,
+    "mrp": 199,
+    "size": "150ml"
+  },
+  {
+    "id": 7,
+    "title": "Lavender Body Lotion",
+    "image": "https://images.unsplash.com/photo-1585232350744-974fc9804d65?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "price": 249,
+    "mrp": 349,
+    "size": "200ml"
+  },
+  {
+    "id": 8,
+    "title": "Vitamin C Serum",
+    "image": "https://images.unsplash.com/photo-1612817151110-1d63d4701c01?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 399,
+    "mrp": 499,
+    "size": "30ml"
+  },
+  {
+    "id": 9,
+    "title": "Rose Water Toner",
+    "image": "https://images.unsplash.com/photo-1597395435433-57d9b38b437d?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 120,
+    "mrp": 180,
+    "size": "100ml"
+  },
+  {
+    "id": 10,
+    "title": "Charcoal Face Wash",
+    "image": "https://images.unsplash.com/photo-1587049352851-81c2c571d940?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 180,
+    "mrp": 250,
+    "size": "100ml"
+  },
+  {
+    "id": 11,
+    "title": "Mint Foot Cream",
+    "image": "https://images.unsplash.com/photo-1610337673045-b6377819595e?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 130,
+    "mrp": 180,
+    "size": "75ml"
+  },
+  {
+    "id": 12,
+    "title": "Neem Face Pack",
+    "image": "https://images.unsplash.com/photo-1623276524199-f7913b3540f2?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 220,
+    "mrp": 300,
+    "size": "80ml"
+  },
+  {
+    "id": 13,
+    "title": "Coconut Hair Mask",
+    "image": "https://images.unsplash.com/photo-1631010193489-6ea0cbf1d4a5?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 275,
+    "mrp": 340,
+    "size": "150ml"
+  },
+  {
+    "id": 14,
+    "title": "Sandalwood Soap",
+    "image": "https://images.unsplash.com/photo-1590080878414-dfeddf7230b6?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 80,
+    "mrp": 120,
+    "size": "100g"
+  },
+  {
+    "id": 15,
+    "title": "Turmeric Face Scrub",
+    "image": "https://images.unsplash.com/photo-1594737625785-c7d0a198ca0c?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 160,
+    "mrp": 220,
+    "size": "120ml"
+  },
+  {
+    "id": 16,
+    "title": "Coffee Body Polish",
+    "image": "https://images.unsplash.com/photo-1606761568499-6d3665f842d3?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 350,
+    "mrp": 450,
+    "size": "200ml"
+  },
+  {
+    "id": 17,
+    "title": "Green Tea Face Mist",
+    "image": "https://images.unsplash.com/photo-1588776814546-d11f14e9ff82?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 199,
+    "mrp": 250,
+    "size": "100ml"
+  },
+  {
+    "id": 18,
+    "title": "Saffron Radiance Cream",
+    "image": "https://images.unsplash.com/photo-1617299222103-9f99b85a5f70?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 450,
+    "mrp": 580,
+    "size": "60ml"
+  },
+  {
+    "id": 19,
+    "title": "Tea Tree Toner",
+    "image": "https://images.unsplash.com/photo-1610139464562-5f2642fa69cb?q=80&w=2006&auto=format&fit=crop&ixlib=rb-4.0.3",
+    "price": 140,
+    "mrp": 190,
+    "size": "110ml"
+  }
+]

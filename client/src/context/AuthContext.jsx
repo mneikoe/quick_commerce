@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
+import axiosInstance from "../utils/config";
 
 export const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token"); // this token not show why
       const userData = localStorage.getItem("user");
 
       if (token && userData) {
@@ -44,11 +45,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${import.meta.env.VITE_BASE_URL}/auth/register`,
         userData
       );
-      return handleAuthResponse(response);
+
+      return response.data;
     } catch (error) {
       throw error.response?.data?.message || "Registration failed";
     }
@@ -65,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    // user,
     loading,
     error,
   };
