@@ -5,13 +5,13 @@ import {
   getOrderDetails,
   getMyOrders,
 } from "../controllers/orderController.js";
-
+import { protect } from "../middlewares/authMiddleware.js";
 // import { verifyToken } from "../middlewares/authMiddleware.js";
 
 const orderRoutes = express.Router();
 
 // Apply auth middleware to all routes below
-// orderRoutes.use(verifyToken);
+orderRoutes.use(protect);
 
 // Place new order
 orderRoutes.post("/", placeOrder);

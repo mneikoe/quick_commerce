@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema(
           ref: "Menu",
           required: true,
         },
-        quantity: { type: Number, required: true },
+        quantity: { type: Number },
       },
     ],
     status: {
@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema(
       default: Constants.ORDER_STATUS.PENDING,
     },
     totalPrice: { type: Number, required: true },
-    deliveryAddress: { type: String, required: true },
+    // deliveryAddress: { type: String, required: true },
     assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

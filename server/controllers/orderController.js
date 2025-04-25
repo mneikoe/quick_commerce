@@ -2,7 +2,6 @@ import Order from "../models/Order.js";
 import Menu from "../models/Menu.js";
 
 // @desc    Place a new order
-// @route   POST /api/orders/place
 // @access  Private (Role: User)
 export const placeOrder = async (req, res) => {
   try {

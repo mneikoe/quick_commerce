@@ -6,6 +6,7 @@ import Order from "../models/Order.js";
 import { Constants } from "../constants/constants.js";
 import { ErrorHandler } from "../utils/errorHandler.js";
 import APIFeatures from "../utils/apiFeatures.js";
+import Category from "../models/Category.js";
 // import { ErrorHandler } from "../middlewares/errorMiddleware.js";
 
 // @desc    Get all users (admin only)
@@ -43,91 +44,10 @@ export const verifyUser = asyncHandler(async (req, res) => {
 
   res.json({ message: `${user.role} is verified`, user });
 });
-
 // @desc    Create menu item
-export const createMenuItem = asyncHandler(async (req, res) => {
-  try {
-    // Create the menu item
-    const menuItem = await Menu.create({
-      ...req.body,
-      createdBy: req.user.id, // Assuming `req.user` is populated from your `protect` middleware
-    });
-
-    if (!menuItem) {
-      throw new ErrorHandler("Menu item creation failed", 400); // Custom error if menuItem creation fails
-    }
-
-    // Successfully created the menu item, send it in the response
-    res.status(201).json(menuItem);
-  } catch (err) {
-    // If an error occurs during creation, it will be caught here
-    throw new ErrorHandler(err.message || "Server error", 500); // Catch any unexpected errors
-  }
-});
-
-// Get all menu items
-export const getAllMenuItems = asyncHandler(async (req, res) => {
-  const menuItems = await Menu.find().populate("createdBy", "name email");
-  res.status(200).json({
-    success: true,
-    data: menuItems,
-  });
-});
-
-// Get a single menu item by ID
-export const getMenuItemById = asyncHandler(async (req, res, next) => {
-  const menuItem = await Menu.findById(req.params.id);
-
-  if (!menuItem) {
-    return next(new ErrorHandler("Menu item not found", 404));
-  }
-
-  res.status(200).json({
-    success: true,
-    data: menuItem,
-  });
-});
-
-// Update a menu item
-export const updateMenuItem = asyncHandler(async (req, res, next) => {
-  const menuItem = await Menu.findById(req.params.id);
-
-  if (!menuItem) {
-    return next(new ErrorHandler("Menu item not found", 404));
-  }
-
-  const updatedFields = req.body;
-
-  const updatedItem = await Menu.findByIdAndUpdate(
-    req.params.id,
-    { $set: updatedFields },
-    { new: true, runValidators: true }
-  );
-
-  res.status(200).json({
-    success: true,
-    message: "Menu item updated successfully",
-    data: updatedItem,
-  });
-});
-
-// Delete a menu item
-export const deleteMenuItem = asyncHandler(async (req, res, next) => {
-  const menuItem = await Menu.findById(req.params.id);
-
-  if (!menuItem) {
-    return next(new ErrorHandler("Menu item not found", 404));
-  }
-
-  await menuItem.deleteOne();
-
-  res.status(200).json({
-    success: true,
-    message: "Menu item deleted successfully",
-  });
-});
 
 // @desc    Confirm order
+// @access role:admin
 export const confirmOrder = asyncHandler(async (req, res) => {
   const order = await Order.findByIdAndUpdate(
     req.params.orderId,
@@ -176,4 +96,79 @@ export const getAllOrders = asyncHandler(async (req, res) => {
     .sort("-createdAt");
 
   res.json(orders);
+});
+
+// Create a category
+export const createCategory = asyncHandler(async (req, res) => {
+  const { name, description, status } = req.body;
+
+  const existing = await Category.findOne({ name });
+  if (existing) {
+    throw new ErrorHandler("Category already exists", 400);
+  }
+
+  const category = await Category.create({
+    name,
+    description,
+    status,
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Category created successfully",
+    data: category,
+  });
+});
+
+// get all categories
+export const getAllCategories = asyncHandler(async (req, res) => {
+  const categories = await Category.find();
+
+  res.status(200).json({
+    success: true,
+    data: categories,
+  });
+});
+
+// get single category
+export const getCategoryById = asyncHandler(async (req, res) => {
+  const category = await Category.findById(req.params.id);
+  if (!category) {
+    throw new ErrorHandler("Category not found", 404);
+  }
+
+  res.status(200).json({ success: true, data: category });
+});
+
+// update category
+export const updateCategory = asyncHandler(async (req, res) => {
+  const { name, description, status } = req.body;
+
+  const category = await Category.findById(req.params.id);
+  if (!category) throw new ErrorHandler("Category not found", 404);
+
+  category.name = name ?? category.name;
+  category.description = description ?? category.description;
+  category.status = status ?? category.status;
+
+  const updated = await category.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Category updated successfully",
+    data: updated,
+  });
+});
+
+// delete category
+export const deleteCategory = asyncHandler(async (req, res) => {
+  const category = await Category.findById(req.params.id);
+  if (!category) throw new ErrorHandler("Category not found", 404);
+
+  await category.delete(); // soft delete
+
+  res.status(200).json({
+    success: true,
+    message: "Category deleted successfully",
+  });
 });

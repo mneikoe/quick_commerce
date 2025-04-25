@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const menuSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: [true, "Menu item name is required"],
       minlength: [3, "Menu item name must be at least 3 characters long"],
@@ -24,7 +24,9 @@ const menuSchema = new mongoose.Schema(
       },
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

@@ -4,6 +4,7 @@ import Order from "../models/Order.js";
 // @desc    Get all available menu items
 // @route   GET /api/menu
 // @access  Public
+
 export const getMenu = async (req, res) => {
   try {
     const menuItems = await Menu.find({ isAvailable: true });
@@ -32,7 +33,7 @@ export const placeOrder = async (req, res) => {
 
 // @desc    Get all orders of the logged-in user
 // @route   GET /api/orders/myorders
-// @access  Private
+// @access  Private(role: user)
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })

@@ -1,15 +1,20 @@
 import express from "express";
 import {
   verifyUser,
-  createMenuItem,
+  // createMenuItem,
+  // getAllMenuItems,
+  // getMenuItemById,
+  // updateMenuItem,
+  // deleteMenuItem,
   confirmOrder,
   assignOrder,
   getAllOrders,
-  getAllMenuItems,
-  getMenuItemById,
-  updateMenuItem,
-  deleteMenuItem,
   getAllUsers,
+  createCategory,
+  getAllCategories,
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
 } from "../controllers/adminController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { Constants } from "../constants/constants.js";
@@ -27,18 +32,29 @@ adminRoutes.use(authorizeRoles(Constants.USER.ADMIN)); // Use the role middlewar
 adminRoutes.patch("/verify/:userId", verifyUser);
 adminRoutes.get("/users", getAllUsers);
 // adminRoutes.post("/menu", createMenuItem);
-adminRoutes
-  .route("/menu")
-  .post(protect, createMenuItem)
-  .get(protect, getAllMenuItems);
+// adminRoutes
+//   .route("/menu")
+//   .post(protect, createMenuItem)
+//   .get(protect, getAllMenuItems);
 
-adminRoutes
-  .route("/menu/:id")
-  .get(protect, getMenuItemById)
-  .put(protect, updateMenuItem)
-  .delete(protect, deleteMenuItem);
+// adminRoutes
+//   .route("/menu/:id")
+//   .get(protect, getMenuItemById)
+//   .put(protect, updateMenuItem)
+//   .delete(protect, deleteMenuItem);
 adminRoutes.put("/orders/confirm/:orderId", confirmOrder);
 adminRoutes.put("/orders/assign/:orderId", assignOrder);
 adminRoutes.get("/orders", getAllOrders);
+
+adminRoutes
+  .route("/categories")
+  .get(getAllCategories)
+  .post(protect, createCategory);
+
+adminRoutes
+  .route("/categories/:id")
+  .get(getCategoryById)
+  .put(protect, updateCategory)
+  .delete(protect, deleteCategory);
 
 export default adminRoutes;
