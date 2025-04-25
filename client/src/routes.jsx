@@ -8,23 +8,34 @@ import AdminDashboard from "./admin/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import PageNotFound from "./pages/PageNotFound";
 import AdminUsers from "./admin/AdminUsers";
+import Products from "./pages/Products";
+import AdminMenu from "./admin/AdminMenu";
+import AdminCategory from "./admin/AdminCategory";
+import ShopkeeperOrders from "./shopkeepers/ShopkeeperOrder";
+import ShopkeeperDashboard from "./shopkeepers/ShopkeeperDashboard";
 // import ProductDetail from "./components/ui/ProductDetail";
 
 export const publicRoutes = [
   { path: "/", element: <HomePage /> }, //bki hai
-  { path: "/login", element: <Login /> }, //✅
-  { path: "/register", element: <Register /> }, //✅
+  { path: "/products", element: <Products /> }, //✅
   // { path: "/product/:id", element: <ProductDetail /> }, //✅
 ];
 
 export const adminRoutes = [
   { path: "dashboard", element: <AdminDashboard /> },
   { path: "users", element: <AdminUsers /> },
+  { path: "menu", element: <AdminMenu /> },
+  { path: "category", element: <AdminCategory /> },
 ];
-export const shopkeeperRoutes = [];
+export const shopkeeperRoutes = [
+  { path: "dashboard", element: <ShopkeeperDashboard /> },
+  { path: "myOrders", element: <ShopkeeperOrders /> },
+];
 export const deliveryRoutes = [];
 export const userRoutes = [];
 export const commonRoutes = [
   { path: "/unauthorized", element: <Unauthorized /> }, //✅
+  { path: "/register", element: <Register /> }, //✅
+  { path: "/login", element: <Login /> }, //✅
   { path: "*", element: <PageNotFound /> }, //✅
 ];

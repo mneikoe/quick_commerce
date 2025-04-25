@@ -44,7 +44,7 @@ const Register = () => {
           navigate("/delivery/dashboard");
           break;
         default:
-          navigate("/user/dashboard");
+          navigate("/products");
       }
     } catch (error) {
       setError(error.toString());
@@ -75,7 +75,7 @@ const Register = () => {
       text: "Ultra-Fast Performance – Built for scale and speed.",
     },
   ];
-
+  console.log("Current Role Value:", formData.role);
   return (
     <div className="flex items-center justify-center min-h-screen px-6 py-8 bg-gray-100">
       <motion.div

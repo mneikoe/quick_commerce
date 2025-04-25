@@ -41,8 +41,10 @@ const Login = () => {
         case "deliveryBoy":
           navigate("/delivery/dashboard");
           break;
+
         default:
-          navigate("/");
+          navigate("/products");
+        // navigate("/");
       }
     } catch (error) {
       setError(error.toString());

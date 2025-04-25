@@ -15,12 +15,16 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { Menu } from "lucide-react";
+import { Category } from "@mui/icons-material";
 
 // Role-based navigation items
 const navItems = {
   admin: [
     { label: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
     { label: "Users", path: "/admin/users", icon: <PeopleIcon /> },
+    { label: "Menu", path: "/admin/menu", icon: <Menu /> },
+    { label: "Category", path: "/admin/category", icon: <Category /> },
     // { label: "Menu", path: "/admin/menu", icon: <RestaurantMenuIcon /> },
     // { label: "Shipping", path: "/admin/shipping", icon: <LocalShippingIcon /> },
   ],
@@ -34,7 +38,11 @@ const navItems = {
       path: "/shopkeeper/dashboard",
       icon: <DashboardIcon />,
     },
-    { label: "Orders", path: "/shopkeeper/orders", icon: <ShoppingCartIcon /> },
+    {
+      label: "Orders",
+      path: "/shopkeeper/myOrders",
+      icon: <ShoppingCartIcon />,
+    },
   ],
   deliveryboy: [
     {

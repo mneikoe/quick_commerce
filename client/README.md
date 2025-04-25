@@ -47,3 +47,9 @@ Customer Review Component (CustomerReview)
 - test all ui component
 - create layout(dashboard) for all user type
 - product card details
+<!-- - toggle functionality not works -->
+- rating system
+login and logout feature
+<!-- - dashboard badge button in like `seller dashboard `
+  `admin dashboard` -->
+- admin dashboard design

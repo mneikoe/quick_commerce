@@ -7,17 +7,67 @@ import {
   Typography,
   Box,
   IconButton,
+  Rating,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  addToCart,
+  removeFromCart,
+  updateCartQuantity,
+} from "../../../actions/CartAction";
 // image, title,short desciroptiion,price,mrp,disocunt,size(weight),ratings,a to cart and buy button ,wishlistbadges
-const ProductCard = ({ id, image, title, size, price, mrp }) => {
-  const [count, setCount] = useState(0);
+const ProductCard = ({
+  id,
+  image,
+  title,
+  size,
+  price,
+  mrp,
+  category,
+  rating,
+}) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const handleAdd = () => setCount(count + 1);
-  const handleRemove = () => setCount(count > 0 ? count - 1 : 0);
+  const cartItem = cartItems.find((item) => item.productId === id);
+  console.log("cartItem id", cartItem);
+  const count = cartItem ? cartItem.quantity : 0;
+  // const [ratingValue, setRatingValue] = useState(rating);
 
+  const handleAdd = () => {
+    console.log("Adding item to cart", id); // Check if ID is correct
+    if (count > 0) {
+      dispatch(updateCartQuantity(id, count + 1));
+    } else {
+      dispatch(
+        addToCart({
+          productId: id,
+          image,
+          title,
+          size,
+          price,
+          category,
+          quantity: 1,
+        })
+      );
+    }
+
+    // Check the updated cart state
+    console.log("Updated cart:", cartItems);
+  };
+
+  console.log("Updated cart:", cartItems);
+
+  const handleRemove = () => {
+    if (count === 1) {
+      dispatch(removeFromCart(id));
+    } else if (count > 1) {
+      dispatch(updateCartQuantity(id, count - 1));
+    }
+  };
   return (
     <Card
       sx={{
@@ -38,10 +88,14 @@ const ProductCard = ({ id, image, title, size, price, mrp }) => {
           srcSet={`${image}?w=400 400w, ${image}?w=800 800w, ${image}?w=1200 1200w`} // Using srcSet for responsive image sizes
           sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
           alt={title}
-          sx={{ height: 240, width: "100%", objectFit: "cover" }}
+          sx={{ height: 240, width: "100%", objectFit: "contain" }}
         />
       </Link>
       <CardContent sx={{ px: 1, textAlign: "center" }}>
+        {/* cateogry */}
+        <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
+          {category}
+        </Typography>
         {/* Title */}
         <Typography
           variant="subtitle1"
@@ -49,6 +103,14 @@ const ProductCard = ({ id, image, title, size, price, mrp }) => {
         >
           {title}
         </Typography>
+        <Rating
+          name="rating"
+          value={rating}
+          readOnly
+          precision={0.5}
+          size="small"
+          sx={{ mt: 1 }}
+        />
 
         {/* Size */}
         <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>

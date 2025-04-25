@@ -4,7 +4,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminLayout from "./components/common/layout/AdminLayout";
 import ProtectedRoute from "./components/common/protectedRoute";
 
-import { adminRoutes, commonRoutes, publicRoutes } from "./routes";
+import {
+  adminRoutes,
+  commonRoutes,
+  publicRoutes,
+  shopkeeperRoutes,
+} from "./routes";
 import Layout from "./components/common/layout/Layout";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -33,9 +38,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        {publicRoutes.map(({ path, element }, i) => (
-          <Route key={i} path={path} element={element} />
-        ))}
+        <Route element={<Layout />}>
+          {publicRoutes.map(({ path, element }, i) => (
+            <Route key={i} path={path} element={element} />
+          ))}
+        </Route>
 
         {/* Admin Routes */}
         {/* <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
@@ -63,10 +70,10 @@ function App() {
               //   ...route,
               //   path: `user/${route.path}`,
               // })),
-              // ...shopkeeperRoutes.map((route) => ({
-              //   ...route,
-              //   path: `shopkeeper/${route.path}`,
-              // })),
+              ...shopkeeperRoutes.map((route) => ({
+                ...route,
+                path: `shopkeeper/${route.path}`,
+              })),
               // ...deliveryRoutes.map((route) => ({
               //   ...route,
               //   path: `delivery/${route.path}`,

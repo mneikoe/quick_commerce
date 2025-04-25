@@ -1,3 +1,4 @@
+// constants/orderConstants.js
 export const ORDER_CONSTANTS = {
   // Create Order
   CREATE: {
@@ -47,5 +48,12 @@ export const ORDER_CONSTANTS = {
     REQUEST: "ORDER_CONFIRM_READY_REQUEST",
     SUCCESS: "ORDER_CONFIRM_READY_SUCCESS",
     FAIL: "ORDER_CONFIRM_READY_FAIL",
+  },
+
+  // Place Order
+  PLACE_ORDER: {
+    REQUEST: "ORDER_PLACE_ORDER_REQUEST",
+    SUCCESS: "ORDER_PLACE_ORDER_SUCCESS",
+    FAIL: "ORDER_PLACE_ORDER_FAIL",
   },
 };

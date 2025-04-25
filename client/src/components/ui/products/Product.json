@@ -6,7 +6,8 @@
     "price": 299,
     "mrp": 499,
     "size": "50ml",
-    "category": ""
+    "category": "food",
+    "rating":3
   },
   {
     "id": 2,
@@ -14,7 +15,8 @@
     "image": "https://images.unsplash.com/photo-1611253468024-df921701df4c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "price": 199,
     "mrp": 299,
-    "size": "100ml"
+    "size": "100ml",
+    "rating":2
   },
   {
     "id": 3,
@@ -24,7 +26,7 @@
     "mrp": 499,
     "discount": 40,
     "unit": "50ml",
-    "rating": 4.5,
+    "rating": 4,
     "reviews": 120,
     "image": "https://images.unsplash.com/photo-1613489716914-92acdfe372fb?q=80&w=2006&auto=format&fit=crop",
     "images": [

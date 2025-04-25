@@ -1,50 +1,79 @@
 import React from "react";
 import Slider from "react-slick";
+import { Box, Typography } from "@mui/material";
 import CategoryCard from "./CategoryCard";
-import { Box } from "@mui/material";
 import CategoryData from "./category.json";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+// Custom Next Arrow
+const NextArrow = ({ onClick }) => (
+  <Box
+    onClick={onClick}
+    sx={{
+      position: "absolute",
+      top: "40%",
+      right: -15,
+      zIndex: 2,
+      backgroundColor: "white",
+      borderRadius: "50%",
+      boxShadow: 3,
+      p: 1,
+      cursor: "pointer",
+    }}
+  >
+    <ChevronRight size={20} />
+  </Box>
+);
+
+// Custom Prev Arrow
+const PrevArrow = ({ onClick }) => (
+  <Box
+    onClick={onClick}
+    sx={{
+      position: "absolute",
+      top: "40%",
+      left: -15,
+      zIndex: 2,
+      backgroundColor: "white",
+      borderRadius: "50%",
+      boxShadow: 3,
+      p: 1,
+      cursor: "pointer",
+    }}
+  >
+    <ChevronLeft size={20} />
+  </Box>
+);
 
 const CategoryCarousel = () => {
-  // Slick settings for carousel
+  const filteredCategories = CategoryData.filter((c) => c.image); // Only show with image
+
   const settings = {
-    dots: true, // To show navigation dots at the bottom
-    infinite: true, // To enable infinite scrolling
-    speed: 500, // Transition speed for the carousel
-    slidesToShow: 3, // Show 3 items at a time horizontally
-    slidesToScroll: 3, // Scroll 3 items at a time
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
-      // Responsiveness for different screen sizes
-      {
-        breakpoint: 1024, // When the screen size is below 1024px
-        settings: {
-          slidesToShow: 2, // Show 2 items at a time
-          slidesToScroll: 2, // Scroll 2 items at a time
-        },
-      },
-      {
-        breakpoint: 600, // When the screen size is below 600px
-        settings: {
-          slidesToShow: 1, // Show 1 item at a time
-          slidesToScroll: 1, // Scroll 1 item at a time
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
+    <Box sx={{ mt: 5 }}>
       <Slider {...settings}>
-        <div>
-          {CategoryData.map((category, idx) => (
-            <div key={idx}>
-              <CategoryCard
-                name={category.name}
-                image={category.image}
-                to={`/category/${category.name}`}
-              />
-            </div>
-          ))}
-        </div>
+        {filteredCategories.map((category, idx) => (
+          <Box key={idx} px={1}>
+            <CategoryCard
+              name={category.name}
+              image={category.image}
+              to={`/category/${encodeURIComponent(category.name)}`}
+            />
+          </Box>
+        ))}
       </Slider>
     </Box>
   );
