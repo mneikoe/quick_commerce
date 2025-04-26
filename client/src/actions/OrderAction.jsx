@@ -51,7 +51,7 @@ export const confirmOrder = (orderId) => async (dispatch, getState) => {
     dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
 
     const { data } = await axiosInstance.put(
-      `/api/orders/admin/confirm/${orderId}`
+      `/admin/orders/confirm/${orderId}`
     ); // Backend route for confirming the order
 
     dispatch({
@@ -68,7 +68,8 @@ export const confirmOrder = (orderId) => async (dispatch, getState) => {
     });
   }
 };
-
+//  get all orders
+// export const getAllOrders = () => async () => {};
 // Confirm Order Ready for Pickup
 export const confirmOrderReady = (orderId) => async (dispatch) => {
   try {
@@ -84,6 +85,7 @@ export const confirmOrderReady = (orderId) => async (dispatch) => {
       payload: data, // Updated order
     });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.CONFIRM_READY.FAIL,
       payload:
@@ -102,7 +104,7 @@ export const assignOrder =
 
       // Send the PUT request to the backend to assign shopkeeper and delivery boy to the order
       const { data } = await axiosInstance.put(
-        `/api/orders/assign/${orderId}`,
+        `/admin/orders/assign/${orderId}`,
         {
           shopkeeperId,
           deliveryBoyId,
@@ -114,6 +116,7 @@ export const assignOrder =
         payload: data, // Updated order with assigned shopkeeper and delivery boy
       });
     } catch (error) {
+      console.log(error);
       dispatch({
         type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
         payload:
@@ -174,6 +177,24 @@ export const confirmDelivery = (orderId) => async (dispatch) => {
   }
 };
 
+export const getAllOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.GET_ALL.REQUEST });
+
+    const { data } = await axiosInstance.get("/admin/orders");
+    console.log(data);
+    dispatch({
+      type: ORDER_CONSTANTS.GET_ALL.SUCCESS,
+      payload: { role, users: data },
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.GET_ALL.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
 // // Create Order
 // export const createOrder = (orderData) => async (dispatch, getState) => {
 //   try {

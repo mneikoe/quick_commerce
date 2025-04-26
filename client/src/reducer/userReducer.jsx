@@ -2,14 +2,24 @@ import { ORDER_CONSTANTS } from "../constants/OrderConstants";
 import USER from "../constants/UserConstants";
 
 // User List Reducer
-export const userListReducer = (state = { users: [] }, action) => {
+export const userListReducer = (
+  state = { shopkeeper: [], deliveryboy: [] },
+  action
+) => {
   switch (action.type) {
     case USER.LIST.REQUEST:
-      return { loading: true, users: [] };
+      return { ...state, loading: true };
+
     case USER.LIST.SUCCESS:
-      return { loading: false, users: action.payload };
+      return {
+        ...state,
+        loading: false,
+        [action.payload.role]: action.payload.users,
+      };
+
     case USER.LIST.FAIL:
-      return { loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }
@@ -47,3 +57,20 @@ export const placeOrderReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+// export const userListReducer = (state = {}, action) => {
+//   switch (action.type) {
+//     case USER_CONSTANTS.USER_LIST_REQUEST:
+//       return { ...state, loading: true };
+//     case USER_CONSTANTS.USER_LIST_SUCCESS:
+//       return {
+//         ...state,
+//         loading: false,
+//         [action.payload.role]: action.payload.users,
+//       };
+//     case USER_CONSTANTS.USER_LIST_FAIL:
+//       return { ...state, loading: false, error: action.payload };
+//     default:
+//       return state;
+//   }
+// };

@@ -1,11 +1,6 @@
 import express from "express";
 import {
   verifyUser,
-  // createMenuItem,
-  // getAllMenuItems,
-  // getMenuItemById,
-  // updateMenuItem,
-  // deleteMenuItem,
   confirmOrder,
   assignOrder,
   getAllOrders,
@@ -15,6 +10,7 @@ import {
   getCategoryById,
   updateCategory,
   deleteCategory,
+  getUsersByRole,
 } from "../controllers/adminController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { Constants } from "../constants/constants.js";
@@ -31,20 +27,11 @@ adminRoutes.use(authorizeRoles(Constants.USER.ADMIN)); // Use the role middlewar
 // Routes for admin actions
 adminRoutes.patch("/verify/:userId", verifyUser);
 adminRoutes.get("/users", getAllUsers);
-// adminRoutes.post("/menu", createMenuItem);
-// adminRoutes
-//   .route("/menu")
-//   .post(protect, createMenuItem)
-//   .get(protect, getAllMenuItems);
 
-// adminRoutes
-//   .route("/menu/:id")
-//   .get(protect, getMenuItemById)
-//   .put(protect, updateMenuItem)
-//   .delete(protect, deleteMenuItem);
 adminRoutes.put("/orders/confirm/:orderId", confirmOrder);
 adminRoutes.put("/orders/assign/:orderId", assignOrder);
 adminRoutes.get("/orders", getAllOrders);
+adminRoutes.get("/users", getUsersByRole);
 
 adminRoutes
   .route("/categories")

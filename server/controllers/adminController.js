@@ -90,12 +90,19 @@ export const assignOrder = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private (Admin/User - depends on role)
 export const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find()
-    .populate("user shopkeeper deliveryBoy")
-    .sort("-createdAt");
+  try {
+    const orders = await Order.find()
+      .populate("user shopkeeper deliveryBoy")
+      .sort("-createdAt");
 
-  res.json(orders);
+    res.json(orders);
+  } catch (error) {
+    res.status(500);
+    throw new Error("Failed to fetch orders. Please try again later.");
+  }
 });
 
 // Create a category
@@ -171,4 +178,19 @@ export const deleteCategory = asyncHandler(async (req, res) => {
     success: true,
     message: "Category deleted successfully",
   });
+});
+
+// @desc    Get users by role (shopkeeper or deliveryBoy)
+// @route   GET /admin/users?role=shopkeeper
+// @access  Admin
+export const getUsersByRole = asyncHandler(async (req, res) => {
+  const role = req.query.role;
+
+  if (!role || !["shopkeeper", "deliveryBoy"].includes(role)) {
+    throw new ErrorHandler("Invalid or missing role", 400);
+  }
+
+  const users = await User.find({ role }).select("_id name email");
+
+  res.json(users);
 });
