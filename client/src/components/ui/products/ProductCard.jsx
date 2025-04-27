@@ -33,12 +33,12 @@ const ProductCard = ({
   const cartItems = useSelector((state) => state.cart.cartItems);
 
   const cartItem = cartItems.find((item) => item.productId === id);
-  console.log("cartItem id", cartItem);
+  // console.log("cartItem id", cartItem);
   const count = cartItem ? cartItem.quantity : 0;
   // const [ratingValue, setRatingValue] = useState(rating);
 
   const handleAdd = () => {
-    console.log("Adding item to cart", id); // Check if ID is correct
+    // console.log("Adding item to cart", id); // Check if ID is correct
     if (count > 0) {
       dispatch(updateCartQuantity(id, count + 1));
     } else {
@@ -56,10 +56,10 @@ const ProductCard = ({
     }
 
     // Check the updated cart state
-    console.log("Updated cart:", cartItems);
+    // console.log("Updated cart:", cartItems);
   };
 
-  console.log("Updated cart:", cartItems);
+  // console.log("Updated cart:", cartItems);
 
   const handleRemove = () => {
     if (count === 1) {

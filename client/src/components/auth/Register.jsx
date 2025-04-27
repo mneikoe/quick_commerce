@@ -1,27 +1,31 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+// import { AuthContext } from "../../context/AuthContext";
 import { ShoppingBag, Divide } from "lucide-react";
 import { motion } from "framer-motion";
 import TextInput from "../ui/TextInput";
 import SelectBox from "../ui/SelectBox";
 import { Rocket, ShieldCheck, Users, Zap, GaugeCircle } from "lucide-react";
-import Constants from "../../constants/constants";
+import Constants from "../../constants/Constants";
+import { showToast } from "../ui/ShowToast";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../actions/AuthAction";
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: "user",
+    role: "",
     phone: "",
   });
-
+  const { currentUser } = useSelector((s) => s.auth);
+  console.log(currentUser);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { register } = useContext(AuthContext);
+  // const { register } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -30,23 +34,40 @@ const Register = () => {
     setError("");
     setLoading(true);
 
-    try {
-      const userData = await register(formData);
+    if (!formData.email && !formData.phone) {
+      setError("Either email or phone must be provided.");
+      setLoading(false);
+      return;
+    }
 
-      switch (userData.role) {
+    try {
+      const userData = await dispatch(
+        registerUser(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.role,
+          formData.phone
+        )
+      ); // The userData will be returned here
+      console.log("userData in handleSubmit:", userData); // Log the returned data to verify
+      showToast("regsitered successfully", "success");
+      // Switch based on role
+      switch (currentUser?.role) {
         case "admin":
           navigate("/admin/dashboard");
           break;
         case "shopkeeper":
           navigate("/shopkeeper/dashboard");
           break;
-        case "deliveryBoy":
+        case "deliveryboy":
           navigate("/delivery/dashboard");
           break;
         default:
           navigate("/products");
       }
     } catch (error) {
+      console.log(error); // Log any unexpected error
       setError(error.toString());
     } finally {
       setLoading(false);
@@ -194,6 +215,7 @@ const Register = () => {
                   //   placeholder=""
                   onChange={handleChange}
                   //   required
+                  // required={false}
                   //   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Enter your  phone"
                 />

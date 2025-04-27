@@ -24,9 +24,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const handleAuthResponse = (response) => {
+    console.log("Auth Response:", response.data);
     const { token, user } = response.data;
     localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("user", user);
     setCurrentUser(user);
     return user;
   };

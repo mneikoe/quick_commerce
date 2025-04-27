@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Menu, MenuItem, IconButton, Avatar } from "@mui/material";
 
-const UserProfileMenu = () => {
+const UserProfileMenu = ({ logout }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpen = (e) => setAnchorEl(e.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+    logout();
+  };
 
   return (
     <>

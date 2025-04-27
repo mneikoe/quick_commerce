@@ -5,11 +5,12 @@ import Topbar from "../../ui/Topbar";
 import { Box, useMediaQuery } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import { isRolePath } from "../../../utils/isRolePath";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useSelector((s) => s.auth);
 
   const handleToggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);

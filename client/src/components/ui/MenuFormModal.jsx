@@ -25,7 +25,7 @@ const MenuFormModal = ({
     price: "",
     isAvailable: true,
   });
-  console.log(formData);
+  // console.log(formData);
   // Reset formData when item changes (for editing mode)
   useEffect(() => {
     if (item) {
@@ -53,7 +53,7 @@ const MenuFormModal = ({
   };
 
   const onSubmit = () => {
-    console.log("Submitting form data:", formData);
+    // console.log("Submitting form data:", formData);
     handleSubmit(formData);
     setFormData({
       title: "",

@@ -15,7 +15,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import { Menu } from "lucide-react";
+import { ListOrdered, Menu } from "lucide-react";
 import { Category } from "@mui/icons-material";
 
 // Role-based navigation items
@@ -25,6 +25,7 @@ const navItems = {
     { label: "Users", path: "/admin/users", icon: <PeopleIcon /> },
     { label: "Menu", path: "/admin/menu", icon: <Menu /> },
     { label: "Category", path: "/admin/category", icon: <Category /> },
+    { label: "Order", path: "/admin/order", icon: <ListOrdered /> },
     // { label: "Menu", path: "/admin/menu", icon: <RestaurantMenuIcon /> },
     // { label: "Shipping", path: "/admin/shipping", icon: <LocalShippingIcon /> },
   ],

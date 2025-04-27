@@ -12,20 +12,21 @@ import {
   Divider,
   Chip,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Menu as MenuIcon, ShoppingCart, X } from "lucide-react";
 
-import { AuthContext } from "../../context/AuthContext";
+// import { AuthContext } from "../../context/AuthContext";
 import UserProfileMenu from "./UserProfileMenu";
 import Button from "./Button";
 import TextInput from "./TextInput";
 import CartModal from "./CartModal";
 import { allowedRoles, isRolePath } from "../../utils/isRolePath";
+import { logoutUser } from "../../actions/AuthAction";
 
 const Topbar = ({ onToggleSidebar, open }) => {
-  const { currentUser, logout } = useContext(AuthContext);
+  const { currentUser } = useSelector((s) => s.auth);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
     "shopkeeper",
     "deliveryboy",
   ]);
-
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems || []);
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -46,12 +47,12 @@ const Topbar = ({ onToggleSidebar, open }) => {
   const handleMenuClose = () => setMenuAnchor(null);
 
   const handleLogout = () => {
-    logout();
+    dispatch(logoutUser());
     navigate("/login");
   };
 
   const handleLogin = () => navigate("/login");
-  console.log(currentUser?.role);
+  // console.log(currentUser?.role);
   return (
     <>
       <AppBar
@@ -140,7 +141,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
                 </>
               ) : (
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
-                  <UserProfileMenu />
+                  <UserProfileMenu logout={handleLogout} />
                 </Box>
               )
             ) : (

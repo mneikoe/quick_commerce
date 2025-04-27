@@ -9,7 +9,7 @@ const TextInput = ({
   value,
   onChange,
   placeholder = "",
-  required = true,
+  required = false,
   className = "",
   icon,
   size = "medium", // Default to medium

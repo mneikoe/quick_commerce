@@ -8,14 +8,20 @@ export const ORDER_CONSTANTS = {
     RESET: "ORDER_CREATE_RESET",
   },
 
-  // Get Orders
+  // Get All Orders
   GET_ALL: {
     REQUEST: "ORDER_GET_ALL_REQUEST",
     SUCCESS: "ORDER_GET_ALL_SUCCESS",
     FAIL: "ORDER_GET_ALL_FAIL",
   },
 
-  // Get Order Details
+  // Get My Orders
+  GET_MY_ORDERS: {
+    REQUEST: "GET_MY_ORDERS_REQUEST",
+    SUCCESS: "GET_MY_ORDERS_SUCCESS",
+    FAIL: "GET_MY_ORDERS_FAIL",
+  },
+  // Get Single Order
   GET_SINGLE: {
     REQUEST: "ORDER_GET_SINGLE_REQUEST",
     SUCCESS: "ORDER_GET_SINGLE_SUCCESS",
@@ -36,14 +42,14 @@ export const ORDER_CONSTANTS = {
     FAIL: "ORDER_UPDATE_STATUS_FAIL",
   },
 
-  // Get Orders for a Shopkeeper
+  // Get Orders for Shopkeeper
   GET_SHOPKEEPER_ORDERS: {
     REQUEST: "ORDER_GET_SHOPKEEPER_ORDERS_REQUEST",
     SUCCESS: "ORDER_GET_SHOPKEEPER_ORDERS_SUCCESS",
     FAIL: "ORDER_GET_SHOPKEEPER_ORDERS_FAIL",
   },
 
-  // Confirm Order Ready for Pickup
+  // Confirm Ready for Pickup
   CONFIRM_READY: {
     REQUEST: "ORDER_CONFIRM_READY_REQUEST",
     SUCCESS: "ORDER_CONFIRM_READY_SUCCESS",
