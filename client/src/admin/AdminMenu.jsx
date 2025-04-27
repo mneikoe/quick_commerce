@@ -28,7 +28,7 @@ const AdminMenu = () => {
   const dispatch = useDispatch();
   const { menuItems, loading } = useSelector((state) => state.menu); // assuming state shape
   const { categories } = useSelector((state) => state.category); // assuming state shape
-  console.log("menu items", menuItems.data);
+  // console.log("menu items", menuItems.data);
   useEffect(() => {
     dispatch(getMenuItems());
     dispatch(getAllCategories());

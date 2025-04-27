@@ -9,8 +9,12 @@ axiosInstance.interceptors.request.use((config) => {
   let token = localStorage.getItem("token");
 
   if (token) {
-    config.headers["Authorization"] = `${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`; // <- "Bearer " add karo
   }
+
+  // if (token) {
+  //   config.headers["Authorization"] = `${token}`;
+  // }
 
   // If `config.isMultipart` is true, use multipart/form-data
   if (config.isMultipart) {

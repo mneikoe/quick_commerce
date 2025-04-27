@@ -8,6 +8,7 @@ import * as cartReducer from "./CartReducer";
 import * as orderReducer from "./OrderReducer";
 import * as menuReducer from "./MenuReducer";
 import * as categoryReducer from "./CategoryReducer";
+import * as authReducer from "./AuthReducer";
 
 // Persist configuration
 const persistConfig = {
@@ -21,16 +22,11 @@ const rootReducer = combineReducers({
   // user related reducer
   userList: userReducer.userListReducer,
   userVerify: userReducer.userVerifyReducer,
-
+  // auth
+  auth: authReducer.authReducer,
   // CART
   cart: cartReducer.cartReducer,
 
-  // order
-  // orderCreate: orderReducer.orderCreateReducer,
-  // orderList: orderReducer.orderListReducer,
-  // orderDetails: orderReducer.orderDetailsReducer,
-  // orderTrack: orderReducer.orderTrackReducer,
-  // orderStatusUpdate: orderReducer.orderStatusUpdateReducer,
   orders: orderReducer.orderReducer,
   menu: menuReducer.menuReducer,
   category: categoryReducer.categoryReducer,

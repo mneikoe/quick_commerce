@@ -13,6 +13,7 @@ import AdminMenu from "./admin/AdminMenu";
 import AdminCategory from "./admin/AdminCategory";
 import ShopkeeperOrders from "./shopkeepers/ShopkeeperOrder";
 import ShopkeeperDashboard from "./shopkeepers/ShopkeeperDashboard";
+import AdminOrder from "./admin/AdminOrder";
 // import ProductDetail from "./components/ui/ProductDetail";
 
 export const publicRoutes = [
@@ -26,6 +27,7 @@ export const adminRoutes = [
   { path: "users", element: <AdminUsers /> },
   { path: "menu", element: <AdminMenu /> },
   { path: "category", element: <AdminCategory /> },
+  { path: "order", element: <AdminOrder /> },
 ];
 export const shopkeeperRoutes = [
   { path: "dashboard", element: <ShopkeeperDashboard /> },

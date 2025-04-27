@@ -1,108 +1,88 @@
-// actions/orderActions.js
-import axios from "axios";
-import { ORDER_CONSTANTS } from "../constants/OrderConstants";
 import axiosInstance from "../utils/config";
+import { ORDER_CONSTANTS } from "../constants/OrderConstants";
 
-// Frontend - Place Order (Action)
+//! /** ------------------- user  order action  -------------------*/
+
+// Place Order (Action)
+// access by user only
+// status :pending
 export const placeOrder = (orderData) => async (dispatch) => {
   try {
     dispatch({ type: ORDER_CONSTANTS.PLACE_ORDER.REQUEST });
-
-    // Send the order data to the backend
     const { data } = await axiosInstance.post(`/user/orders`, orderData);
     console.log(data);
-    dispatch({ type: ORDER_CONSTANTS.PLACE_ORDER.SUCCESS, payload: data }); // Successful response
+    dispatch({ type: ORDER_CONSTANTS.PLACE_ORDER.SUCCESS, payload: data });
   } catch (error) {
     console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.PLACE_ORDER.FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message, // Error handling
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
 
-// Frontend - Get My Orders (Action)
-export const getMyOrders = () => async (dispatch) => {
+// Track specific order
+export const trackOrder = (trackingId) => async (dispatch) => {
   try {
-    dispatch({ type: ORDER_CONSTANTS.GET_ALL.REQUEST });
+    dispatch({ type: ORDER_CONSTANTS.TRACK.REQUEST });
 
-    // Fetch all orders from the backend
-    const { data } = await axiosInstance.get("/auth/orders");
-    console.log("get all orders", data);
-    dispatch({ type: ORDER_CONSTANTS.GET_ALL.SUCCESS, payload: data }); // Dispatching orders data
-  } catch (error) {
-    console.log("get order error", error);
-    dispatch({
-      type: ORDER_CONSTANTS.GET_ALL.FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message, // Error handling
-    });
-  }
-};
-
-// confirm order by admin
-export const confirmOrder = (orderId) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
-
-    const { data } = await axiosInstance.put(
-      `/admin/orders/confirm/${orderId}`
-    ); // Backend route for confirming the order
-
-    dispatch({
-      type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS,
-      payload: data, // Updated order details
-    });
-  } catch (error) {
-    dispatch({
-      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-//  get all orders
-// export const getAllOrders = () => async () => {};
-// Confirm Order Ready for Pickup
-export const confirmOrderReady = (orderId) => async (dispatch) => {
-  try {
-    dispatch({ type: ORDER_CONSTANTS.CONFIRM_READY.REQUEST });
-
-    // Send the PUT request to the backend to update the order status to 'ready'
-    const { data } = await axiosInstance.put(
-      `/api/orders/shopkeeper/${orderId}/ready`
-    );
-
-    dispatch({
-      type: ORDER_CONSTANTS.CONFIRM_READY.SUCCESS,
-      payload: data, // Updated order
-    });
+    const { data } = await axiosInstance.get(`/api/order/track/${trackingId}`);
+    console.log(data);
+    dispatch({ type: ORDER_CONSTANTS.TRACK.SUCCESS, payload: data });
   } catch (error) {
     console.log(error);
     dispatch({
-      type: ORDER_CONSTANTS.CONFIRM_READY.FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      type: ORDER_CONSTANTS.TRACK.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+    // showToast(error.response?.data?.message || "Tracking failed", "error");
+  }
+};
+
+// Get My Orders (Action)
+// access by user,shopkeeper,deliveryboy
+export const getMyOrders = () => async (dispatch) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST });
+    const { data } = await axiosInstance.get("/auth/orders");
+    console.log(data);
+    dispatch({ type: ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.GET_MY_ORDERS.FAIL,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
 
-// Assign Order to Shopkeeper and Delivery Boy
+//! /** -------------------  admin  order action  -------------------*/
+// Confirm Order by Admin (Action)
+// status : confirm
+
+export const confirmOrder = (orderId) => async (dispatch) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
+    const { data } = await axiosInstance.put(
+      `/admin/orders/confirm/${orderId}`
+    );
+    console.log(data);
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+// Assign Order to Shopkeeper and Delivery Boy (Action)
+// status : assigned
 export const assignOrder =
   (orderId, shopkeeperId, deliveryBoyId) => async (dispatch) => {
     try {
       dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
-
-      // Send the PUT request to the backend to assign shopkeeper and delivery boy to the order
       const { data } = await axiosInstance.put(
         `/admin/orders/assign/${orderId}`,
         {
@@ -110,83 +90,24 @@ export const assignOrder =
           deliveryBoyId,
         }
       );
-
-      dispatch({
-        type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS,
-        payload: data, // Updated order with assigned shopkeeper and delivery boy
-      });
+      console.log(data);
+      dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
     } catch (error) {
       console.log(error);
       dispatch({
         type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
+        payload: error.response?.data?.message || error.message,
       });
     }
   };
 
-// Confirm Order Pickup by Delivery Boy
-export const confirmPickup = (orderId) => async (dispatch) => {
-  try {
-    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
-
-    // Send the PUT request to mark the order as picked up
-    const { data } = await axiosInstance.put(
-      `/api/delivery/orders/${orderId}/pickup`
-    );
-
-    dispatch({
-      type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS,
-      payload: data, // Updated order with 'picked up' status
-    });
-  } catch (error) {
-    dispatch({
-      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-// order delivered by delivery boy
-// Confirm Order Delivery by Delivery Boy
-export const confirmDelivery = (orderId) => async (dispatch) => {
-  try {
-    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
-
-    // Send the PUT request to mark the order as delivered
-    const { data } = await axiosInstance.put(
-      `/api/delivery/orders/${orderId}/deliver`
-    );
-
-    dispatch({
-      type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS,
-      payload: data, // Updated order with 'delivered' status
-    });
-  } catch (error) {
-    dispatch({
-      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
-export const getAllOrders = () => async (dispatch, getState) => {
+// Get All Orders (Action)
+export const getAllOrders = () => async (dispatch) => {
   try {
     dispatch({ type: ORDER_CONSTANTS.GET_ALL.REQUEST });
-
     const { data } = await axiosInstance.get("/admin/orders");
     console.log(data);
-    dispatch({
-      type: ORDER_CONSTANTS.GET_ALL.SUCCESS,
-      payload: { role, users: data },
-    });
+    dispatch({ type: ORDER_CONSTANTS.GET_ALL.SUCCESS, payload: data });
   } catch (error) {
     console.log(error);
     dispatch({
@@ -195,99 +116,63 @@ export const getAllOrders = () => async (dispatch, getState) => {
     });
   }
 };
-// // Create Order
-// export const createOrder = (orderData) => async (dispatch, getState) => {
-//   try {
-//     dispatch({ type: ORDER_CONSTANTS.CREATE.REQUEST });
 
-//     const { data } = await axios.post("/api/orders/place", orderData, {
-//       headers: {
-//         Authorization: `Bearer ${getState().auth.user.token}`,
-//       },
-//     });
+//! /** -------------------  shopkeeper order action  -------------------*/
 
-//     dispatch({ type: ORDER_CONSTANTS.CREATE.SUCCESS, payload: data });
-//   } catch (error) {
-//     dispatch({
-//       type: ORDER_CONSTANTS.CREATE.FAIL,
-//       payload:
-//         error.response && error.response.data.message
-//           ? error.response.data.message
-//           : error.message,
-//     });
-//   }
-// };
+// Confirm Order Ready by Shopkeeper (Action)
+// sttaus : confirmOrderReady
+export const confirmOrderReady = (orderId) => async (dispatch) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
+    const { data } = await axiosInstance.put(
+      `/api/orders/shopkeeper/${orderId}/ready`
+    );
+    console.log(data);
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+//! /** -------------------  deliveryBoy  order action  -------------------*/
 
-// // Get single order details
-// export const getOrderDetails = (orderId) => async (dispatch, getState) => {
-//   try {
-//     dispatch({ type: ORDER_CONSTANTS.GET_SINGLE.REQUEST });
+// Confirm Pickup by Delivery Boy (Action)
+// status : pickedup
+export const confirmPickup = (orderId) => async (dispatch) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
+    const { data } = await axiosInstance.put(
+      `/delivery/orders/${orderId}/pickup`
+    );
+    console.log(data);
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
 
-//     const { data } = await axios.get(`/api/orders/${orderId}`, {
-//       headers: {
-//         Authorization: `Bearer ${getState().auth.user.token}`,
-//       },
-//     });
-
-//     dispatch({ type: ORDER_CONSTANTS.GET_SINGLE.SUCCESS, payload: data });
-//   } catch (error) {
-//     dispatch({
-//       type: ORDER_CONSTANTS.GET_SINGLE.FAIL,
-//       payload:
-//         error.response && error.response.data.message
-//           ? error.response.data.message
-//           : error.message,
-//     });
-//   }
-// };
-
-// // Track order(user)
-// export const trackOrder = (orderId) => async (dispatch, getState) => {
-//   try {
-//     dispatch({ type: ORDER_CONSTANTS.TRACK.REQUEST });
-
-//     const { data } = await axios.get(`/api/orders/${orderId}/track`, {
-//       headers: {
-//         Authorization: `Bearer ${getState().auth.user.token}`,
-//       },
-//     });
-
-//     dispatch({ type: ORDER_CONSTANTS.TRACK.SUCCESS, payload: data });
-//   } catch (error) {
-//     dispatch({
-//       type: ORDER_CONSTANTS.TRACK.FAIL,
-//       payload:
-//         error.response && error.response.data.message
-//           ? error.response.data.message
-//           : error.message,
-//     });
-//   }
-// };
-
-// // Update order status
-// export const updateOrderStatus =
-//   (orderId, status) => async (dispatch, getState) => {
-//     try {
-//       dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
-
-//       const { data } = await axios.put(
-//         `/api/orders/${orderId}/status`,
-//         { status },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${getState().auth.user.token}`,
-//           },
-//         }
-//       );
-
-//       dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
-//     } catch (error) {
-//       dispatch({
-//         type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
-//         payload:
-//           error.response && error.response.data.message
-//             ? error.response.data.message
-//             : error.message,
-//       });
-//     }
-//   };
+// Confirm Delivery by Delivery Boy (Action)
+// status :delivered
+export const confirmDelivery = (orderId) => async (dispatch) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.REQUEST });
+    const { data } = await axiosInstance.put(
+      `/delivery/orders/${orderId}/deliver`
+    );
+    console.log(data);
+    dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};

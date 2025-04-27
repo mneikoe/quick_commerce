@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import AdminLayout from "./components/common/layout/AdminLayout";
+// import AdminLayout from "./components/common/layout/AdminLayout";
 import ProtectedRoute from "./components/common/protectedRoute";
 
 import {
@@ -44,16 +44,21 @@ function App() {
           ))}
         </Route>
 
-        {/* Admin Routes */}
-        {/* <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            {adminRoutes.map(({ path, element }, i) => (
-              <Route key={i} path={path} element={element} />
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<Layout />}>
+            {adminRoutes.map(({ path, element }, index) => (
+              <Route key={index} path={path} element={element} />
             ))}
           </Route>
-        </Route> */}
-
-        <Route
+        </Route>
+        <Route element={<ProtectedRoute allowedRoles={["shopkeeper"]} />}>
+          <Route path="/shopkeeper" element={<Layout />}>
+            {shopkeeperRoutes.map(({ path, element }, index) => (
+              <Route key={index} path={path} element={element} />
+            ))}
+          </Route>
+        </Route>
+        {/* <Route
           element={
             <ProtectedRoute
               allowedRoles={["admin", "user", "shopkeeper", "deliveryboy"]}
@@ -82,7 +87,7 @@ function App() {
               <Route key={index} path={path} element={element} />
             ))}
           </Route>
-        </Route>
+        </Route> */}
 
         {/* common routes */}
         {commonRoutes.map(({ path, element }, i) => (

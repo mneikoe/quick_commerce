@@ -3,7 +3,7 @@ import USER from "../constants/UserConstants";
 
 // User List Reducer
 export const userListReducer = (
-  state = { shopkeeper: [], deliveryboy: [] },
+  state = { users: [], loading: false },
   action
 ) => {
   switch (action.type) {
@@ -14,7 +14,7 @@ export const userListReducer = (
       return {
         ...state,
         loading: false,
-        [action.payload.role]: action.payload.users,
+        users: action.payload,
       };
 
     case USER.LIST.FAIL:
