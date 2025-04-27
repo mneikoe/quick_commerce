@@ -10,6 +10,22 @@ const initialState = {
   success: false,
 };
 
+export const getAllOrdersReducer = (
+  state = { orders: [], loading: false, error: null },
+  action
+) => {
+  switch (action.type) {
+    case ORDER_CONSTANTS.GET_ALL.REQUEST:
+      return { ...state, loading: true };
+    case ORDER_CONSTANTS.GET_ALL.SUCCESS:
+      return { ...state, loading: false, orders: action.payload, error: null };
+    case ORDER_CONSTANTS.GET_ALL.FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 // Order reducer
 export const orderReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -24,12 +40,12 @@ export const orderReducer = (state = initialState, action) => {
       return { ...state, success: false };
 
     // --- Get All Orders ---
-    case ORDER_CONSTANTS.GET_ALL.REQUEST:
-      return { ...state, loading: true };
-    case ORDER_CONSTANTS.GET_ALL.SUCCESS:
-      return { ...state, loading: false, orders: action.payload };
-    case ORDER_CONSTANTS.GET_ALL.FAIL:
-      return { ...state, loading: false, error: action.payload };
+    // case ORDER_CONSTANTS.GET_ALL.REQUEST:
+    //   return { ...state, loading: true };
+    // case ORDER_CONSTANTS.GET_ALL.SUCCESS:
+    //   return { ...state, loading: false, orders: action.payload };
+    // case ORDER_CONSTANTS.GET_ALL.FAIL:
+    //   return { ...state, loading: false, error: action.payload };
 
     // --- Get Single Order ---
     case ORDER_CONSTANTS.GET_SINGLE.REQUEST:

@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
   cart: cartReducer.cartReducer,
 
   orders: orderReducer.orderReducer,
+  allOrders: orderReducer.getAllOrdersReducer,
   menu: menuReducer.menuReducer,
   category: categoryReducer.categoryReducer,
 });

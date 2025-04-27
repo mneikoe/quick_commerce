@@ -4,8 +4,16 @@ import { Constants } from "../constants/constants.js"; // Assuming you have a co
 const orderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    shopkeeper: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    deliveryBoy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    shopkeeper: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+    deliveryBoy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
     items: [
       {
         menuItem: {

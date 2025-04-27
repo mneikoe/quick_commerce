@@ -12,31 +12,47 @@ const AdminOrder = () => {
   const dispatch = useDispatch();
 
   const {
-    orders,
+    orders: allOrders,
+    loading: allOrdersLoading,
+    error: allOrdersError,
+  } = useSelector((state) => state.allOrders);
 
-    order,
-    loading: ordersLoading,
-    error: ordersError,
-  } = useSelector((state) => state.orders);
-  console.log(order);
   const {
     users,
     loading: usersLoading,
     error: usersError,
   } = useSelector((state) => state.userList);
-  console.log(users);
-  console.log(usersError);
-  console.log(ordersError);
+  console.log(usersLoading, usersError);
   const [shopkeeperId, setShopkeeperId] = useState("");
   const [deliveryBoyId, setDeliveryBoyId] = useState("");
+  const { currentUser, token } = useSelector((s) => s.auth);
 
-  // Fetch orders and users when the component mounts
+  const shopkeepers = users?.users?.filter(
+    (user) => user.role === "shopkeeper"
+  );
+  const deliveryBoys = users?.users?.filter(
+    (user) => user.role === "deliveryBoy"
+  );
   useEffect(() => {
     dispatch(getAllOrders());
     dispatch(listUsers());
   }, [dispatch]);
+  useEffect(() => {
+    console.log("--- Admin Orders Page Logs ---");
+
+    console.log("All orders fetched:", allOrders);
+    console.log("All orders loading:", allOrdersLoading);
+    console.log("All orders error:", allOrdersError);
+    console.log("Current User:", currentUser);
+    console.log("Auth Token:", token);
+    console.log("Users list:", users?.users);
+    console.log("Shopkeepers:", shopkeepers);
+    console.log("Delivery Boys:", deliveryBoys);
+    console.log("-------------------------------");
+  }, [, allOrders, users, shopkeepers, deliveryBoys]);
 
   const handleConfirmOrder = async (orderId) => {
+    console.log(orderId);
     try {
       await dispatch(confirmOrder(orderId));
       showToast("Order Confirmed Successfully!", "success");
@@ -44,7 +60,7 @@ const AdminOrder = () => {
       showToast("Failed to Confirm Order!", "error");
     }
   };
-
+  // handleConfirmOrder();
   const handleAssignOrder = async (orderId) => {
     if (!shopkeeperId || !deliveryBoyId) {
       return showToast(
@@ -62,15 +78,12 @@ const AdminOrder = () => {
     }
   };
 
-  if (ordersLoading || usersLoading) return <p>Loading...</p>;
+  if (allOrdersLoading || usersLoading) return <p>Loading...</p>;
 
-  if (ordersError || usersError) {
-    showToast(ordersError || usersError, "error");
-    return <p>Error: {ordersError || usersError}</p>;
+  if (allOrdersError) {
+    showToast(allOrdersError, "error");
+    return <p>Error: {allOrdersError}</p>;
   }
-
-  const shopkeepers = users.filter((user) => user.role === "shopkeeper");
-  const deliveryBoys = users.filter((user) => user.role === "deliveryBoy");
 
   return (
     <div className="p-4">
@@ -112,11 +125,11 @@ const AdminOrder = () => {
 
       <div>
         <h2 className="mb-2 text-xl font-semibold">Orders</h2>
-        {orders.length === 0 ? (
+        {allOrders.length === 0 ? (
           <p>No orders found.</p>
         ) : (
           <ul className="space-y-4">
-            {orders.map((order) => (
+            {allOrders.map((order) => (
               <li key={order._id} className="p-4 border rounded">
                 <div className="flex items-center justify-between">
                   <span>Order ID: {order._id}</span>

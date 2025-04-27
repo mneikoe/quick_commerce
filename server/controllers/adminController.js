@@ -159,7 +159,7 @@ export const getAllOrders = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error("Error fetching all orders:", error);
     res.status(500);
-    throw new Error("Failed to fetch orders. Please try again later.");
+    throw new Error("Failed to fetch orders. Please try again later.", error);
   }
 });
 

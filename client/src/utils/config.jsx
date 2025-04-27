@@ -7,6 +7,7 @@ const axiosInstance = axios.create({
 // Add a request interceptor
 axiosInstance.interceptors.request.use((config) => {
   let token = localStorage.getItem("token");
+  console.log("toekn from config", token);
 
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`; // <- "Bearer " add karo
