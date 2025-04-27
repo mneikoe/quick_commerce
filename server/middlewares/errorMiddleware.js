@@ -1,5 +1,5 @@
 // middlewares/errorMiddleware.js
-import  {ErrorHandler}  from "../utils/errorHandler.js";
+import { ErrorHandler } from "../utils/errorHandler.js";
 
 const errorHandler = (err, req, res, next) => {
   // Ensure that the error is an instance of ErrorHandler

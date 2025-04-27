@@ -112,6 +112,7 @@ export const getAllOrders = async (req, res) => {
 
     res.json(orders);
   } catch (err) {
+    console.error("Error fetching orders:", error);
     res.status(500).json({ message: err.message });
   }
 };

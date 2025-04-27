@@ -8,26 +8,46 @@ import { ErrorHandler } from "../utils/errorHandler.js";
 import APIFeatures from "../utils/apiFeatures.js";
 import Category from "../models/Category.js";
 // import { ErrorHandler } from "../middlewares/errorMiddleware.js";
-
 // @desc    Get all users (admin only)
 export const getAllUsers = asyncHandler(async (req, res) => {
-  const features = new APIFeatures(User.find(), req.query)
-    .search(["name", "email"])
-    .filter()
-    .dateRange("createdAt")
-    .sort()
-    .limitFields()
-    .paginate();
+  try {
+    // Initialize APIFeatures with the query parameters
+    const features = new APIFeatures(User.find(), req.query)
+      .search(["name", "email", "role"])
+      .filter()
+      .dateRange("createdAt")
+      .sort();
 
-  const users = await features.query;
-  const total = await User.countDocuments();
+    // Handle multiple roles if provided in the request
+    if (req.query.role) {
+      let roles = req.query.role;
+      if (!Array.isArray(roles)) {
+        roles = roles.split(",");
+      }
+      features.query = features.query.find({ role: { $in: roles } });
+    }
 
-  res.json({
-    success: true,
-    total,
-    count: users.length,
-    users,
-  });
+    // Fetch the users based on the built query features
+    const users = await features.query;
+
+    // Fetch the total count of users in the database
+    const total = await User.countDocuments();
+
+    // Send the response with the users and count information
+    res.json({
+      success: true,
+      total,
+      count: users.length,
+      users,
+    });
+  } catch (error) {
+    // Handle any errors that occur during the query process
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching users, please try again later.",
+    });
+  }
 });
 
 // @desc    Verify user
@@ -48,47 +68,84 @@ export const verifyUser = asyncHandler(async (req, res) => {
 
 // @desc    Confirm order
 // @access role:admin
-export const confirmOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findByIdAndUpdate(
-    req.params.orderId,
-    { status: Constants.ORDER_STATUS.CONFIRMED },
-    { new: true }
-  );
-  console.log(ErrorHandler);
+// @desc    Confirm order
+// @access  Admin only
+export const confirmOrder = asyncHandler(async (req, res, next) => {
+  try {
+    console.log("User confirming order:", req.user);
 
-  if (!order) {
-    throw new ErrorHandler("Order not found", 404);
+    // Find and update the order status
+    const order = await Order.findByIdAndUpdate(
+      req.params.orderId,
+      { status: Constants.ORDER_STATUS.CONFIRMED },
+      { new: true }
+    );
+
+    if (!order) {
+      // Handle case when order is not found
+      return next(new ErrorHandler("Order not found", 404));
+    }
+
+    // Emit the real-time update via Socket.io
+    req.io.emit("orderUpdate", order);
+
+    // Send the response with the updated order
+    res.json({
+      success: true,
+      message: "Order confirmed successfully",
+      order,
+    });
+  } catch (error) {
+    console.error("Error confirming order:", error);
+    return next(new ErrorHandler("Error while confirming order.", 500));
   }
-
-  req.io.emit("orderUpdate", order);
-
-  res.json(order);
 });
 
 // @desc    Assign order to shopkeeper and delivery boy
-export const assignOrder = asyncHandler(async (req, res) => {
-  const { shopkeeperId, deliveryBoyId } = req.body;
+// @access  Admin only
+export const assignOrder = asyncHandler(async (req, res, next) => {
+  try {
+    const { shopkeeperId, deliveryBoyId } = req.body;
 
-  const order = await Order.findByIdAndUpdate(
-    req.params.orderId,
-    {
-      status: Constants.ORDER_STATUS.ASSIGNED,
-      shopkeeper: shopkeeperId,
-      deliveryBoy: deliveryBoyId,
-      assignedBy: req.user.id,
-    },
-    { new: true }
-  ).populate("shopkeeper deliveryBoy");
+    console.log("User assigning order:", req.user);
 
-  if (!order) {
-    throw new ErrorHandler("Order not found", 404);
+    // Validate input parameters
+    if (!shopkeeperId || !deliveryBoyId) {
+      return next(
+        new ErrorHandler("Shopkeeper and Delivery Boy are required", 400)
+      );
+    }
+
+    // Update the order with assigned shopkeeper and delivery boy
+    const order = await Order.findByIdAndUpdate(
+      req.params.orderId,
+      {
+        status: Constants.ORDER_STATUS.ASSIGNED,
+        shopkeeper: shopkeeperId,
+        deliveryBoy: deliveryBoyId,
+        assignedBy: req.user.id,
+      },
+      { new: true }
+    ).populate("shopkeeper deliveryBoy");
+
+    if (!order) {
+      return next(new ErrorHandler("Order not found", 404));
+    }
+
+    // Emit the real-time update via Socket.io
+    req.io.emit("orderUpdate", order);
+
+    // Send the response with the updated order
+    res.json({
+      success: true,
+      message: "Order assigned successfully",
+      order,
+    });
+  } catch (error) {
+    console.error("Error assigning order:", error);
+    return next(new ErrorHandler("Error while assigning order.", 500));
   }
-
-  req.io.emit("orderUpdate", order);
-
-  res.json(order);
 });
-
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private (Admin/User - depends on role)
@@ -97,9 +154,10 @@ export const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find()
       .populate("user shopkeeper deliveryBoy")
       .sort("-createdAt");
-
+    // console.log(orders);
     res.json(orders);
   } catch (error) {
+    console.error("Error fetching all orders:", error);
     res.status(500);
     throw new Error("Failed to fetch orders. Please try again later.");
   }

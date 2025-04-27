@@ -13,6 +13,15 @@ class APIFeatures {
       };
       this.query = this.query.find(keyword);
     }
+
+    if (this.queryString.role) {
+      let roles = this.queryString.role;
+      if (!Array.isArray(roles)) {
+        roles = roles.split(",");
+      }
+      this.query = this.query.find({ role: { $in: roles } });
+    }
+
     return this;
   }
 

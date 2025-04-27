@@ -151,7 +151,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get orders based on user role (Shopkeeper, User, or DeliveryBoy)
-// @route   GET /api/orders/myOrders
+// @route   GET /auth/orders
 // @access  Private
 export const getMyOrders = async (req, res) => {
   try {
@@ -182,5 +182,3 @@ export const getMyOrders = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-
