@@ -14,6 +14,7 @@ export const ORDER_CONSTANTS = {
     SUCCESS: "ORDER_GET_ALL_SUCCESS",
     FAIL: "ORDER_GET_ALL_FAIL",
   },
+  CLEAR_ALL_ORDERS: "CLEAR_ALL_ORDERS",
 
   // Get My Orders
   GET_MY_ORDERS: {

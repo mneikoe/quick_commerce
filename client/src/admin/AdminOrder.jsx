@@ -7,6 +7,7 @@ import {
 } from "../actions/OrderAction";
 import { listUsers } from "../actions/userAction";
 import { showToast } from "../components/ui/ShowToast";
+import { clearAllOrders } from "../reducer/OrderReducer";
 
 const AdminOrder = () => {
   const dispatch = useDispatch();
@@ -16,63 +17,52 @@ const AdminOrder = () => {
     loading: allOrdersLoading,
     error: allOrdersError,
   } = useSelector((state) => state.allOrders);
-
   const {
     users,
     loading: usersLoading,
     error: usersError,
   } = useSelector((state) => state.userList);
-  console.log(usersLoading, usersError);
-  const [shopkeeperId, setShopkeeperId] = useState("");
-  const [deliveryBoyId, setDeliveryBoyId] = useState("");
   const { currentUser, token } = useSelector((s) => s.auth);
 
-  const shopkeepers = users?.users?.filter(
-    (user) => user.role === "shopkeeper"
-  );
-  const deliveryBoys = users?.users?.filter(
-    (user) => user.role === "deliveryBoy"
-  );
+  const [shopkeeperId, setShopkeeperId] = useState("");
+  const [deliveryBoyId, setDeliveryBoyId] = useState("");
+  const [selectedOrderId, setSelectedOrderId] = useState(null); // Kis order ko assign karna hai
+
+  const shopkeepers =
+    users?.users?.filter((user) => user.role === "shopkeeper") || [];
+  const deliveryBoys =
+    users?.users?.filter((user) => user.role === "deliveryboy") || [];
+  // console.log(deliveryBoys);
   useEffect(() => {
+    dispatch(clearAllOrders());
     dispatch(getAllOrders());
     dispatch(listUsers());
   }, [dispatch]);
-  useEffect(() => {
-    console.log("--- Admin Orders Page Logs ---");
-
-    console.log("All orders fetched:", allOrders);
-    console.log("All orders loading:", allOrdersLoading);
-    console.log("All orders error:", allOrdersError);
-    console.log("Current User:", currentUser);
-    console.log("Auth Token:", token);
-    console.log("Users list:", users?.users);
-    console.log("Shopkeepers:", shopkeepers);
-    console.log("Delivery Boys:", deliveryBoys);
-    console.log("-------------------------------");
-  }, [, allOrders, users, shopkeepers, deliveryBoys]);
 
   const handleConfirmOrder = async (orderId) => {
-    console.log(orderId);
     try {
       await dispatch(confirmOrder(orderId));
       showToast("Order Confirmed Successfully!", "success");
+      dispatch(getAllOrders()); // Taaki fresh data aa jaye
     } catch (error) {
       showToast("Failed to Confirm Order!", "error");
     }
   };
-  // handleConfirmOrder();
-  const handleAssignOrder = async (orderId) => {
-    if (!shopkeeperId || !deliveryBoyId) {
+
+  const handleAssignOrder = async () => {
+    if (!shopkeeperId || !deliveryBoyId || !selectedOrderId) {
       return showToast(
-        "Please select both Shopkeeper and Delivery Boy!",
+        "Please select Order, Shopkeeper, and Delivery Boy!",
         "error"
       );
     }
     try {
-      await dispatch(assignOrder(orderId, shopkeeperId, deliveryBoyId));
+      await dispatch(assignOrder(selectedOrderId, shopkeeperId, deliveryBoyId));
       showToast("Order Assigned Successfully!", "success");
       setShopkeeperId("");
       setDeliveryBoyId("");
+      setSelectedOrderId(null);
+      dispatch(getAllOrders()); // Refresh karne ke liye
     } catch (error) {
       showToast("Failed to Assign Order!", "error");
     }
@@ -89,67 +79,113 @@ const AdminOrder = () => {
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Admin Orders</h1>
 
-      <div className="mb-6">
-        <h2 className="mb-2 text-xl font-semibold">
-          Assign Shopkeeper and Delivery Boy
-        </h2>
-
-        <div className="flex gap-4 mb-4">
-          <select
-            className="p-2 border rounded"
-            value={shopkeeperId}
-            onChange={(e) => setShopkeeperId(e.target.value)}
-          >
-            <option value="">Select Shopkeeper</option>
-            {shopkeepers.map((shopkeeper) => (
-              <option key={shopkeeper._id} value={shopkeeper._id}>
-                {shopkeeper.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="p-2 border rounded"
-            value={deliveryBoyId}
-            onChange={(e) => setDeliveryBoyId(e.target.value)}
-          >
-            <option value="">Select Delivery Boy</option>
-            {deliveryBoys.map((deliveryBoy) => (
-              <option key={deliveryBoy._id} value={deliveryBoy._id}>
-                {deliveryBoy.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
+      {/* Pending Orders Section */}
       <div>
-        <h2 className="mb-2 text-xl font-semibold">Orders</h2>
-        {allOrders.length === 0 ? (
-          <p>No orders found.</p>
+        <h2 className="mb-2 text-xl font-semibold">Pending Orders</h2>
+        {allOrders.filter((order) => order.status === "pending").length ===
+        0 ? (
+          <p>No pending orders.</p>
         ) : (
           <ul className="space-y-4">
-            {allOrders.map((order) => (
-              <li key={order._id} className="p-4 border rounded">
-                <div className="flex items-center justify-between">
+            {allOrders
+              .filter((order) => order.status === "pending")
+              .map((order) => (
+                <li
+                  key={order._id}
+                  className="flex items-center justify-between p-4 border rounded"
+                >
                   <span>Order ID: {order._id}</span>
-                  <div className="flex gap-2">
-                    <button
-                      className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
-                      onClick={() => handleConfirmOrder(order._id)}
-                    >
-                      Confirm
-                    </button>
-                    <button
-                      className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-                      onClick={() => handleAssignOrder(order._id)}
-                    >
-                      Assign
-                    </button>
+                  <button
+                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                    onClick={() => handleConfirmOrder(order._id)}
+                  >
+                    Confirm
+                  </button>
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Confirmed Orders Section */}
+      <div className="mt-8">
+        <h2 className="mb-2 text-xl font-semibold">
+          Confirmed Orders (Assign Shopkeeper & DeliveryBoy)
+        </h2>
+        {allOrders.filter((order) => order.status === "confirmed").length ===
+        0 ? (
+          <p>No confirmed orders to assign.</p>
+        ) : (
+          <ul className="space-y-4">
+            {allOrders
+              .filter((order) => order.status === "confirmed")
+              .map((order) => (
+                <li key={order._id} className="p-4 border rounded">
+                  <div className="flex flex-col gap-2">
+                    <span>Order ID: {order._id}</span>
+
+                    <div className="flex gap-4">
+                      <select
+                        className="p-2 border rounded"
+                        value={shopkeeperId}
+                        onChange={(e) => {
+                          setShopkeeperId(e.target.value);
+                          setSelectedOrderId(order._id);
+                        }}
+                      >
+                        <option value="">Select Shopkeeper</option>
+                        {shopkeepers.map((shopkeeper) => (
+                          <option key={shopkeeper._id} value={shopkeeper._id}>
+                            {shopkeeper.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        className="p-2 border rounded"
+                        value={deliveryBoyId}
+                        onChange={(e) => {
+                          setDeliveryBoyId(e.target.value);
+                          setSelectedOrderId(order._id);
+                        }}
+                      >
+                        <option value="">Select Delivery Boy</option>
+                        {deliveryBoys.map((deliveryBoy) => (
+                          <option key={deliveryBoy._id} value={deliveryBoy._id}>
+                            {deliveryBoy.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                        onClick={handleAssignOrder}
+                      >
+                        Assign
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Assigned Orders Section */}
+      <div className="mt-8">
+        <h2 className="mb-2 text-xl font-semibold">Assigned Orders</h2>
+        {allOrders.filter((order) => order.status === "assigned").length ===
+        0 ? (
+          <p>No assigned orders.</p>
+        ) : (
+          <ul className="space-y-4">
+            {allOrders
+              .filter((order) => order.status === "assigned")
+              .map((order) => (
+                <li key={order._id} className="p-4 border rounded">
+                  <span>Order ID: {order._id} (Assigned)</span>
+                </li>
+              ))}
           </ul>
         )}
       </div>

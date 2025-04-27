@@ -21,6 +21,8 @@ export const getAllOrdersReducer = (
       return { ...state, loading: false, orders: action.payload, error: null };
     case ORDER_CONSTANTS.GET_ALL.FAIL:
       return { ...state, loading: false, error: action.payload };
+    case ORDER_CONSTANTS.CLEAR_ALL_ORDERS:
+      return { ...state, orders: [] };
     default:
       return state;
   }
@@ -118,8 +120,16 @@ export const orderReducer = (state = initialState, action) => {
       };
     case ORDER_CONSTANTS.PLACE_ORDER.FAIL:
       return { ...state, loading: false, error: action.payload };
+    case ORDER_CONSTANTS.CLEAR_ALL_ORDERS:
+      return { ...state, orders: [], order: null, loading: false, error: null };
 
     default:
       return state;
   }
+};
+
+// export const CLEAR_ALL_ORDERS = "CLEAR_ALL_ORDERS";
+
+export const clearAllOrders = () => (dispatch) => {
+  dispatch({ type: ORDER_CONSTANTS.CLEAR_ALL_ORDERS });
 };
