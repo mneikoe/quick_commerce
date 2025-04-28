@@ -8,17 +8,17 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
     (state) => state.auth || {}
   );
 
-  console.log("current user role", currentUser?.role);
-  console.log("Allowed Roles:", allowedRoles);
-  console.log(typeof currentUser?.role); // should be 'string'
-  console.log(allowedRoles.map((role) => typeof role)); // should all be 'string'
+  // console.log("current user role", currentUser?.role);
+  // console.log("Allowed Roles:", allowedRoles);
+  // console.log(typeof currentUser?.role); // should be 'string'
+  // console.log(allowedRoles.map((role) => typeof role)); // should all be 'string'
 
-  console.log(error);
+  // console.log(error);
 
-  // If there's an error, render the ErrorPage component with the error
-  if (error) {
-    return <ErrorPage error={error} />;
-  }
+  // // If there's an error, render the ErrorPage component with the error
+  // if (error) {
+  //   return <ErrorPage error={error} />;
+  // }
 
   // Show loading indicator while fetching user data
   if (loading) return <Loader />;

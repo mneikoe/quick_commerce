@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/common/protectedRoute";
 import {
   adminRoutes,
   commonRoutes,
+  deliveryRoutes,
   publicRoutes,
   shopkeeperRoutes,
 } from "./routes";
@@ -54,6 +55,13 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={["shopkeeper"]} />}>
           <Route path="/shopkeeper" element={<Layout />}>
             {shopkeeperRoutes.map(({ path, element }, index) => (
+              <Route key={index} path={path} element={element} />
+            ))}
+          </Route>
+        </Route>
+        <Route element={<ProtectedRoute allowedRoles={["deliveryboy"]} />}>
+          <Route path="/deliveryboy" element={<Layout />}>
+            {deliveryRoutes.map(({ path, element }, index) => (
               <Route key={index} path={path} element={element} />
             ))}
           </Route>

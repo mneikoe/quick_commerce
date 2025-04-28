@@ -48,12 +48,12 @@ const navItems = {
   deliveryboy: [
     {
       label: "Dashboard",
-      path: "/delivery/dashboard",
+      path: "/deliveryboy/dashboard",
       icon: <DashboardIcon />,
     },
     {
-      label: "Deliveries",
-      path: "/delivery/orders",
+      label: "Orders",
+      path: "/deliveryboy/myOrders",
       icon: <ShoppingCartIcon />,
     },
   ],

@@ -16,7 +16,7 @@ deliveryRoutes.use(protect);
 deliveryRoutes.use(authorizeRoles(Constants.USER.DELIVERYBOY));
 
 // Routes for delivery boy actions
-deliveryRoutes.get("/orders", getMyOrders);
+deliveryRoutes.get("/orders/myOrders", getMyOrders);
 deliveryRoutes.put("/orders/:orderId/pickup", confirmPickup);
 deliveryRoutes.put("/orders/:orderId/deliver", confirmDelivery);
 deliveryRoutes.post("/location", updateLocation);

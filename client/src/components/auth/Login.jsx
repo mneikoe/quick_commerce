@@ -33,7 +33,7 @@ const Login = () => {
       const userData = await dispatch(
         loginUser(formData.email, formData.password)
       );
-      console.log(userData); // Now this will log the resolved user data
+      // console.log(userData); // Now this will log the resolved user data
       showToast("Login successfully", "success");
 
       // Switch based on role

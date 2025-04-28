@@ -6,9 +6,9 @@ export const authorizeRoles = (allowedRoles) => {
   return (req, res, next) => {
     try {
       // Debugging: check roles and user details
-      console.log("Allowed roles:", allowedRoles); // what roles are allowed
-      console.log("Admin role in Constants:", Constants.USER.ADMIN); // Assuming Constants.USER.ADMIN is defined
-      console.log("Current user role:", req.user?.role);
+      // console.log("Allowed roles:", allowedRoles); // what roles are allowed
+      // console.log("Admin role in Constants:", Constants.USER.ADMIN); // Assuming Constants.USER.ADMIN is defined
+      // console.log("Current user role:", req.user?.role);
 
       // Check if the user has a valid role and if it's included in allowed roles
       if (!req.user || !allowedRoles.includes(req.user.role)) {

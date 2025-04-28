@@ -33,13 +33,13 @@ export const verifyUser = (userId) => async (dispatch) => {
     dispatch({ type: USER.VERIFY.REQUEST });
 
     const { data } = await axiosInstance.patch(`/admin/verify/${userId}`);
-    console.info("verify user", data);
+    // console.info("verify user", data);
     dispatch({
       type: USER.VERIFY.SUCCESS,
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     dispatch({
       type: USER.VERIFY.FAIL,
       payload: error.response?.data?.message || error.message,

@@ -29,11 +29,12 @@ import {
 
 const AdminCategory = () => {
   const dispatch = useDispatch();
-  const { categories, loading } = useSelector((state) => state.category);
-  console.log(categories);
+  const { categories, loading, error } = useSelector((state) => state.category);
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [editId, setEditId] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   useEffect(() => {
     dispatch(getAllCategories());
@@ -65,11 +66,23 @@ const AdminCategory = () => {
     closeModal();
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      dispatch(deleteCategory(id));
+  const handleDelete = (category) => {
+    setCategoryToDelete(category);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setCategoryToDelete(null);
+  };
+
+  const confirmDelete = () => {
+    if (categoryToDelete) {
+      dispatch(deleteCategory(categoryToDelete._id));
+      closeDeleteModal();
     }
   };
+
   if (loading) return <Loader />;
   return (
     <Box className="p-4">
@@ -118,7 +131,7 @@ const AdminCategory = () => {
                     </Tooltip>
                     <Tooltip title="Delete">
                       <IconButton
-                        onClick={() => handleDelete(category._id)}
+                        onClick={() => handleDelete(category)}
                         color="error"
                       >
                         <Delete />
@@ -132,6 +145,7 @@ const AdminCategory = () => {
         </Table>
       </Paper>
 
+      {/* Edit / Add Category Modal */}
       <Dialog open={modalOpen} onClose={closeModal} fullWidth maxWidth="sm">
         <DialogTitle>{editId ? "Edit Category" : "Add Category"}</DialogTitle>
         <DialogContent>
@@ -160,6 +174,24 @@ const AdminCategory = () => {
           <Button onClick={closeModal}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
             {editId ? "Update" : "Create"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteModalOpen} onClose={closeDeleteModal}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this category?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteModal} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDelete} variant="contained" color="error">
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

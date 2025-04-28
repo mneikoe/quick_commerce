@@ -13,8 +13,8 @@ export const loginUser = (email, password) => async (dispatch) => {
     const { user, token } = response.data; // Destructuring user and token from response
 
     // Save token to localStorage (if needed)
-    localStorage.setItem("token", token);
-    console.log(token);
+    // localStorage.setItem("token", token);
+    // console.log(token);
     // Dispatch success action to update the state with the user and token
     dispatch({
       type: USER.LOGIN.SUCCESS,
@@ -47,14 +47,14 @@ export const registerUser =
       const { user, token } = response.data;
       localStorage.setItem("token", token);
       // console.log(response);
-      console.log(token, user);
+      // console.log(token, user);
       dispatch({
         type: USER.REGISTER.SUCCESS,
         payload: { user, token },
       });
       return { user, token };
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||

@@ -29,6 +29,8 @@ const rootReducer = combineReducers({
 
   orders: orderReducer.orderReducer,
   allOrders: orderReducer.getAllOrdersReducer,
+  getMyOrders: orderReducer.getMyOrdersReducer,
+  deliveryBoyOrders: orderReducer.deliveryBoyOrdersReducer,
   menu: menuReducer.menuReducer,
   category: categoryReducer.categoryReducer,
 });

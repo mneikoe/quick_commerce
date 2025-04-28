@@ -179,6 +179,7 @@ export const getMyOrders = async (req, res) => {
     console.log(orders);
     res.json(orders);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };

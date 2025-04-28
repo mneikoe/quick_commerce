@@ -20,6 +20,7 @@ import Loader from "../components/ui/Loader";
 import { format } from "date-fns";
 import { listUsers, verifyUser } from "../actions/userAction";
 import NoData from "../components/ui/NoData";
+import { showToast } from "../components/ui/ShowToast";
 
 const AdminUsers = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const AdminUsers = () => {
 
   const handleVerify = async (userId) => {
     await dispatch(verifyUser(userId));
+    showToast("verified user successfully", "success");
     dispatch(listUsers());
   };
 

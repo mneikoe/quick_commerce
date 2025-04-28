@@ -10,39 +10,25 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { getMyOrders } from "../actions/OrderAction";
-import { useSelector } from "react-redux";
+import {
+  confirmOrderReady,
+  getAllOrders,
+  getMyOrders,
+} from "../actions/OrderAction";
+import { useDispatch, useSelector } from "react-redux";
+import Constants from "../constants/Constants";
 // import axios from "axios";
 
 const ShopkeeperOrders = () => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { orders: getorders } = useSelector((state) => state.orders);
-  //   const fetchOrders = async () => {
-  //     try {
-  //       const res = await axios.get("/api/orders/shopkeeper/myorders");
-  //       setOrders(res.data);
-  //     } catch (error) {
-  //       console.error("Error fetching shopkeeper orders:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  // const [orders, setOrders] = useState([]);
 
-  //   const markOrderReady = async (orderId) => {
-  //     try {
-  //       const res = await axios.put(`/api/orders/shopkeeper/${orderId}/ready`);
-  //       setOrders((prevOrders) =>
-  //         prevOrders.map((order) => (order._id === orderId ? res.data : order))
-  //       );
-  //     } catch (err) {
-  //       console.error("Error marking order as ready", err);
-  //     }
-  //   };
+  const { orders, loading, error } = useSelector((state) => state.getMyOrders);
+  const dispatch = useDispatch();
+  console.log(orders, loading, error);
 
   useEffect(() => {
-    getMyOrders();
-  }, []);
+    dispatch(getMyOrders());
+  }, [dispatch]);
 
   return (
     <Box className="p-4">
@@ -65,8 +51,8 @@ const ShopkeeperOrders = () => {
               <TableRow>
                 <TableCell colSpan={5}>Loading...</TableCell>
               </TableRow>
-            ) : getorders.length ? (
-              getorders.map((order) => (
+            ) : orders.length ? (
+              orders.map((order) => (
                 <TableRow key={order._id}>
                   <TableCell>{order.user?.name || "N/A"}</TableCell>
                   <TableCell>
@@ -75,15 +61,16 @@ const ShopkeeperOrders = () => {
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{order.items?.length || 0}</TableCell>
                   <TableCell align="right">
-                    {order.status !== "ready" && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => markOrderReady(order._id)}
-                      >
-                        Mark Ready
-                      </Button>
-                    )}
+                    <Button
+                      variant="contained"
+                      color="success"
+                      disabled={order.status === Constants.ORDER_STATUS.READY}
+                      onClick={() => dispatch(confirmOrderReady(order._id))}
+                    >
+                      {order.status === Constants.ORDER_STATUS.READY
+                        ? "Already Ready"
+                        : "Mark Ready"}
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))

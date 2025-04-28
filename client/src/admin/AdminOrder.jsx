@@ -32,18 +32,26 @@ const AdminOrder = () => {
     users?.users?.filter((user) => user.role === "shopkeeper") || [];
   const deliveryBoys =
     users?.users?.filter((user) => user.role === "deliveryboy") || [];
-  // console.log(deliveryBoys);
+
   useEffect(() => {
     dispatch(clearAllOrders());
     dispatch(getAllOrders());
     dispatch(listUsers());
+
+    // Set interval to fetch new orders every 5 seconds (5000 ms)
+     const intervalId = setInterval(() => {
+       dispatch(getAllOrders()); // Fetch orders after a fixed interval
+     }, 5000);
+
+     // Cleanup interval on component unmount to prevent memory leaks
+     return () => clearInterval(intervalId);
   }, [dispatch]);
 
   const handleConfirmOrder = async (orderId) => {
     try {
       await dispatch(confirmOrder(orderId));
       showToast("Order Confirmed Successfully!", "success");
-      dispatch(getAllOrders()); // Taaki fresh data aa jaye
+      dispatch(getAllOrders()); // Refresh karne ke liye
     } catch (error) {
       showToast("Failed to Confirm Order!", "error");
     }
@@ -68,7 +76,7 @@ const AdminOrder = () => {
     }
   };
 
-  if (allOrdersLoading || usersLoading) return <p>Loading...</p>;
+  // if (allOrdersLoading || usersLoading) return <p>Loading...</p>;
 
   if (allOrdersError) {
     showToast(allOrdersError, "error");

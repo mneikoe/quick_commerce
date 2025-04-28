@@ -14,6 +14,8 @@ import AdminCategory from "./admin/AdminCategory";
 import ShopkeeperOrders from "./shopkeepers/ShopkeeperOrder";
 import ShopkeeperDashboard from "./shopkeepers/ShopkeeperDashboard";
 import AdminOrder from "./admin/AdminOrder";
+import DeliveryBoyOrders from "./deliveryboy/DeliveryBoyOrders";
+import DeliveryBoyDashboard from "./deliveryboy/DeliveryBoyDashboard";
 // import ProductDetail from "./components/ui/ProductDetail";
 
 export const publicRoutes = [
@@ -33,7 +35,10 @@ export const shopkeeperRoutes = [
   { path: "dashboard", element: <ShopkeeperDashboard /> },
   { path: "myOrders", element: <ShopkeeperOrders /> },
 ];
-export const deliveryRoutes = [];
+export const deliveryRoutes = [
+  { path: "dashboard", element: <DeliveryBoyDashboard /> },
+  { path: "myOrders", element: <DeliveryBoyOrders /> },
+];
 export const userRoutes = [];
 export const commonRoutes = [
   { path: "/unauthorized", element: <Unauthorized /> }, //✅

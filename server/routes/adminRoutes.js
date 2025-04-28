@@ -22,7 +22,7 @@ const adminRoutes = express.Router();
 adminRoutes.use(protect);
 // adminRoutes.use(authorizeRoles(Constants.USER.ADMIN));
 adminRoutes.use(authorizeRoles(Constants.USER.ADMIN));
-console.log(authorizeRoles(Constants.USER.ADMIN));
+// console.log(authorizeRoles(Constants.USER.ADMIN));
 // Routes for admin actions
 adminRoutes.patch("/verify/:userId", verifyUser);
 adminRoutes.get("/users", getAllUsers);

@@ -72,7 +72,7 @@ export const verifyUser = asyncHandler(async (req, res) => {
 // @access  Admin only
 export const confirmOrder = asyncHandler(async (req, res, next) => {
   try {
-    console.log("User confirming order:", req.user);
+    // console.log("User confirming order:", req.user);
 
     // Find and update the order status
     const order = await Order.findByIdAndUpdate(
@@ -107,7 +107,7 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
   try {
     const { shopkeeperId, deliveryBoyId } = req.body;
 
-    console.log("User assigning order:", req.user);
+    // console.log("User assigning order:", req.user);
 
     // Validate input parameters
     if (!shopkeeperId || !deliveryBoyId) {
@@ -212,11 +212,28 @@ export const updateCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(req.params.id);
   if (!category) throw new ErrorHandler("Category not found", 404);
 
+  // Check if any menu items are associated with the category (if needed for certain updates)
+  const menuItems = await Menu.find({ category: category._id });
+  if (menuItems.length > 0 && status === "inactive") {
+    throw new ErrorHandler(
+      "Cannot update category status to 'inactive' because it has associated menu items.",
+      400
+    );
+  }
+
   category.name = name ?? category.name;
   category.description = description ?? category.description;
   category.status = status ?? category.status;
 
   const updated = await category.save();
+
+  // Optionally, update the menu items if category name/description is updated
+  if (name || description) {
+    await Menu.updateMany(
+      { category: category._id },
+      { $set: { categoryName: name, categoryDescription: description } }
+    );
+  }
 
   res.status(200).json({
     success: true,
@@ -226,11 +243,22 @@ export const updateCategory = asyncHandler(async (req, res) => {
 });
 
 // delete category
+// delete category
 export const deleteCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(req.params.id);
   if (!category) throw new ErrorHandler("Category not found", 404);
 
-  await category.delete(); // soft delete
+  // Check if any menu items are associated with this category
+  const menuItems = await Menu.find({ category: category._id });
+  if (menuItems.length > 0) {
+    throw new ErrorHandler(
+      "Cannot delete category because it has associated menu items.",
+      400
+    );
+  }
+
+  // Soft delete the category
+  await category.delete();
 
   res.status(200).json({
     success: true,

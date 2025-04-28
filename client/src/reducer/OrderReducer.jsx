@@ -28,6 +28,42 @@ export const getAllOrdersReducer = (
   }
 };
 
+export const getMyOrdersReducer = (
+  state = { orders: [], loading: false, error: null },
+  action
+) => {
+  switch (action.type) {
+    // --- Get my  Order ---
+    case ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST:
+      return { ...state, loading: true, orders: [] };
+    case ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS:
+      return { ...state, loading: false, orders: action.payload };
+    case ORDER_CONSTANTS.GET_MY_ORDERS.FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case ORDER_CONSTANTS.CLEAR_ALL_ORDERS:
+      return { ...state, orders: [] };
+    default:
+      return state;
+  }
+};
+// Adding reducer for Delivery Boy Orders
+
+export const deliveryBoyOrdersReducer = (
+  state = { orders: [], loading: false, error: null },
+  action
+) => {
+  switch (action.type) {
+    case ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST:
+      return { ...state, loading: true, orders: [] }; // Clear orders while loading
+    case ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS:
+      return { ...state, loading: false, orders: action.payload }; // Set fetched orders
+    case ORDER_CONSTANTS.GET_MY_ORDERS.FAIL:
+      return { ...state, loading: false, error: action.payload }; // Handle failure
+    default:
+      return state;
+  }
+};
+
 // Order reducer
 export const orderReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -57,13 +93,13 @@ export const orderReducer = (state = initialState, action) => {
     case ORDER_CONSTANTS.GET_SINGLE.FAIL:
       return { ...state, loading: false, error: action.payload };
 
-    // --- Get my  Order ---
-    case ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST:
-      return { ...state, loading: true };
-    case ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS:
-      return { ...state, loading: false, orders: action.payload };
-    case ORDER_CONSTANTS.GET_MY_ORDERS.FAIL:
-      return { ...state, loading: false, error: action.payload };
+    // // --- Get my  Order ---
+    // case ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST:
+    //   return { ...state, loading: true };
+    // case ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS:
+    //   return { ...state, loading: false, orders: action.payload };
+    // case ORDER_CONSTANTS.GET_MY_ORDERS.FAIL:
+    //   return { ...state, loading: false, error: action.payload };
 
     // --- Track Order ---
     case ORDER_CONSTANTS.TRACK.REQUEST:
