@@ -18,7 +18,7 @@ userRoutes.use(authorizeRoles(Constants.USER.USER));
 // Routes for user actions
 userRoutes.get("/menu", getMenu);
 userRoutes.post("/orders", placeOrder);
-userRoutes.get("/orders", getMyOrders);
+userRoutes.get("/orders/myOrders", getMyOrders);
 userRoutes.get("/orders/:orderId/track", trackOrder);
 
 export default userRoutes;

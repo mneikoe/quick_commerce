@@ -23,6 +23,7 @@ const Layout = () => {
     "admin",
     "shopkeeper",
     "deliveryboy",
+    "user",
   ]);
   // Set widths dynamically
   const sidebarWidth = sidebarOpen ? 162 : 60;

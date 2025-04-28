@@ -9,13 +9,18 @@ import {
   Box,
 } from "@mui/material";
 import { useSelector } from "react-redux";
+import { getMyOrdersByUser } from "../actions/OrderAction";
 
 const UserProfile = () => {
   const { currentUser: user } = useSelector((s) => s.auth);
 
   console.log(user);
+  const { orders, loading, error } = useSelector((s) => s.getUserOrders);
+  console.log(orders), loading, error;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getMyOrdersByUser();
+  });
 
   return (
     <Grid container spacing={3} justifyContent="center">

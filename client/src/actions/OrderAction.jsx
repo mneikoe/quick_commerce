@@ -192,3 +192,21 @@ export const getMyOrdersByDdeliveryBoy = () => async (dispatch) => {
     });
   }
 };
+export const getMyOrdersByUser = () => async (dispatch) => {
+  try {
+    dispatch({ type: ORDER_CONSTANTS.GET_USER_ORDERS.REQUEST });
+
+    const { data } = await axiosInstance.get("/user/orders/myOrders");
+    console.log(data);
+    dispatch({
+      type: ORDER_CONSTANTS.GET_USER_ORDERS.SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ORDER_CONSTANTS.GET_USER_ORDERS.FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};

@@ -47,6 +47,25 @@ export const getMyOrdersReducer = (
   }
 };
 
+export const getUserOrdersReducer = (
+  state = { orders: [], loading: false, error: null },
+  action
+) => {
+  switch (action.type) {
+    // --- Get my  Order ---
+    case ORDER_CONSTANTS.GET_USER_ORDERS.REQUEST:
+      return { ...state, loading: true, orders: [] };
+    case ORDER_CONSTANTS.GET_USER_ORDERS.SUCCESS:
+      return { ...state, loading: false, orders: action.payload };
+    case ORDER_CONSTANTS.GET_USER_ORDERS.FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case ORDER_CONSTANTS.CLEAR_ALL_ORDERS:
+      return { ...state, orders: [] };
+    default:
+      return state;
+  }
+};
+
 export const getDeliveryBoyOrdersReducer = (
   state = { orders: [], loading: false, error: null },
   action

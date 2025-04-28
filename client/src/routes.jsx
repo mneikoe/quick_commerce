@@ -17,6 +17,7 @@ import AdminOrder from "./admin/AdminOrder";
 import DeliveryBoyOrders from "./deliveryboy/DeliveryBoyOrders";
 import DeliveryBoyDashboard from "./deliveryboy/DeliveryBoyDashboard";
 import UserProfile from "./pages/UserProfile";
+import UserDashboard from "./user/UserDashboard";
 // import ProductDetail from "./components/ui/ProductDetail";
 
 export const publicRoutes = [
@@ -47,6 +48,7 @@ export const deliveryRoutes = [
 ];
 export const userRoutes = [
   { path: "profile", element: <UserProfile /> }, //✅
+  { path: "dashboard", element: <UserDashboard /> }, //✅
 ];
 export const commonRoutes = [
   { path: "/unauthorized", element: <Unauthorized /> }, //✅

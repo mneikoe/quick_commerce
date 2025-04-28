@@ -10,6 +10,7 @@ import {
   deliveryRoutes,
   publicRoutes,
   shopkeeperRoutes,
+  userRoutes,
 } from "./routes";
 import Layout from "./components/common/layout/Layout";
 import "slick-carousel/slick/slick.css";
@@ -68,7 +69,7 @@ function App() {
         </Route>
         <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
           <Route path="/user" element={<Layout />}>
-            {deliveryRoutes.map(({ path, element }, index) => (
+            {userRoutes.map(({ path, element }, index) => (
               <Route key={index} path={path} element={element} />
             ))}
           </Route>

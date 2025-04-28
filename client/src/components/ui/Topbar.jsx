@@ -34,6 +34,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
   const isRoleRoute = isRolePath(location.pathname, [
     "admin",
     "shopkeeper",
+    "user",
     "deliveryboy",
   ]);
   const dispatch = useDispatch();

@@ -30,6 +30,7 @@ const rootReducer = combineReducers({
   orders: orderReducer.orderReducer,
   allOrders: orderReducer.getAllOrdersReducer,
   getMyOrders: orderReducer.getMyOrdersReducer,
+  getUserOrders: orderReducer.getUserOrdersReducer,
   getDeliveryBoyOrders: orderReducer.getDeliveryBoyOrdersReducer,
   deliveryBoyOrders: orderReducer.deliveryBoyOrdersReducer,
   menu: menuReducer.menuReducer,
