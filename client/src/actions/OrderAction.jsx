@@ -4,8 +4,8 @@ import { ORDER_CONSTANTS } from "../constants/OrderConstants";
 //! /** ------------------- user  order action  -------------------*/
 
 // Place Order (Action)
-// access by user only
-// status :pending
+// access by user only:pending
+
 export const placeOrder = (orderData) => async (dispatch) => {
   try {
     dispatch({ type: ORDER_CONSTANTS.PLACE_ORDER.REQUEST });
