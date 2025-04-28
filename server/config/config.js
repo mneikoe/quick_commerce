@@ -8,6 +8,7 @@ const config = {
   DB_URI: process.env.DB_URI,
   JWT_SECRET: process.env.JWT_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN || "*", // Default to all origins if not set
+  BUCKET_NAME: process.env.BUCKET_NAME,
 };
 
 if (!config.DB_URI || !config.JWT_SECRET) {

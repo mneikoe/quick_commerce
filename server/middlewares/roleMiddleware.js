@@ -14,7 +14,9 @@ export const authorizeRoles = (allowedRoles) => {
       if (!req.user || !allowedRoles.includes(req.user.role)) {
         // Log to server console for debugging purposes
         console.error(
-          `Access denied: ${req.user?.role || "unknown"} role is not allowed.`
+          `Access denied: ${
+            req.user?.role || "unknown"
+          } role is not allowed.Allowed roles: ${allowedRoles}`
         );
 
         // Send error response
@@ -22,7 +24,7 @@ export const authorizeRoles = (allowedRoles) => {
           new ErrorHandler(
             `Access denied: ${
               req.user?.role || "unknown"
-            } role is not allowed. Allowed roles: ${allowedRoles.join(", ")}`,
+            } role is not allowed. Allowed roles: ${allowedRoles}`,
             403
           )
         );
@@ -30,6 +32,7 @@ export const authorizeRoles = (allowedRoles) => {
 
       next(); // Role is authorized, proceed to the next middleware
     } catch (error) {
+      console.log("An error occurred while checking roles.", error);
       // Catch any unexpected errors and pass them to the global error handler
       return next(
         new ErrorHandler("An error occurred while checking roles.", 500)

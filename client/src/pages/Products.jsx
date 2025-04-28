@@ -21,9 +21,6 @@ const Products = () => {
   }, [dispatch]); // Run this effect only once when the component mounts
 
   // Check if menuItems are still loading or have no data
-  if (loading) {
-    return <div>Loading...</div>; // Show loading state if data is still being fetched
-  }
 
   return (
     <div>

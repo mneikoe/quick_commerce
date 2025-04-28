@@ -46,6 +46,25 @@ export const getMyOrdersReducer = (
       return state;
   }
 };
+
+export const getDeliveryBoyOrdersReducer = (
+  state = { orders: [], loading: false, error: null },
+  action
+) => {
+  switch (action.type) {
+    // --- Get deliveryboy Order ---
+    case ORDER_CONSTANTS.GET_DELIVERYBOY_ORDERS.REQUEST:
+      return { ...state, loading: true, orders: [] };
+    case ORDER_CONSTANTS.GET_DELIVERYBOY_ORDERS.SUCCESS:
+      return { ...state, loading: false, orders: action.payload };
+    case ORDER_CONSTANTS.GET_DELIVERYBOY_ORDERS.FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case ORDER_CONSTANTS.CLEAR_ALL_ORDERS:
+      return { ...state, orders: [] };
+    default:
+      return state;
+  }
+};
 // Adding reducer for Delivery Boy Orders
 
 export const deliveryBoyOrdersReducer = (

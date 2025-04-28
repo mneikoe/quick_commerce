@@ -23,7 +23,7 @@ const AdminOrder = () => {
     error: usersError,
   } = useSelector((state) => state.userList);
   const { currentUser, token } = useSelector((s) => s.auth);
-
+  // console.log("all orders", allOrders);
   const [shopkeeperId, setShopkeeperId] = useState("");
   const [deliveryBoyId, setDeliveryBoyId] = useState("");
   const [selectedOrderId, setSelectedOrderId] = useState(null); // Kis order ko assign karna hai
@@ -39,24 +39,24 @@ const AdminOrder = () => {
     dispatch(listUsers());
 
     // Set interval to fetch new orders every 5 seconds (5000 ms)
-     const intervalId = setInterval(() => {
-       dispatch(getAllOrders()); // Fetch orders after a fixed interval
-     }, 5000);
+    const intervalId = setInterval(() => {
+      dispatch(getAllOrders()); // Fetch orders after a fixed interval
+    }, 5000);
 
-     // Cleanup interval on component unmount to prevent memory leaks
-     return () => clearInterval(intervalId);
+    // Cleanup interval on component unmount to prevent memory leaks
+    return () => clearInterval(intervalId);
   }, [dispatch]);
-
+  // confirmed
   const handleConfirmOrder = async (orderId) => {
     try {
       await dispatch(confirmOrder(orderId));
-      showToast("Order Confirmed Successfully!", "success");
       dispatch(getAllOrders()); // Refresh karne ke liye
+      showToast("Order Confirmed Successfully!", "success");
     } catch (error) {
       showToast("Failed to Confirm Order!", "error");
     }
   };
-
+  // assigned
   const handleAssignOrder = async () => {
     if (!shopkeeperId || !deliveryBoyId || !selectedOrderId) {
       return showToast(
@@ -66,11 +66,11 @@ const AdminOrder = () => {
     }
     try {
       await dispatch(assignOrder(selectedOrderId, shopkeeperId, deliveryBoyId));
-      showToast("Order Assigned Successfully!", "success");
       setShopkeeperId("");
       setDeliveryBoyId("");
       setSelectedOrderId(null);
-      dispatch(getAllOrders()); // Refresh karne ke liye
+      dispatch(getAllOrders());
+      showToast("Order Assigned Successfully!", "success");
     } catch (error) {
       showToast("Failed to Assign Order!", "error");
     }
@@ -86,7 +86,6 @@ const AdminOrder = () => {
   return (
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Admin Orders</h1>
-
       {/* Pending Orders Section */}
       <div>
         <h2 className="mb-2 text-xl font-semibold">Pending Orders</h2>
@@ -114,7 +113,6 @@ const AdminOrder = () => {
           </ul>
         )}
       </div>
-
       {/* Confirmed Orders Section */}
       <div className="mt-8">
         <h2 className="mb-2 text-xl font-semibold">
@@ -178,7 +176,6 @@ const AdminOrder = () => {
           </ul>
         )}
       </div>
-
       {/* Assigned Orders Section */}
       <div className="mt-8">
         <h2 className="mb-2 text-xl font-semibold">Assigned Orders</h2>
@@ -192,6 +189,62 @@ const AdminOrder = () => {
               .map((order) => (
                 <li key={order._id} className="p-4 border rounded">
                   <span>Order ID: {order._id} (Assigned)</span>
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Ready Orders Section (Shopkeeper) */}
+      <div className="mt-8">
+        <h2 className="mb-2 text-xl font-semibold">Ready Orders</h2>
+        {allOrders.filter((order) => order.status === "ready").length === 0 ? (
+          <p>No ready orders.</p>
+        ) : (
+          <ul className="space-y-4">
+            {allOrders
+              .filter((order) => order.status === "ready")
+              .map((order) => (
+                <li key={order._id} className="p-4 border rounded">
+                  <span>Order ID: {order._id} (Ready)</span>
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Picked Up Orders Section (Delivery Boy) */}
+      <div className="mt-8">
+        <h2 className="mb-2 text-xl font-semibold">Picked Up Orders</h2>
+        {allOrders.filter((order) => order.status === "pickedup").length ===
+        0 ? (
+          <p>No picked-up orders.</p>
+        ) : (
+          <ul className="space-y-4">
+            {allOrders
+              .filter((order) => order.status === "pickedup")
+              .map((order) => (
+                <li key={order._id} className="p-4 border rounded">
+                  <span>Order ID: {order._id} (Picked Up)</span>
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Delivered Orders Section (Delivery Boy) */}
+      <div className="mt-8">
+        <h2 className="mb-2 text-xl font-semibold">Delivered Orders</h2>
+        {allOrders.filter((order) => order.status === "delivered").length ===
+        0 ? (
+          <p>No delivered orders.</p>
+        ) : (
+          <ul className="space-y-4">
+            {allOrders
+              .filter((order) => order.status === "delivered")
+              .map((order) => (
+                <li key={order._id} className="p-4 border rounded">
+                  <span>Order ID: {order._id} (Delivered)</span>
                 </li>
               ))}
           </ul>

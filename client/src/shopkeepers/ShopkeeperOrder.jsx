@@ -10,49 +10,72 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import {
-  confirmOrderReady,
-  getAllOrders,
-  getMyOrders,
-} from "../actions/OrderAction";
+import { confirmOrderReady, getMyOrders } from "../actions/OrderAction";
 import { useDispatch, useSelector } from "react-redux";
 import Constants from "../constants/Constants";
-// import axios from "axios";
-
+import { showToast } from "../components/ui/ShowToast";
+import NoData from "../components/ui/NoData";
 const ShopkeeperOrders = () => {
-  // const [orders, setOrders] = useState([]);
-
-  const { orders, loading, error } = useSelector((state) => state.getMyOrders);
   const dispatch = useDispatch();
-  console.log(orders, loading, error);
+  const { orders } = useSelector((state) => state.getMyOrders);
+
+  // Keep track of the previous orders to append new ones
+  const [currentOrders, setCurrentOrders] = useState([]);
 
   useEffect(() => {
+    // Initial fetch to get orders
     dispatch(getMyOrders());
+
+    // Polling every 3 seconds to fetch new orders
+    const intervalId = setInterval(() => {
+      dispatch(getMyOrders()); // Fetch new orders if any
+    }, 3000);
+
+    return () => clearInterval(intervalId);
   }, [dispatch]);
 
+  useEffect(() => {
+    if (orders.length > 0) {
+      setCurrentOrders((prevOrders) => {
+        // Avoid duplicating orders, only add new ones
+        const readyOrders = orders.filter(
+          (order) => order.status === Constants.ORDER_STATUS.ASSIGNED
+        );
+        const newOrders = readyOrders.filter(
+          (order) =>
+            !prevOrders.some((prevOrder) => prevOrder._id === order._id)
+        );
+        return [...prevOrders, ...newOrders];
+      });
+    }
+  }, [orders]); // This effect runs when orders from Redux change
+  // ready
+  const handleConfirmOrerReady = (orderId) => {
+    dispatch(confirmOrderReady(orderId));
+    dispatch(getMyOrders());
+    showToast("order confirm ready successfully", "success");
+  };
   return (
     <Box className="p-4">
       <Paper elevation={3} className="p-4">
         <Typography variant="h5" fontWeight="bold" mb={3}>
           My Orders
         </Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>User</TableCell>
-              <TableCell>Delivery Boy</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Items Count</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
+
+        {currentOrders.length === 0 && <NoData message="No orders ready" />}
+        {currentOrders.length > 0 && (
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={5}>Loading...</TableCell>
+                <TableCell>User</TableCell>
+                <TableCell>Delivery Boy</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Items Count</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
-            ) : orders.length ? (
-              orders.map((order) => (
+            </TableHead>
+            <TableBody>
+              {currentOrders?.map((order) => (
                 <TableRow key={order._id}>
                   <TableCell>{order.user?.name || "N/A"}</TableCell>
                   <TableCell>
@@ -65,7 +88,7 @@ const ShopkeeperOrders = () => {
                       variant="contained"
                       color="success"
                       disabled={order.status === Constants.ORDER_STATUS.READY}
-                      onClick={() => dispatch(confirmOrderReady(order._id))}
+                      onClick={() => handleConfirmOrerReady(order._id)}
                     >
                       {order.status === Constants.ORDER_STATUS.READY
                         ? "Already Ready"
@@ -73,14 +96,10 @@ const ShopkeeperOrders = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5}>No orders found.</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </Paper>
     </Box>
   );

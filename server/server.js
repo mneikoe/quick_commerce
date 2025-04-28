@@ -18,6 +18,7 @@ const io = new Server(server, { cors: { origin: "http://localhost:5173" } });
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   req.io = io;
   next();

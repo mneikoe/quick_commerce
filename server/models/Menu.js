@@ -8,6 +8,9 @@ const menuSchema = new mongoose.Schema(
       minlength: [3, "Menu item name must be at least 3 characters long"],
       maxlength: [100, "Menu item name must not exceed 100 characters"],
     },
+    image:{
+      type:String
+    },
     description: {
       type: String,
       maxlength: [500, "Description cannot exceed 500 characters"],
