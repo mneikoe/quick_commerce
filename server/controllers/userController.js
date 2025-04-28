@@ -35,9 +35,11 @@ export const placeOrder = async (req, res) => {
 // @route   GET /api/orders/myorders
 // @access  Private(role: user)
 export const getMyOrders = async (req, res) => {
+  console.log("req.user:", req.user);
+
   try {
     const orders = await Order.find({ user: req.user.id })
-      .populate("shopkeeper deliveryBoy")
+      .populate("shopkeeper deliveryBoy items.menuItem")
       .sort("-createdAt");
     res.json(orders);
   } catch (err) {

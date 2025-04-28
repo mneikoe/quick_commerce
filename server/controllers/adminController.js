@@ -126,7 +126,7 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
         assignedBy: req.user.id,
       },
       { new: true }
-    ).populate("shopkeeper deliveryBoy");
+    ).populate("shopkeeper deliveryBoy items.menuItem");
 
     if (!order) {
       return next(new ErrorHandler("Order not found", 404));
@@ -152,7 +152,7 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
 export const getAllOrders = asyncHandler(async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate("user shopkeeper deliveryBoy")
+      .populate("user shopkeeper deliveryBoy items.menuItem")
       .sort("-createdAt");
     // console.log(orders);
     res.json(orders);
