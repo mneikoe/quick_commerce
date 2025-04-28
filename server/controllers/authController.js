@@ -161,13 +161,13 @@ export const getMyOrders = async (req, res) => {
     // Check user's role and assign query accordingly
     if (req.user.role === Constants.USER.SHOPKEEPER) {
       query = { shopkeeper: req.user.id }; // For shopkeepers, fetch orders assigned to them
-      populateFields = "user deliveryBoy"; // Populate user and deliveryBoy data
+      populateFields = "user deliveryBoy items.menuItem"; // Populate user and deliveryBoy data
     } else if (req.user.role === Constants.USER.USER) {
       query = { user: req.user.id }; // For users, fetch their placed orders
-      populateFields = "shopkeeper deliveryBoy"; // Populate shopkeeper and deliveryBoy data
+      populateFields = "shopkeeper deliveryBoy items.menuItem"; // Populate shopkeeper and deliveryBoy data
     } else if (req.user.role === Constants.USER.DELIVERYBOY) {
       query = { deliveryBoy: req.user.id }; // For delivery boys, fetch orders assigned to them
-      populateFields = "user shopkeeper"; // Populate user and shopkeeper data
+      populateFields = "user shopkeeper items.menuItem"; // Populate user and shopkeeper data
     } else {
       return res.status(403).json({ message: "Unauthorized role" });
     }

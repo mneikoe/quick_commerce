@@ -14,13 +14,33 @@ import { confirmOrderReady, getMyOrders } from "../actions/OrderAction";
 import { useDispatch, useSelector } from "react-redux";
 import Constants from "../constants/Constants";
 import { showToast } from "../components/ui/ShowToast";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+
 import NoData from "../components/ui/NoData";
+import OrderDetailsDialog from "../components/ui/OrderDetailDialogue";
 const ShopkeeperOrders = () => {
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.getMyOrders);
-
+  console.log(orders);
   // Keep track of the previous orders to append new ones
   const [currentOrders, setCurrentOrders] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleOpenDialog = (order) => {
+    setSelectedOrder(order);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedOrder(null);
+  };
 
   useEffect(() => {
     // Initial fetch to get orders
@@ -94,6 +114,13 @@ const ShopkeeperOrders = () => {
                         ? "Already Ready"
                         : "Mark Ready"}
                     </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => handleOpenDialog(order)}
+                    >
+                      View Details
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -101,6 +128,11 @@ const ShopkeeperOrders = () => {
           </Table>
         )}
       </Paper>
+      <OrderDetailsDialog
+        open={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        selectedOrder={selectedOrder}
+      />
     </Box>
   );
 };

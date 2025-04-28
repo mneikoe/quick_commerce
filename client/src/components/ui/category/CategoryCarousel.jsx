@@ -1,22 +1,24 @@
 import React from "react";
 import Slider from "react-slick";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import CategoryCard from "./CategoryCard";
 import CategoryData from "./category.json";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 // Custom Next Arrow
 const NextArrow = ({ onClick }) => (
   <Box
     onClick={onClick}
     sx={{
       position: "absolute",
-      top: "40%",
-      right: -15,
+      top: "50%",
+      right: { xs: 0, md: -15 },
+      transform: "translateY(-50%)",
       zIndex: 2,
       backgroundColor: "white",
       borderRadius: "50%",
       boxShadow: 3,
-      p: 1,
+      p: 0.8,
       cursor: "pointer",
     }}
   >
@@ -30,13 +32,14 @@ const PrevArrow = ({ onClick }) => (
     onClick={onClick}
     sx={{
       position: "absolute",
-      top: "40%",
-      left: -15,
+      top: "50%",
+      left: { xs: 0, md: -15 },
+      transform: "translateY(-50%)",
       zIndex: 2,
       backgroundColor: "white",
       borderRadius: "50%",
       boxShadow: 3,
-      p: 1,
+      p: 0.8,
       cursor: "pointer",
     }}
   >
@@ -45,28 +48,50 @@ const PrevArrow = ({ onClick }) => (
 );
 
 const CategoryCarousel = () => {
-  const filteredCategories = CategoryData.filter((c) => c.image); // Only show with image
+  const filteredCategories = CategoryData.filter((c) => c.image);
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
-    speed: 500,
+    speed: 600,
     slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          arrows: true,
+        },
+      },
+      {
+        breakpoint: 960,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          arrows: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false, // Mobile friendly: hide arrows
+          dots: true, // Mobile: show dots instead of arrows
+        },
+      },
     ],
   };
 
   return (
-    <Box sx={{ mt: 5 }}>
+    <Box sx={{ mt: 5, px: { xs: 1, md: 2 } }}>
       <Slider {...settings}>
         {filteredCategories.map((category, idx) => (
-          <Box key={idx} px={1}>
+          <Box key={idx} px={{ xs: 0.5, md: 1 }}>
             <CategoryCard
               name={category.name}
               image={category.image}

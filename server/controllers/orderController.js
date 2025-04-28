@@ -86,7 +86,7 @@ export const getOrderDetails = async (req, res) => {
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
-      .populate("shopkeeper deliveryBoy")
+      .populate("shopkeeper deliveryBoy items.menuItem ")
       .sort("-createdAt");
 
     res.json(orders);

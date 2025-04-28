@@ -6,7 +6,7 @@ import Order from "../models/Order.js";
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ deliveryBoy: req.user.id })
-      .populate("user shopkeeper")
+      .populate("user shopkeeper items.menuItem deliveryBoy")
       .sort("-createdAt");
     res.json(orders);
   } catch (err) {

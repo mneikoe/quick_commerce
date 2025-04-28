@@ -18,12 +18,14 @@ import {
 } from "@mui/material";
 import Constants from "../constants/Constants";
 import { showToast } from "../components/ui/ShowToast";
+import OrderDetailsDialog from "../components/ui/OrderDetailDialogue";
 
 const DeliveryBoyOrders = () => {
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((s) => s.getDeliveryBoyOrders);
   const [currentOrders, setCurrentOrders] = useState([]);
   console.log(orders);
+  console.log(error);
   useEffect(() => {
     // Fetch immediately when component mounts
     dispatch(getMyOrdersByDdeliveryBoy());
@@ -36,6 +38,9 @@ const DeliveryBoyOrders = () => {
     // Clean up interval on unmount
     return () => clearInterval(interval);
   }, [dispatch]);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   // Update the state only when new orders are fetched
   useEffect(() => {
@@ -105,6 +110,17 @@ const DeliveryBoyOrders = () => {
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{order.items?.length || 0}</TableCell>
                   <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ mr: 1 }}
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setOpenDialog(true);
+                      }}
+                    >
+                      View Details
+                    </Button>
                     {order.status === Constants.ORDER_STATUS.READY && (
                       <Button
                         variant="contained"
@@ -140,6 +156,11 @@ const DeliveryBoyOrders = () => {
           <Typography>No orders found.</Typography>
         )}
       </Paper>
+      <OrderDetailsDialog
+        open={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        selectedOrder={selectedOrder}
+      />
     </Box>
   );
 };
