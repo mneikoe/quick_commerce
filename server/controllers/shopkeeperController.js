@@ -1,8 +1,5 @@
 import Order from "../models/Order.js";
 
-// @desc    Get all orders for the logged-in shopkeeper
-// @route   GET /api/orders/shopkeeper/myorders
-// @access  Private (Role: Shopkeeper)
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ shopkeeper: req.user.id })
@@ -14,9 +11,6 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
-// @desc    Confirm order is ready for pickup
-// @route   PUT /api/orders/shopkeeper/:orderId/ready
-// @access  Private (Role: Shopkeeper)
 export const confirmOrderReady = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(

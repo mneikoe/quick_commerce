@@ -1,2 +1,0 @@
-// userActions.js
-// Verify User

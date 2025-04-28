@@ -14,26 +14,32 @@ import * as authReducer from "./AuthReducer";
 const persistConfig = {
   key: "root",
   storage,
-  // specify which reducers to persist
 };
 
 // Root Reducer
 const rootReducer = combineReducers({
-  // user related reducer
+  // user
   userList: userReducer.userListReducer,
   userVerify: userReducer.userVerifyReducer,
+
   // auth
   auth: authReducer.authReducer,
-  // CART
+
+  // cart
   cart: cartReducer.cartReducer,
 
+  // order
   orders: orderReducer.orderReducer,
   allOrders: orderReducer.getAllOrdersReducer,
   getMyOrders: orderReducer.getMyOrdersReducer,
   getUserOrders: orderReducer.getUserOrdersReducer,
   getDeliveryBoyOrders: orderReducer.getDeliveryBoyOrdersReducer,
   deliveryBoyOrders: orderReducer.deliveryBoyOrdersReducer,
+
+  // menu
   menu: menuReducer.menuReducer,
+
+  // category
   category: categoryReducer.categoryReducer,
 });
 

@@ -1,5 +1,4 @@
 import CATEGORY_CONSTANTS from "../constants/CategoryConstants";
-// import axios from "axios";
 import axiosInstance from "../utils/config";
 
 // Create a new category
@@ -12,7 +11,6 @@ export const createCategory = (categoryData) => async (dispatch) => {
       categoryData
     );
 
-    console.log(data);
     dispatch({
       type: CATEGORY_CONSTANTS.CREATE_SUCCESS,
       payload: data.data,
@@ -34,7 +32,7 @@ export const getAllCategories = () => async (dispatch) => {
     dispatch({ type: CATEGORY_CONSTANTS.LIST_REQUEST });
 
     const { data } = await axiosInstance.get("/admin/categories");
-    console.log(data);
+
     dispatch({
       type: CATEGORY_CONSTANTS.LIST_SUCCESS,
       payload: data.data,

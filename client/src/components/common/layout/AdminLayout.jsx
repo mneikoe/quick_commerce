@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Box, Toolbar, useMediaQuery } from "@mui/material";
-// import Sidebar from "../../../admin/Sidebar";
-// import Topbar from "../Topbar";
 import { Outlet } from "react-router-dom";
+
+import { Box, useMediaQuery } from "@mui/material";
+
 import Topbar from "../../ui/Topbar";
 import Sidebar from "../../ui/Sidebar";
 
@@ -36,9 +36,9 @@ const AdminLayout = ({ children }) => {
         sx={{
           flexGrow: 1,
           p: 3,
-          marginLeft: isMobile ? 0 : sidebarOpen ? `${drawerWidth}px` : 10, // Adjust for sidebar width
-          marginTop: "64px", // Offset for Topbar height (64px is the default MUI AppBar height)
-          transition: "margin-left 0.3s ease", // Smooth transition for margin change
+          marginLeft: isMobile ? 0 : sidebarOpen ? `${drawerWidth}px` : 10,
+          marginTop: "64px",
+          transition: "margin-left 0.3s ease",
         }}
       >
         <Outlet />

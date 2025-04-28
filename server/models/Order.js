@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Constants } from "../constants/constants.js"; // Assuming you have a constants file
+import { Constants } from "../constants/constants.js";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -36,4 +36,4 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Order", orderSchema); // Using export default instead of module.exports
+export default mongoose.model("Order", orderSchema);

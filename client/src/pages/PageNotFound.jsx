@@ -11,7 +11,7 @@ const PageNotFound = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f7f7f7", // Same background color as login page
+        backgroundColor: "#f7f7f7",
         textAlign: "center",
         padding: 3,
       }}
@@ -26,7 +26,7 @@ const PageNotFound = () => {
         </Typography>
         <Button
           component={Link}
-          to="/admin" // or "/" depending on where you want the user to go
+          to="/admin"
           variant="contained"
           color="primary"
           sx={{ marginTop: 2 }}

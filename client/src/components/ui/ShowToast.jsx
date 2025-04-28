@@ -1,6 +1,4 @@
-// src/components/ShowToast.js
 import { toast } from "react-toastify";
-
 
 export const showToast = (message, type = "success") => {
   toast[type](message, {

@@ -1,11 +1,12 @@
-import React, { useState, useContext } from "react";
-import Sidebar from "../../ui/Sidebar";
-import { AuthContext } from "../../../context/AuthContext";
-import Topbar from "../../ui/Topbar";
-import { Box, useMediaQuery } from "@mui/material";
-import { Outlet, useLocation } from "react-router-dom";
-import { isRolePath } from "../../../utils/isRolePath";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { Outlet, useLocation } from "react-router-dom";
+
+import { Box, useMediaQuery } from "@mui/material";
+
+import Sidebar from "../../ui/Sidebar";
+import Topbar from "../../ui/Topbar";
+import { isRolePath } from "../../../utils/isRolePath";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -25,7 +26,7 @@ const Layout = () => {
     "deliveryboy",
     "user",
   ]);
-  // Set widths dynamically
+
   const sidebarWidth = sidebarOpen ? 162 : 60;
 
   return (
@@ -59,7 +60,7 @@ const Layout = () => {
             flexGrow: 1,
             p: 3,
             transition: "margin 0.3s ease",
-            marginTop: "64px", // adjust based on your Topbar height
+            marginTop: "64px",
           }}
         >
           <Outlet />

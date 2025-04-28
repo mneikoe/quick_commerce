@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, CheckCircle } from "lucide-react";
-import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 
 import TextInput from "../ui/TextInput";
 import { showToast } from "../ui/ShowToast";
@@ -29,14 +29,12 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Wait for the loginUser action to resolve
       const userData = await dispatch(
         loginUser(formData.email, formData.password)
       );
-      // console.log(userData); // Now this will log the resolved user data
+
       showToast("Login successfully", "success");
 
-      // Switch based on role
       switch (currentUser?.role) {
         case "admin":
           navigate("/admin/dashboard");

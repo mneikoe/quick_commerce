@@ -1,7 +1,7 @@
 class APIFeatures {
   constructor(query, queryString) {
-    this.query = query; // Mongoose query
-    this.queryString = queryString; // req.query
+    this.query = query;
+    this.queryString = queryString;
   }
 
   search(fields = []) {

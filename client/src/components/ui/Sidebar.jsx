@@ -28,8 +28,6 @@ const navItems = {
     { label: "Category", path: "/admin/category", icon: <Category /> },
     { label: "Order", path: "/admin/order", icon: <ListOrdered /> },
     { label: "Profile", path: "/admin/profile", icon: <User2 /> },
-    // { label: "Menu", path: "/admin/menu", icon: <RestaurantMenuIcon /> },
-    // { label: "Shipping", path: "/admin/shipping", icon: <LocalShippingIcon /> },
   ],
   user: [
     { label: "Dashboard", path: "/user/dashboard", icon: <DashboardIcon /> },
@@ -72,8 +70,6 @@ const navItems = {
   ],
 };
 
-// Get the navigation items based on user role
-
 // Sidebar component
 const Sidebar = ({
   drawerWidth,
@@ -84,9 +80,7 @@ const Sidebar = ({
 }) => {
   const location = useLocation();
 
-  // Get the nav items based on the user role
-  // const roleNavItems = navItems[userRole] || navItems["shopkeeper"]; // Default to shopkeeper if role not found
-  const roleNavItems = navItems[userRole] || navItems["shopkeeper"]; // Default to shopkeeper if role is not found
+  const roleNavItems = navItems[userRole] || navItems["user"];
 
   return (
     <Drawer

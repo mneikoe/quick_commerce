@@ -39,7 +39,7 @@ const menuSchema = new mongoose.Schema(
       min: [0, "Price must be a positive value"],
       validate: {
         validator: function (v) {
-          return v % 1 === 0 || (v * 100) % 1 === 0; // Ensure that price is either a whole number or has two decimal places
+          return v % 1 === 0 || (v * 100) % 1 === 0;
         },
         message: "Price must be a valid number with up to two decimal places",
       },
@@ -49,7 +49,7 @@ const menuSchema = new mongoose.Schema(
       min: [0, "MRP must be a positive value"],
       validate: {
         validator: function (v) {
-          return v % 1 === 0 || (v * 100) % 1 === 0; // Ensure that MRP is either a whole number or has two decimal places
+          return v % 1 === 0 || (v * 100) % 1 === 0;
         },
         message: "MRP must be a valid number with up to two decimal places",
       },
@@ -61,31 +61,31 @@ const menuSchema = new mongoose.Schema(
     },
     discountType: {
       type: String,
-      enum: ["percentage", "fixed"], // Whether discount is percentage or fixed value
+      enum: ["percentage", "fixed"],
     },
     unit: {
       type: String,
       required: [true, "Unit is required (e.g., ml, kg)"],
     },
     images: {
-      type: [String], // Array of image URLs
+      type: [String],
       validate: {
         validator: function (v) {
-          return v && v.length > 0; // Ensure there is at least one image
+          return v && v.length > 0;
         },
         message: "Product must have at least one image",
       },
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category", // Reference to a Category model (can also have subcategories)
+      ref: "Category",
       required: true,
     },
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Subcategory", // Reference to a Subcategory model (optional)
+      ref: "Subcategory",
     },
-    reviews: [reviewSchema], // Array of reviews
+    reviews: [reviewSchema],
     stockQuantity: {
       type: Number,
       default: 0,
@@ -112,7 +112,7 @@ const menuSchema = new mongoose.Schema(
       },
       deliveryFee: {
         type: Number,
-        default: 50, // Default delivery fee
+        default: 50,
       },
     },
   },

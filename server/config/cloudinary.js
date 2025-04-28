@@ -1,4 +1,3 @@
-// config/cloudinary.js
 import cloudinary from "cloudinary";
 
 cloudinary.config({

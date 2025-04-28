@@ -17,7 +17,6 @@ import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Menu as MenuIcon, ShoppingCart, X } from "lucide-react";
 
-// import { AuthContext } from "../../context/AuthContext";
 import UserProfileMenu from "./UserProfileMenu";
 import Button from "./Button";
 import TextInput from "./TextInput";
@@ -44,9 +43,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
   const [cartOpen, setCartOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
 
-  // const [menuList, setMenuList] = useState([]); // fetched data
-  const [searchQuery, setSearchQuery] = useState(""); // input text
-
+  const [searchQuery, setSearchQuery] = useState("");
   const handleMenuOpen = (e) => setMenuAnchor(e.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
 
@@ -56,7 +53,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
   };
 
   const handleLogin = () => navigate("/login");
-  // console.log(currentUser?.role);
+
   return (
     <>
       <AppBar

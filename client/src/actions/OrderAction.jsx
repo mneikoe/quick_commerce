@@ -10,10 +10,9 @@ export const placeOrder = (orderData) => async (dispatch) => {
   try {
     dispatch({ type: ORDER_CONSTANTS.PLACE_ORDER.REQUEST });
     const { data } = await axiosInstance.post(`/user/orders`, orderData);
-    // console.log(data);
+
     dispatch({ type: ORDER_CONSTANTS.PLACE_ORDER.SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.PLACE_ORDER.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -27,15 +26,13 @@ export const trackOrder = (trackingId) => async (dispatch) => {
     dispatch({ type: ORDER_CONSTANTS.TRACK.REQUEST });
 
     const { data } = await axiosInstance.get(`/api/order/track/${trackingId}`);
-    console.log(data);
+
     dispatch({ type: ORDER_CONSTANTS.TRACK.SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.TRACK.FAIL,
       payload: error.response?.data?.message || error.message,
     });
-    // showToast(error.response?.data?.message || "Tracking failed", "error");
   }
 };
 
@@ -64,10 +61,9 @@ export const confirmOrder = (orderId) => async (dispatch) => {
     const { data } = await axiosInstance.put(
       `/admin/orders/confirm/${orderId}`
     );
-    console.log(data);
+
     dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -88,10 +84,8 @@ export const assignOrder =
           deliveryBoyId,
         }
       );
-      console.log(data);
       dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
     } catch (error) {
-      console.log(error);
       dispatch({
         type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
         payload: error.response?.data?.message || error.message,
@@ -104,10 +98,9 @@ export const getAllOrders = () => async (dispatch) => {
   try {
     dispatch({ type: ORDER_CONSTANTS.GET_ALL.REQUEST });
     const { data } = await axiosInstance.get("/admin/orders");
-    // console.log(data);
+
     dispatch({ type: ORDER_CONSTANTS.GET_ALL.SUCCESS, payload: data });
   } catch (error) {
-    // console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.GET_ALL.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -125,10 +118,8 @@ export const confirmOrderReady = (orderId) => async (dispatch) => {
     const { data } = await axiosInstance.put(
       `/shopkeeper/orders/${orderId}/ready`
     );
-    // console.log(data);
     dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
   } catch (error) {
-    // console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -145,10 +136,9 @@ export const confirmPickup = (orderId) => async (dispatch) => {
     const { data } = await axiosInstance.put(
       `/delivery/orders/${orderId}/pickup`
     );
-    // console.log(data);
+
     dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -164,10 +154,9 @@ export const confirmDelivery = (orderId) => async (dispatch) => {
     const { data } = await axiosInstance.put(
       `/delivery/orders/${orderId}/deliver`
     );
-    console.log(data);
+
     dispatch({ type: ORDER_CONSTANTS.UPDATE_STATUS.SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.UPDATE_STATUS.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -179,13 +168,12 @@ export const getMyOrdersByDdeliveryBoy = () => async (dispatch) => {
     dispatch({ type: ORDER_CONSTANTS.GET_DELIVERYBOY_ORDERS.REQUEST });
 
     const { data } = await axiosInstance.get("/delivery/orders/myOrders");
-    // console.log(data);
+
     dispatch({
       type: ORDER_CONSTANTS.GET_DELIVERYBOY_ORDERS.SUCCESS,
       payload: data,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.GET_DELIVERYBOY_ORDERS.FAIL,
       payload: error.response?.data?.message || error.message,
@@ -197,13 +185,12 @@ export const getMyOrdersByUser = () => async (dispatch) => {
     dispatch({ type: ORDER_CONSTANTS.GET_USER_ORDERS.REQUEST });
 
     const { data } = await axiosInstance.get("/user/orders/myOrders");
-    console.log(data);
+
     dispatch({
       type: ORDER_CONSTANTS.GET_USER_ORDERS.SUCCESS,
       payload: data,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ORDER_CONSTANTS.GET_USER_ORDERS.FAIL,
       payload: error.response?.data?.message || error.message,

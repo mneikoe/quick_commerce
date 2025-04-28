@@ -1,10 +1,6 @@
 import Menu from "../models/Menu.js";
 import Order from "../models/Order.js";
 
-// @desc    Get all available menu items
-// @route   GET /api/menu
-// @access  Public
-
 export const getMenu = async (req, res) => {
   try {
     const menuItems = await Menu.find({ isAvailable: true });
@@ -14,9 +10,6 @@ export const getMenu = async (req, res) => {
   }
 };
 
-// @desc    Place an order
-// @route   POST /api/orders
-// @access  Private
 export const placeOrder = async (req, res) => {
   try {
     const order = await Order.create({
@@ -31,9 +24,6 @@ export const placeOrder = async (req, res) => {
   }
 };
 
-// @desc    Get all orders of the logged-in user
-// @route   GET /api/orders/myorders
-// @access  Private(role: user)
 export const getMyOrders = async (req, res) => {
   console.log("req.user:", req.user);
 
@@ -47,9 +37,6 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
-// @desc    Track an order
-// @route   GET /api/orders/:orderId/track
-// @access  Private
 export const trackOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId).populate(

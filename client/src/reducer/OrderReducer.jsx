@@ -52,7 +52,7 @@ export const getUserOrdersReducer = (
   action
 ) => {
   switch (action.type) {
-    // --- Get my  Order ---
+    // --- Get user  Order ---
     case ORDER_CONSTANTS.GET_USER_ORDERS.REQUEST:
       return { ...state, loading: true, orders: [] };
     case ORDER_CONSTANTS.GET_USER_ORDERS.SUCCESS:
@@ -84,19 +84,19 @@ export const getDeliveryBoyOrdersReducer = (
       return state;
   }
 };
-// Adding reducer for Delivery Boy Orders
 
 export const deliveryBoyOrdersReducer = (
+  //--- Adding reducer for Delivery Boy Orders ---
   state = { orders: [], loading: false, error: null },
   action
 ) => {
   switch (action.type) {
     case ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST:
-      return { ...state, loading: true, orders: [] }; // Clear orders while loading
+      return { ...state, loading: true, orders: [] };
     case ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS:
-      return { ...state, loading: false, orders: action.payload }; // Set fetched orders
+      return { ...state, loading: false, orders: action.payload };
     case ORDER_CONSTANTS.GET_MY_ORDERS.FAIL:
-      return { ...state, loading: false, error: action.payload }; // Handle failure
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
@@ -115,14 +115,6 @@ export const orderReducer = (state = initialState, action) => {
     case ORDER_CONSTANTS.CREATE.RESET:
       return { ...state, success: false };
 
-    // --- Get All Orders ---
-    // case ORDER_CONSTANTS.GET_ALL.REQUEST:
-    //   return { ...state, loading: true };
-    // case ORDER_CONSTANTS.GET_ALL.SUCCESS:
-    //   return { ...state, loading: false, orders: action.payload };
-    // case ORDER_CONSTANTS.GET_ALL.FAIL:
-    //   return { ...state, loading: false, error: action.payload };
-
     // --- Get Single Order ---
     case ORDER_CONSTANTS.GET_SINGLE.REQUEST:
       return { ...state, loading: true };
@@ -130,14 +122,6 @@ export const orderReducer = (state = initialState, action) => {
       return { ...state, loading: false, order: action.payload };
     case ORDER_CONSTANTS.GET_SINGLE.FAIL:
       return { ...state, loading: false, error: action.payload };
-
-    // // --- Get my  Order ---
-    // case ORDER_CONSTANTS.GET_MY_ORDERS.REQUEST:
-    //   return { ...state, loading: true };
-    // case ORDER_CONSTANTS.GET_MY_ORDERS.SUCCESS:
-    //   return { ...state, loading: false, orders: action.payload };
-    // case ORDER_CONSTANTS.GET_MY_ORDERS.FAIL:
-    //   return { ...state, loading: false, error: action.payload };
 
     // --- Track Order ---
     case ORDER_CONSTANTS.TRACK.REQUEST:
@@ -201,8 +185,6 @@ export const orderReducer = (state = initialState, action) => {
       return state;
   }
 };
-
-// export const CLEAR_ALL_ORDERS = "CLEAR_ALL_ORDERS";
 
 export const clearAllOrders = () => (dispatch) => {
   dispatch({ type: ORDER_CONSTANTS.CLEAR_ALL_ORDERS });

@@ -8,6 +8,8 @@ import {
 import { listUsers } from "../actions/userAction";
 import { showToast } from "../components/ui/ShowToast";
 import { clearAllOrders } from "../reducer/OrderReducer";
+import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
+import { Button } from "@mui/material";
 
 const AdminOrder = () => {
   const dispatch = useDispatch();
@@ -17,16 +19,19 @@ const AdminOrder = () => {
     loading: allOrdersLoading,
     error: allOrdersError,
   } = useSelector((state) => state.allOrders);
+
   const {
     users,
     loading: usersLoading,
     error: usersError,
   } = useSelector((state) => state.userList);
   const { currentUser, token } = useSelector((s) => s.auth);
-  // console.log("all orders", allOrders);
+
   const [shopkeeperId, setShopkeeperId] = useState("");
   const [deliveryBoyId, setDeliveryBoyId] = useState("");
-  const [selectedOrderId, setSelectedOrderId] = useState(null); // Kis order ko assign karna hai
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const shopkeepers =
     users?.users?.filter((user) => user.role === "shopkeeper") || [];
@@ -38,25 +43,23 @@ const AdminOrder = () => {
     dispatch(getAllOrders());
     dispatch(listUsers());
 
-    // Set interval to fetch new orders every 5 seconds (5000 ms)
     const intervalId = setInterval(() => {
-      dispatch(getAllOrders()); // Fetch orders after a fixed interval
+      dispatch(getAllOrders());
     }, 5000);
 
-    // Cleanup interval on component unmount to prevent memory leaks
     return () => clearInterval(intervalId);
   }, [dispatch]);
-  // confirmed
+
   const handleConfirmOrder = async (orderId) => {
     try {
       await dispatch(confirmOrder(orderId));
-      dispatch(getAllOrders()); // Refresh karne ke liye
+      dispatch(getAllOrders());
       showToast("Order Confirmed Successfully!", "success");
     } catch (error) {
       showToast("Failed to Confirm Order!", "error");
     }
   };
-  // assigned
+
   const handleAssignOrder = async () => {
     if (!shopkeeperId || !deliveryBoyId || !selectedOrderId) {
       return showToast(
@@ -76,10 +79,19 @@ const AdminOrder = () => {
     }
   };
 
-  // if (allOrdersLoading || usersLoading) return <p>Loading...</p>;
+  const openOrderDetailsDialog = (order) => {
+    setSelectedOrder(order);
+    setDialogOpen(true);
+  };
+
+  const closeOrderDetailsDialog = () => {
+    setDialogOpen(false);
+    setSelectedOrder(null);
+  };
 
   if (allOrdersError) {
-    showToast(allOrdersError, "error");
+    showToast("Error during get all orders", "error");
+
     return <p>Error: {allOrdersError}</p>;
   }
 
@@ -102,12 +114,15 @@ const AdminOrder = () => {
                   className="flex items-center justify-between p-4 border rounded"
                 >
                   <span>Order ID: {order._id}</span>
-                  <button
-                    className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                  <Button
+                    variant="contained"
                     onClick={() => handleConfirmOrder(order._id)}
                   >
                     Confirm
-                  </button>
+                  </Button>
+                  <Button onClick={() => openOrderDetailsDialog(order)}>
+                    View Details
+                  </Button>
                 </li>
               ))}
           </ul>
@@ -163,12 +178,12 @@ const AdminOrder = () => {
                         ))}
                       </select>
 
-                      <button
-                        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-                        onClick={handleAssignOrder}
-                      >
+                      <Button variant="contained" onClick={handleAssignOrder}>
                         Assign
-                      </button>
+                      </Button>
+                      <Button onClick={() => openOrderDetailsDialog(order)}>
+                        View Details
+                      </Button>
                     </div>
                   </div>
                 </li>
@@ -189,6 +204,9 @@ const AdminOrder = () => {
               .map((order) => (
                 <li key={order._id} className="p-4 border rounded">
                   <span>Order ID: {order._id} (Assigned)</span>
+                  <Button onClick={() => openOrderDetailsDialog(order)}>
+                    View Details
+                  </Button>
                 </li>
               ))}
           </ul>
@@ -207,6 +225,9 @@ const AdminOrder = () => {
               .map((order) => (
                 <li key={order._id} className="p-4 border rounded">
                   <span>Order ID: {order._id} (Ready)</span>
+                  <Button onClick={() => openOrderDetailsDialog(order)}>
+                    View Details
+                  </Button>
                 </li>
               ))}
           </ul>
@@ -226,6 +247,9 @@ const AdminOrder = () => {
               .map((order) => (
                 <li key={order._id} className="p-4 border rounded">
                   <span>Order ID: {order._id} (Picked Up)</span>
+                  <Button onClick={() => openOrderDetailsDialog(order)}>
+                    View Details
+                  </Button>
                 </li>
               ))}
           </ul>
@@ -245,11 +269,19 @@ const AdminOrder = () => {
               .map((order) => (
                 <li key={order._id} className="p-4 border rounded">
                   <span>Order ID: {order._id} (Delivered)</span>
+                  <Button onClick={() => openOrderDetailsDialog(order)}>
+                    View Details
+                  </Button>
                 </li>
               ))}
           </ul>
         )}
       </div>
+      <OrderDetailsDialog
+        open={dialogOpen}
+        handleClose={closeOrderDetailsDialog}
+        selectedOrder={selectedOrder}
+      />
     </div>
   );
 };

@@ -34,7 +34,6 @@ const ShopkeeperDashboard = () => {
         <p className="text-gray-500">Manage your store orders and deliveries</p>
       </motion.div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((stat, idx) => (
           <motion.div
@@ -55,12 +54,11 @@ const ShopkeeperDashboard = () => {
         ))}
       </div>
 
-      {/* Future Tables/Features Here */}
       <div className="mt-10">
         <h2 className="mb-4 text-xl font-semibold text-gray-700">
           Orders Overview
         </h2>
-        {/* Placeholder for table or order list component */}
+
         <div className="p-6 text-gray-500 bg-white border border-gray-200 rounded-lg">
           Order management table coming soon...
         </div>

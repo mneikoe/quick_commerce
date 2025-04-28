@@ -1,8 +1,5 @@
 import Order from "../models/Order.js";
 
-// @desc    Get all orders assigned to the delivery boy
-// @route   GET /api/delivery/orders
-// @access  Private (Role: DeliveryBoy)
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ deliveryBoy: req.user.id })
@@ -14,9 +11,6 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
-// @desc    Confirm order pickup by the delivery boy
-// @route   PUT /api/delivery/orders/:orderId/pickup
-// @access  Private (Role: DeliveryBoy)
 export const confirmPickup = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
@@ -32,9 +26,6 @@ export const confirmPickup = async (req, res) => {
   }
 };
 
-// @desc    Confirm order delivery by the delivery boy
-// @route   PUT /api/delivery/orders/:orderId/deliver
-// @access  Private (Role: DeliveryBoy)
 export const confirmDelivery = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
@@ -50,9 +41,7 @@ export const confirmDelivery = async (req, res) => {
   }
 };
 
-// @desc    Update the location of the delivery boy in real-time
-// @route   POST /api/delivery/location
-// @access  Private (Role: DeliveryBoy)
+//  left
 export const updateLocation = async (req, res) => {
   try {
     const { orderId, lat, lng } = req.body;

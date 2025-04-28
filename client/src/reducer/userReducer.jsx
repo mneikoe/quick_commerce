@@ -45,6 +45,7 @@ const initialState = {
   error: null,
 };
 
+// place order
 export const placeOrderReducer = (state = initialState, action) => {
   switch (action.type) {
     case ORDER_CONSTANTS.PLACE_ORDER_REQUEST:
@@ -57,20 +58,3 @@ export const placeOrderReducer = (state = initialState, action) => {
       return state;
   }
 };
-
-// export const userListReducer = (state = {}, action) => {
-//   switch (action.type) {
-//     case USER_CONSTANTS.USER_LIST_REQUEST:
-//       return { ...state, loading: true };
-//     case USER_CONSTANTS.USER_LIST_SUCCESS:
-//       return {
-//         ...state,
-//         loading: false,
-//         [action.payload.role]: action.payload.users,
-//       };
-//     case USER_CONSTANTS.USER_LIST_FAIL:
-//       return { ...state, loading: false, error: action.payload };
-//     default:
-//       return state;
-//   }
-// };

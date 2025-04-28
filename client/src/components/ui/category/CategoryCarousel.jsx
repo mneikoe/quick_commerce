@@ -80,8 +80,8 @@ const CategoryCarousel = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: false, // Mobile friendly: hide arrows
-          dots: true, // Mobile: show dots instead of arrows
+          arrows: false,
+          dots: true,
         },
       },
     ],

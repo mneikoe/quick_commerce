@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
 
-// NoData Component
 const NoData = ({ message = "No data found", minHeight = 200 }) => {
   return (
     <Box

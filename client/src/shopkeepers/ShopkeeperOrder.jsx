@@ -10,24 +10,19 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { confirmOrderReady, getMyOrders } from "../actions/OrderAction";
 import { useDispatch, useSelector } from "react-redux";
-import Constants from "../constants/Constants";
+
+import { confirmOrderReady, getMyOrders } from "../actions/OrderAction";
+
 import { showToast } from "../components/ui/ShowToast";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
 
 import NoData from "../components/ui/NoData";
-import OrderDetailsDialog from "../components/ui/OrderDetailDialogue";
+import Constants from "../constants/Constants";
+
 const ShopkeeperOrders = () => {
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.getMyOrders);
-  console.log(orders);
-  // Keep track of the previous orders to append new ones
   const [currentOrders, setCurrentOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -43,12 +38,10 @@ const ShopkeeperOrders = () => {
   };
 
   useEffect(() => {
-    // Initial fetch to get orders
     dispatch(getMyOrders());
 
-    // Polling every 3 seconds to fetch new orders
     const intervalId = setInterval(() => {
-      dispatch(getMyOrders()); // Fetch new orders if any
+      dispatch(getMyOrders());
     }, 3000);
 
     return () => clearInterval(intervalId);
@@ -57,7 +50,6 @@ const ShopkeeperOrders = () => {
   useEffect(() => {
     if (orders.length > 0) {
       setCurrentOrders((prevOrders) => {
-        // Avoid duplicating orders, only add new ones
         const readyOrders = orders.filter(
           (order) => order.status === Constants.ORDER_STATUS.ASSIGNED
         );
@@ -68,8 +60,8 @@ const ShopkeeperOrders = () => {
         return [...prevOrders, ...newOrders];
       });
     }
-  }, [orders]); // This effect runs when orders from Redux change
-  // ready
+  }, [orders]);
+
   const handleConfirmOrerReady = (orderId) => {
     dispatch(confirmOrderReady(orderId));
     dispatch(getMyOrders());

@@ -2,23 +2,19 @@ import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
 import Menu from "../models/Menu.js";
 import Order from "../models/Order.js";
-// import { ErrorHandler } from "../utils/errorHandlerUtils.js";
 import { Constants } from "../constants/constants.js";
 import { ErrorHandler } from "../utils/errorHandler.js";
 import APIFeatures from "../utils/apiFeatures.js";
 import Category from "../models/Category.js";
-// import { ErrorHandler } from "../middlewares/errorMiddleware.js";
-// @desc    Get all users (admin only)
+
 export const getAllUsers = asyncHandler(async (req, res) => {
   try {
-    // Initialize APIFeatures with the query parameters
     const features = new APIFeatures(User.find(), req.query)
       .search(["name", "email", "role"])
       .filter()
       .dateRange("createdAt")
       .sort();
 
-    // Handle multiple roles if provided in the request
     if (req.query.role) {
       let roles = req.query.role;
       if (!Array.isArray(roles)) {
@@ -27,13 +23,10 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       features.query = features.query.find({ role: { $in: roles } });
     }
 
-    // Fetch the users based on the built query features
     const users = await features.query;
 
-    // Fetch the total count of users in the database
     const total = await User.countDocuments();
 
-    // Send the response with the users and count information
     res.json({
       success: true,
       total,
@@ -41,7 +34,6 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       users,
     });
   } catch (error) {
-    // Handle any errors that occur during the query process
     console.error("Error fetching users:", error);
     res.status(500).json({
       success: false,
@@ -50,7 +42,6 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Verify user
 export const verifyUser = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(
     req.params.userId,
@@ -64,17 +55,9 @@ export const verifyUser = asyncHandler(async (req, res) => {
 
   res.json({ message: `${user.role} is verified`, user });
 });
-// @desc    Create menu item
 
-// @desc    Confirm order
-// @access role:admin
-// @desc    Confirm order
-// @access  Admin only
 export const confirmOrder = asyncHandler(async (req, res, next) => {
   try {
-    // console.log("User confirming order:", req.user);
-
-    // Find and update the order status
     const order = await Order.findByIdAndUpdate(
       req.params.orderId,
       { status: Constants.ORDER_STATUS.CONFIRMED },
@@ -82,14 +65,11 @@ export const confirmOrder = asyncHandler(async (req, res, next) => {
     );
 
     if (!order) {
-      // Handle case when order is not found
       return next(new ErrorHandler("Order not found", 404));
     }
 
-    // Emit the real-time update via Socket.io
     req.io.emit("orderUpdate", order);
 
-    // Send the response with the updated order
     res.json({
       success: true,
       message: "Order confirmed successfully",
@@ -101,22 +81,16 @@ export const confirmOrder = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc    Assign order to shopkeeper and delivery boy
-// @access  Admin only
 export const assignOrder = asyncHandler(async (req, res, next) => {
   try {
     const { shopkeeperId, deliveryBoyId } = req.body;
 
-    // console.log("User assigning order:", req.user);
-
-    // Validate input parameters
     if (!shopkeeperId || !deliveryBoyId) {
       return next(
         new ErrorHandler("Shopkeeper and Delivery Boy are required", 400)
       );
     }
 
-    // Update the order with assigned shopkeeper and delivery boy
     const order = await Order.findByIdAndUpdate(
       req.params.orderId,
       {
@@ -132,10 +106,8 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
       return next(new ErrorHandler("Order not found", 404));
     }
 
-    // Emit the real-time update via Socket.io
     req.io.emit("orderUpdate", order);
 
-    // Send the response with the updated order
     res.json({
       success: true,
       message: "Order assigned successfully",
@@ -146,15 +118,12 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
     return next(new ErrorHandler("Error while assigning order.", 500));
   }
 });
-// @desc    Get all orders
-// @route   GET /api/orders
-// @access  Private (Admin/User - depends on role)
+
 export const getAllOrders = asyncHandler(async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("user shopkeeper deliveryBoy items.menuItem")
       .sort("-createdAt");
-    // console.log(orders);
     res.json(orders);
   } catch (error) {
     console.error("Error fetching all orders:", error);
@@ -163,7 +132,6 @@ export const getAllOrders = asyncHandler(async (req, res) => {
   }
 });
 
-// Create a category
 export const createCategory = asyncHandler(async (req, res) => {
   const { name, description, status } = req.body;
 
@@ -185,7 +153,6 @@ export const createCategory = asyncHandler(async (req, res) => {
   });
 });
 
-// get all categories
 export const getAllCategories = asyncHandler(async (req, res) => {
   const categories = await Category.find();
 
@@ -195,7 +162,6 @@ export const getAllCategories = asyncHandler(async (req, res) => {
   });
 });
 
-// get single category
 export const getCategoryById = asyncHandler(async (req, res) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
@@ -205,14 +171,12 @@ export const getCategoryById = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: category });
 });
 
-// update category
 export const updateCategory = asyncHandler(async (req, res) => {
   const { name, description, status } = req.body;
 
   const category = await Category.findById(req.params.id);
   if (!category) throw new ErrorHandler("Category not found", 404);
 
-  // Check if any menu items are associated with the category (if needed for certain updates)
   const menuItems = await Menu.find({ category: category._id });
   if (menuItems.length > 0 && status === "inactive") {
     throw new ErrorHandler(
@@ -227,7 +191,6 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
   const updated = await category.save();
 
-  // Optionally, update the menu items if category name/description is updated
   if (name || description) {
     await Menu.updateMany(
       { category: category._id },
@@ -242,13 +205,10 @@ export const updateCategory = asyncHandler(async (req, res) => {
   });
 });
 
-// delete category
-// delete category
 export const deleteCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(req.params.id);
   if (!category) throw new ErrorHandler("Category not found", 404);
 
-  // Check if any menu items are associated with this category
   const menuItems = await Menu.find({ category: category._id });
   if (menuItems.length > 0) {
     throw new ErrorHandler(
@@ -257,7 +217,6 @@ export const deleteCategory = asyncHandler(async (req, res) => {
     );
   }
 
-  // Soft delete the category
   await category.delete();
 
   res.status(200).json({
@@ -266,9 +225,6 @@ export const deleteCategory = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get users by role (shopkeeper or deliveryBoy)
-// @route   GET /admin/users?role=shopkeeper
-// @access  Admin
 export const getUsersByRole = asyncHandler(async (req, res) => {
   const role = req.query.role;
 

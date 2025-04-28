@@ -11,11 +11,9 @@ import { Constants } from "../constants/constants.js";
 
 const userRoutes = express.Router();
 
-// Apply auth and role-based authorization middleware
 userRoutes.use(protect);
 userRoutes.use(authorizeRoles(Constants.USER.USER));
-// /user
-// Routes for user actions
+
 userRoutes.get("/menu", getMenu);
 userRoutes.post("/orders", placeOrder);
 userRoutes.get("/orders/myOrders", getMyOrders);

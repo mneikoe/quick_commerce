@@ -1,10 +1,5 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { listUsers } from "../actions/userAction";
-import Topbar from "../components/ui/Topbar";
-import ProductGrid from "../components/ui/products/ProductGrid";
-import product from "../components/ui/products/Product.json";
-import Button from "../components/ui/Button";
+import React from "react";
+import { Container } from "@mui/material";
 import {
   Compass,
   DollarSign,
@@ -16,18 +11,13 @@ import {
   ShoppingCart,
   Truck,
 } from "lucide-react";
+
+import Topbar from "../components/ui/Topbar";
+import Button from "../components/ui/Button";
+
 import CategoryCarousel from "../components/ui/category/CategoryCarousel";
-import { Container } from "@mui/material";
 
 const HomePage = () => {
-  const dispatch = useDispatch();
-  const userList = useSelector((state) => state.userList);
-  const { loading, error, users } = userList;
-
-  useEffect(() => {
-    dispatch(listUsers());
-  }, [dispatch]);
-
   return (
     <>
       <Topbar />

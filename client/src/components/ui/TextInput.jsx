@@ -12,14 +12,13 @@ const TextInput = ({
   required = false,
   className = "",
   icon,
-  size = "medium", // Default to medium
+  size = "medium",
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
 
   const inputType = isPassword && showPassword ? "text" : type;
 
-  // Size-specific class mapping
   const sizeClasses = {
     small: "px-3 py-2 text-sm",
     medium: "px-4 py-3 text-base",
@@ -60,18 +59,6 @@ const TextInput = ({
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         )}
-
-        {/* Uncomment this if you want to use icon inside the input */}
-        {/* {icon && (
-          <IconButton
-            className="flex items-center text-gray-900 "
-            tabIndex={-1}
-            onClick={icon.onClick}
-            aria-label={icon.component}
-          >
-            {icon.component}
-          </IconButton>
-        )} */}
       </div>
     </div>
   );

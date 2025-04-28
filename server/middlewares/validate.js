@@ -1,5 +1,4 @@
 import { body, validationResult } from "express-validator";
-import User from "../models/User.js"; // Don't forget to import User
 
 export const validateRegister = [
   body("email").isEmail().withMessage("Invalid email format").optional(),
@@ -21,9 +20,3 @@ export const validateRegister = [
     next();
   },
 ];
-
-// in frotnend
-
-// res.data.errors.forEach((err) => {
-//   console.log(`${err.path}: ${err.msg}`);
-// });

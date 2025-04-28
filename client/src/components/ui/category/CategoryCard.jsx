@@ -29,8 +29,8 @@ const CategoryCard = ({ name, image, to }) => {
           alt={name}
           sx={{
             width: "100%",
-            height: { xs: 140, md: 160 }, // Responsive height
-            objectFit: "cover", // Cover for better visual
+            height: { xs: 140, md: 160 },
+            objectFit: "cover",
           }}
         />
       ) : (

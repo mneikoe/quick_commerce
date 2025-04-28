@@ -8,8 +8,8 @@ const menuSchema = new mongoose.Schema(
       minlength: [3, "Menu item name must be at least 3 characters long"],
       maxlength: [100, "Menu item name must not exceed 100 characters"],
     },
-    image:{
-      type:String
+    image: {
+      type: String,
     },
     description: {
       type: String,
@@ -21,7 +21,7 @@ const menuSchema = new mongoose.Schema(
       min: [0, "Price must be a positive value"],
       validate: {
         validator: function (v) {
-          return v % 1 === 0 || (v * 100) % 1 === 0; // Ensure that price is either a whole number or has two decimal places
+          return v % 1 === 0 || (v * 100) % 1 === 0;
         },
         message: "Price must be a valid number with up to two decimal places",
       },

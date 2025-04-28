@@ -38,25 +38,24 @@ const theme = createTheme({
   },
 
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif', // From Tailwind's font-family
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 700,
   },
   components: {
-    // Customizing MUI components if necessary
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: "8px", // Tailwind's rounded-lg
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Tailwind-like shadow
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Tailwind shadow effect
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         },
       },
     },

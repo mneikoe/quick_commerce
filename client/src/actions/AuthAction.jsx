@@ -1,7 +1,6 @@
 import USER from "../constants/UserConstants";
 import axiosInstance from "../utils/config";
 
-// export const loginUser = (email, password) => async (dispatch) => {
 export const loginUser = (email, password) => async (dispatch) => {
   dispatch({ type: USER.LOGIN.REQUEST });
 
@@ -10,18 +9,14 @@ export const loginUser = (email, password) => async (dispatch) => {
       email,
       password,
     });
-    const { user, token } = response.data; // Destructuring user and token from response
+    const { user, token } = response.data;
 
-    // Save token to localStorage (if needed)
-    // localStorage.setItem("token", token);
-    // console.log(token);
-    // Dispatch success action to update the state with the user and token
     dispatch({
       type: USER.LOGIN.SUCCESS,
       payload: { user, token },
     });
 
-    return { user, token }; // Return the user and token so you can use it later if needed
+    return { user, token };
   } catch (error) {
     const errorMessage =
       error.response?.data?.message || error.message || "Something went wrong!";
@@ -29,7 +24,7 @@ export const loginUser = (email, password) => async (dispatch) => {
       type: USER.LOGIN.FAIL,
       payload: errorMessage,
     });
-    throw new Error(errorMessage); // Propagate the error to handle in the component
+    throw new Error(errorMessage);
   }
 };
 
@@ -46,15 +41,13 @@ export const registerUser =
       });
       const { user, token } = response.data;
       localStorage.setItem("token", token);
-      // console.log(response);
-      // console.log(token, user);
+
       dispatch({
         type: USER.REGISTER.SUCCESS,
         payload: { user, token },
       });
       return { user, token };
     } catch (error) {
-      // console.log(error);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
@@ -68,8 +61,6 @@ export const registerUser =
   };
 
 export const logoutUser = () => (dispatch) => {
-  // const errorMessage =
-  //   error.response?.data?.message || error.message || "Something went wrong!";
   localStorage.removeItem("token");
   dispatch({ type: USER.LOGOUT });
 };

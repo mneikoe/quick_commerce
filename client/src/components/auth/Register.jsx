@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { AuthContext } from "../../context/AuthContext";
-import { ShoppingBag, Divide } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Rocket,
+  ShieldCheck,
+  Users,
+  Zap,
+  GaugeCircle,
+  ShoppingBag,
+} from "lucide-react";
 import { motion } from "framer-motion";
+
 import TextInput from "../ui/TextInput";
 import SelectBox from "../ui/SelectBox";
-import { Rocket, ShieldCheck, Users, Zap, GaugeCircle } from "lucide-react";
-import Constants from "../../constants/Constants";
 import { showToast } from "../ui/ShowToast";
-import { useDispatch, useSelector } from "react-redux";
+
 import { registerUser } from "../../actions/AuthAction";
+
+import Constants from "../../constants/Constants";
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -19,11 +27,10 @@ const Register = () => {
     phone: "",
   });
   const { currentUser } = useSelector((s) => s.auth);
-  console.log(currentUser);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const { register } = useContext(AuthContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleChange = (e) =>
@@ -49,9 +56,10 @@ const Register = () => {
           formData.role,
           formData.phone
         )
-      ); // The userData will be returned here
-      console.log("userData in handleSubmit:", userData); // Log the returned data to verify
+      );
+
       showToast("regsitered successfully", "success");
+
       // Switch based on role
       switch (currentUser?.role) {
         case "admin":
@@ -67,7 +75,6 @@ const Register = () => {
           navigate("/products");
       }
     } catch (error) {
-      console.log(error); // Log any unexpected error
       setError(error.toString());
     } finally {
       setLoading(false);
@@ -96,7 +103,7 @@ const Register = () => {
       text: "Ultra-Fast Performance – Built for scale and speed.",
     },
   ];
-  console.log("Current Role Value:", formData.role);
+
   return (
     <div className="flex items-center justify-center min-h-screen px-6 py-8 bg-gray-100">
       <motion.div

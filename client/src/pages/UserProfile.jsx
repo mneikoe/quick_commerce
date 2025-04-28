@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyOrdersByUser } from "../actions/OrderAction";
-import OrderDetailsDialog from "../components/ui/OrderDetailDialogue";
-import OrderStatusTimeline from "../components/ui/OrderStatusTimeline";
+import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
+import OrderStatusTimeline from "../components/ui/order/OrderStatusTimeline";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,6 @@ const UserProfile = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  // console.log(user);
   const { orders, loading, error } = useSelector((s) => s.getUserOrders);
 
   console.log(orders, loading, error),

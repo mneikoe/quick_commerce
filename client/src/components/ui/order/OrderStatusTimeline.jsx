@@ -6,19 +6,18 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import { Typography } from "@mui/material";
-import Constants from "../../constants/Constants";
+import Constants from "../../../constants/Constants";
 
 export default function OrderStatusTimeline({ currentStatus }) {
-  // Getting the index of the current status
   const getStatusIndex = (status) =>
-    Object.values(Constants.ORDER_STATUS).indexOf(status.toLowerCase()); // Ensure uppercase comparison
+    Object.values(Constants.ORDER_STATUS).indexOf(status.toLowerCase());
   console.log(getStatusIndex(currentStatus));
-  const statusSteps = Object.values(Constants.ORDER_STATUS); // Get statuses as an array
+  const statusSteps = Object.values(Constants.ORDER_STATUS);
   console.log(statusSteps);
   return (
     <Timeline sx={{ p: 0 }}>
       {statusSteps.map((status, index) => {
-        const isActive = index <= getStatusIndex(currentStatus); // Determine if the status is active
+        const isActive = index <= getStatusIndex(currentStatus);
         console.log(isActive);
         return (
           <TimelineItem key={status}>

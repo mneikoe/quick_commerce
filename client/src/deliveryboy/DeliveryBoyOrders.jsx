@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  confirmDelivery,
-  confirmPickup,
-  getMyOrdersByDdeliveryBoy,
-} from "../actions/OrderAction";
-import {
   Box,
   Paper,
   Typography,
@@ -16,10 +11,18 @@ import {
   TableBody,
   Button,
 } from "@mui/material";
-import Constants from "../constants/Constants";
+
+import {
+  confirmDelivery,
+  confirmPickup,
+  getMyOrdersByDdeliveryBoy,
+} from "../actions/OrderAction";
+
 import { showToast } from "../components/ui/ShowToast";
-import OrderDetailsDialog from "../components/ui/OrderDetailDialogue";
+import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
 import Loader from "../components/ui/Loader";
+
+import Constants from "../constants/Constants";
 
 const DeliveryBoyOrders = () => {
   const dispatch = useDispatch();
@@ -28,37 +31,31 @@ const DeliveryBoyOrders = () => {
   console.log(orders);
   console.log(error);
   useEffect(() => {
-    // Fetch immediately when component mounts
     dispatch(getMyOrdersByDdeliveryBoy());
 
-    // Set up interval to fetch every 5 minutes (300000 milliseconds)
     const interval = setInterval(() => {
       dispatch(getMyOrdersByDdeliveryBoy());
-    }, 300000); // 5 minutes = 300,000ms
+    }, 300000);
 
-    // Clean up interval on unmount
     return () => clearInterval(interval);
   }, [dispatch]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  // Update the state only when new orders are fetched
   useEffect(() => {
     if (orders.length > 0) {
       setCurrentOrders((prevOrders) => {
-        // Filter only orders with status 'READY'
         const readyOrders = orders.filter(
           (order) => order.status === Constants.ORDER_STATUS.READY
         );
 
-        // Avoid duplicate orders
         const newOrders = readyOrders.filter(
           (order) =>
             !prevOrders.some((prevOrder) => prevOrder._id === order._id)
         );
 
-        return [...prevOrders, ...newOrders]; // Append new ready orders
+        return [...prevOrders, ...newOrders];
       });
     }
   }, [orders]);
@@ -66,17 +63,15 @@ const DeliveryBoyOrders = () => {
   const handlePickup = (orderId) => {
     dispatch(confirmPickup(orderId))
       .then(() => {
-        // Fetch the updated orders after pickup confirmation
         dispatch(getMyOrdersByDdeliveryBoy());
         showToast("Order pickup successfully", "success");
       })
       .catch(() => showToast("Failed to confirm pickup", "error"));
   };
-  // Confirm delivery for an order
+
   const handleDelivery = (orderId) => {
     dispatch(confirmDelivery(orderId))
       .then(() => {
-        // Fetch the updated orders after delivery confirmation
         dispatch(getMyOrdersByDdeliveryBoy());
         showToast("Order delivered successfully", "success");
       })
