@@ -16,11 +16,13 @@ import ShopkeeperDashboard from "./shopkeepers/ShopkeeperDashboard";
 import AdminOrder from "./admin/AdminOrder";
 import DeliveryBoyOrders from "./deliveryboy/DeliveryBoyOrders";
 import DeliveryBoyDashboard from "./deliveryboy/DeliveryBoyDashboard";
+import UserProfile from "./pages/UserProfile";
 // import ProductDetail from "./components/ui/ProductDetail";
 
 export const publicRoutes = [
   { path: "/", element: <HomePage /> }, //bki hai
   { path: "/products", element: <Products /> }, //✅
+  // { path: "/profile", element: <UserProfile /> }, //✅
   // { path: "/product/:id", element: <ProductDetail /> }, //✅
 ];
 
@@ -30,16 +32,22 @@ export const adminRoutes = [
   { path: "menu", element: <AdminMenu /> },
   { path: "category", element: <AdminCategory /> },
   { path: "order", element: <AdminOrder /> },
+  { path: "profile", element: <UserProfile /> }, //✅
 ];
 export const shopkeeperRoutes = [
   { path: "dashboard", element: <ShopkeeperDashboard /> },
   { path: "myOrders", element: <ShopkeeperOrders /> },
+  { path: "profile", element: <UserProfile /> }, //✅
 ];
 export const deliveryRoutes = [
   { path: "dashboard", element: <DeliveryBoyDashboard /> },
   { path: "myOrders", element: <DeliveryBoyOrders /> },
+  { path: "profile", element: <UserProfile /> }, //✅
+  // { path: "profile", element: <UserProfile /> }, //✅
 ];
-export const userRoutes = [];
+export const userRoutes = [
+  { path: "profile", element: <UserProfile /> }, //✅
+];
 export const commonRoutes = [
   { path: "/unauthorized", element: <Unauthorized /> }, //✅
   { path: "/register", element: <Register /> }, //✅

@@ -74,8 +74,10 @@ const AdminMenu = () => {
   const handleCreateOrUpdate = (data) => {
     if (selectedItem?._id) {
       dispatch(updateMenuItem(selectedItem._id, data));
+      showToast("updated menu successfully", "success");
     } else {
       dispatch(createMenuItem(data));
+      showToast("created menu successfully", "success");
     }
   };
 

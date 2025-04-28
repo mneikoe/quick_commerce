@@ -19,6 +19,7 @@ import {
 import Constants from "../constants/Constants";
 import { showToast } from "../components/ui/ShowToast";
 import OrderDetailsDialog from "../components/ui/OrderDetailDialogue";
+import Loader from "../components/ui/Loader";
 
 const DeliveryBoyOrders = () => {
   const dispatch = useDispatch();
@@ -85,73 +86,74 @@ const DeliveryBoyOrders = () => {
   return (
     <Box className="p-4">
       <Paper elevation={3} className="p-4">
-        <Typography variant="h5" fontWeight="bold" mb={3}>
-          My Delivery Orders
-        </Typography>
-
         {loading ? (
-          <Typography>Loading...</Typography>
+          <Loader />
         ) : error ? (
           <Typography color="error">{error}</Typography>
         ) : currentOrders.length ? (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>User</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Items Count</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders?.map((order) => (
-                <TableRow key={order._id}>
-                  <TableCell>{order.user?.name || "N/A"}</TableCell>
-                  <TableCell>{order.status}</TableCell>
-                  <TableCell>{order.items?.length || 0}</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ mr: 1 }}
-                      onClick={() => {
-                        setSelectedOrder(order);
-                        setOpenDialog(true);
-                      }}
-                    >
-                      View Details
-                    </Button>
-                    {order.status === Constants.ORDER_STATUS.READY && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => handlePickup(order._id)}
-                      >
-                        Confirm Pickup
-                      </Button>
-                    )}
-                    {order.status === Constants.ORDER_STATUS.PICKEDUP && (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleDelivery(order._id)}
-                      >
-                        Confirm Delivery
-                      </Button>
-                    )}
-                    {order.status === Constants.ORDER_STATUS.DELIVERED && (
-                      <Button variant="contained" color="primary" disabled>
-                        Delivered
-                      </Button>
-                    )}
-                    {order.status === Constants.ORDER_STATUS.DELIVERED && (
-                      <Typography>Completed</Typography>
-                    )}
-                  </TableCell>
+          <>
+            <Typography variant="h5" fontWeight="bold" mb={3}>
+              My Delivery Orders
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>User</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Items Count</TableCell>
+                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {orders?.map((order) => (
+                  <TableRow key={order._id}>
+                    <TableCell>{order.user?.name || "N/A"}</TableCell>
+                    <TableCell>{order.status}</TableCell>
+                    <TableCell>{order.items?.length || 0}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{ mr: 1 }}
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setOpenDialog(true);
+                        }}
+                      >
+                        View Details
+                      </Button>
+                      {order.status === Constants.ORDER_STATUS.READY && (
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={() => handlePickup(order._id)}
+                        >
+                          Confirm Pickup
+                        </Button>
+                      )}
+                      {order.status === Constants.ORDER_STATUS.PICKEDUP && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleDelivery(order._id)}
+                        >
+                          Confirm Delivery
+                        </Button>
+                      )}
+                      {order.status === Constants.ORDER_STATUS.DELIVERED && (
+                        <Button variant="contained" color="primary" disabled>
+                          Delivered
+                        </Button>
+                      )}
+                      {order.status === Constants.ORDER_STATUS.DELIVERED && (
+                        <Typography>Completed</Typography>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </>
         ) : (
           <Typography>No orders found.</Typography>
         )}

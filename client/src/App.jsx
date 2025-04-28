@@ -66,6 +66,13 @@ function App() {
             ))}
           </Route>
         </Route>
+        <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
+          <Route path="/user" element={<Layout />}>
+            {deliveryRoutes.map(({ path, element }, index) => (
+              <Route key={index} path={path} element={element} />
+            ))}
+          </Route>
+        </Route>
         {/* <Route
           element={
             <ProtectedRoute

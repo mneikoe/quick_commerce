@@ -43,6 +43,9 @@ const Topbar = ({ onToggleSidebar, open }) => {
   const [cartOpen, setCartOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
 
+  // const [menuList, setMenuList] = useState([]); // fetched data
+  const [searchQuery, setSearchQuery] = useState(""); // input text
+
   const handleMenuOpen = (e) => setMenuAnchor(e.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
 
@@ -107,7 +110,12 @@ const Topbar = ({ onToggleSidebar, open }) => {
                 <Typography>Products</Typography>
               </NavLink>
               <Typography sx={{ color: "white" }}>Contact</Typography>
-              <TextInput size="small" placeholder="Search item" />
+              <TextInput
+                size="small"
+                placeholder="Search item"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </Box>
           )}
 
@@ -133,7 +141,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
               isRoleRoute ? (
                 <>
                   <Typography sx={{ color: "white" }}>
-                    {currentUser?.name}
+                    {!isMobile && currentUser?.name}
                   </Typography>
                   <Button variant="contained" onClick={handleLogout}>
                     Logout
