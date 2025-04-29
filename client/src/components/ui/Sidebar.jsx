@@ -22,10 +22,18 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { ListOrdered, ListOrderedIcon, Menu, User2 } from "lucide-react";
 import { Category } from "@mui/icons-material";
 
-// Blinkit-inspired color scheme
-const BLINKIT_YELLOW = "#f8d521";
-const DARK_BG = "#1a1a1a";
-// Role-based navigation items
+// Updated color scheme to match Admin Menu
+const SIDEBAR_COLORS = {
+  primary: "#3d5a80",
+  secondary: "#e0fbfc",
+  background: "#ffffff",
+  textPrimary: "#293241",
+  textSecondary: "#5e6977",
+  divider: "#eaeff4",
+  hoverBg: "#f5f8fa",
+};
+
+// Role-based navigation items (keep original structure)
 const navItems = {
   admin: [
     { label: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
@@ -37,7 +45,6 @@ const navItems = {
   ],
   user: [
     { label: "Dashboard", path: "/user/dashboard", icon: <DashboardIcon /> },
-    // { label: "Menu", path: "/user/menu", icon: <RestaurantMenuIcon /> },
     { label: "Profile", path: "/user/profile", icon: <User2 /> },
     { label: "Order", path: "/user/order", icon: <ListOrderedIcon /> },
   ],
@@ -52,11 +59,7 @@ const navItems = {
       path: "/shopkeeper/myOrders",
       icon: <ShoppingCartIcon />,
     },
-    {
-      label: "Profile",
-      path: "/shopkeeper/profile",
-      icon: <User2 />,
-    },
+    { label: "Profile", path: "/shopkeeper/profile", icon: <User2 /> },
   ],
   deliveryboy: [
     {
@@ -69,15 +72,10 @@ const navItems = {
       path: "/deliveryboy/myOrders",
       icon: <ShoppingCartIcon />,
     },
-    {
-      label: "Profile",
-      path: "/deliveryboy/profile",
-      icon: <User2 />,
-    },
+    { label: "Profile", path: "/deliveryboy/profile", icon: <User2 /> },
   ],
 };
 
-// Sidebar component
 const Sidebar = ({
   drawerWidth,
   open,
@@ -100,15 +98,15 @@ const Sidebar = ({
           left: 0,
           right: 0,
           zIndex: 1000,
-          backgroundColor: DARK_BG,
-          borderTop: `2px solid ${BLINKIT_YELLOW}`,
+          backgroundColor: SIDEBAR_COLORS.background,
+          borderTop: `2px solid ${SIDEBAR_COLORS.primary}`,
         }}
       >
         <BottomNavigation
           showLabels
           sx={{
-            bgcolor: DARK_BG,
-            "& .Mui-selected": { color: BLINKIT_YELLOW },
+            bgcolor: SIDEBAR_COLORS.background,
+            "& .Mui-selected": { color: SIDEBAR_COLORS.primary },
             height: 64,
           }}
         >
@@ -121,10 +119,10 @@ const Sidebar = ({
               icon={item.icon}
               selected={location.pathname === item.path}
               sx={{
-                minWidth: 80,
-                color: "#fff",
+                minWidth: 60,
+                color: SIDEBAR_COLORS.textSecondary,
                 "&.Mui-selected": {
-                  color: BLINKIT_YELLOW,
+                  color: SIDEBAR_COLORS.primary,
                   fontWeight: "bold",
                 },
               }}
@@ -146,10 +144,10 @@ const Sidebar = ({
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: open ? drawerWidth : 60,
-          bgcolor: DARK_BG,
-          color: "#fff",
+          bgcolor: SIDEBAR_COLORS.background,
+          color: SIDEBAR_COLORS.textPrimary,
           transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-          borderRight: `2px solid ${BLINKIT_YELLOW}`,
+          borderRight: `1px solid ${SIDEBAR_COLORS.divider}`,
         },
       }}
     >
@@ -163,9 +161,9 @@ const Sidebar = ({
               componentsProps={{
                 tooltip: {
                   sx: {
-                    bgcolor: DARK_BG,
-                    color: BLINKIT_YELLOW,
-                    border: `1px solid ${BLINKIT_YELLOW}`,
+                    bgcolor: SIDEBAR_COLORS.primary,
+                    color: SIDEBAR_COLORS.background,
+                    fontSize: "0.8rem",
                   },
                 },
               }}
@@ -181,16 +179,15 @@ const Sidebar = ({
                   margin: 1,
                   borderRadius: 2,
                   "&.Mui-selected": {
-                    bgcolor: BLINKIT_YELLOW,
-                    color: DARK_BG,
-                    fontWeight: "bold",
+                    bgcolor: SIDEBAR_COLORS.primary,
+                    color: SIDEBAR_COLORS.background,
+                    fontWeight: "600",
                     "&:hover": {
-                      bgcolor: "#fae052",
+                      bgcolor: SIDEBAR_COLORS.primary,
                     },
                   },
                   "&:hover": {
-                    bgcolor: "#333333",
-                    color: BLINKIT_YELLOW,
+                    bgcolor: SIDEBAR_COLORS.hoverBg,
                   },
                   transition: "all 0.3s ease",
                 }}
@@ -204,9 +201,11 @@ const Sidebar = ({
                   }}
                 >
                   {React.cloneElement(item.icon, {
-                    style: {
+                    sx: {
                       color:
-                        location.pathname === item.path ? DARK_BG : "inherit",
+                        location.pathname === item.path
+                          ? SIDEBAR_COLORS.background
+                          : SIDEBAR_COLORS.textPrimary,
                     },
                   })}
                 </ListItemIcon>
@@ -226,7 +225,7 @@ const Sidebar = ({
         <Divider
           sx={{
             my: 1,
-            bgcolor: `${BLINKIT_YELLOW}40`,
+            bgcolor: SIDEBAR_COLORS.divider,
             width: "80%",
             mx: "auto",
           }}

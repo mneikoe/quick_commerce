@@ -107,6 +107,7 @@ const AdminOrder = () => {
       <Box
         sx={{
           mt: 4,
+          mb: 6,
           bgcolor: theme.palette.background.paper,
           color: theme.palette.text.primary,
         }}
