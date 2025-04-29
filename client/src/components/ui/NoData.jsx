@@ -10,7 +10,7 @@ const NoData = ({ message = "No data found", minHeight = 200 }) => {
       minHeight={minHeight}
     >
       <Paper sx={{ p: 2, textAlign: "center", maxWidth: 400 }}>
-        <Typography variant="h6" color="textSecondary">
+        <Typography variant="h6" color="primary">
           {message}
         </Typography>
       </Paper>

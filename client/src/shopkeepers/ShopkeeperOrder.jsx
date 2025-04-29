@@ -23,6 +23,7 @@ const ShopkeeperOrders = () => {
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.getMyOrders);
   const [currentOrders, setCurrentOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -38,6 +39,8 @@ const ShopkeeperOrders = () => {
 
   useEffect(() => {
     if (orders.length > 0) {
+      setAllOrders(orders); // ← set all orders here
+
       setCurrentOrders((prevOrders) => {
         const readyOrders = orders.filter(
           (order) => order.status === Constants.ORDER_STATUS.ASSIGNED
@@ -113,6 +116,55 @@ const ShopkeeperOrders = () => {
                             ? "Already Ready"
                             : "Mark Ready"}
                         </Button>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          onClick={() =>
+                            setOpenDialog(true) || setSelectedOrder(order)
+                          }
+                        >
+                          View Details
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        {allOrders.length === 0 ? (
+          <NoData message="No orders ready" />
+        ) : (
+          <TableContainer sx={{ overflowX: "auto" }}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>User</TableCell>
+                  <TableCell>Delivery Boy</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Items Count</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {allOrders?.map((order) => (
+                  <TableRow key={order._id}>
+                    <TableCell>{order.user?.name || "N/A"}</TableCell>
+                    <TableCell>
+                      {order.deliveryBoy?.name || "Not Assigned"}
+                    </TableCell>
+                    <TableCell>{order.status}</TableCell>
+                    <TableCell>{order.items?.length || 0}</TableCell>
+                    <TableCell align="right">
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: { xs: "row", sm: "row" },
+                          gap: 1,
+                        }}
+                      >
                         <Button
                           variant="outlined"
                           color="primary"
