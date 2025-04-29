@@ -45,8 +45,8 @@ const Login = () => {
         case "deliveryboy":
           navigate("/delivery/dashboard");
           break;
-        case "user":
-          navigate("/user/dashboard");
+        case "deliveryboy":
+          navigate("/delivery/dashboard");
           break;
         default:
           navigate("/products");

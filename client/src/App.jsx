@@ -22,7 +22,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
         <Route element={<Layout />}>
           {publicRoutes.map(({ path, element }, i) => (
             <Route key={i} path={path} element={element} />
