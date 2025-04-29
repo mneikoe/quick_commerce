@@ -61,7 +61,7 @@ const Register = () => {
       showToast("regsitered successfully", "success");
 
       // Switch based on role
-      switch (currentUser?.role) {
+      switch (userData?.user?.role) {
         case "admin":
           navigate("/admin/dashboard");
           break;

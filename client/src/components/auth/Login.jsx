@@ -32,10 +32,10 @@ const Login = () => {
       const userData = await dispatch(
         loginUser(formData.email, formData.password)
       );
-
+      console.log(userData);
       showToast("Login successfully", "success");
 
-      switch (currentUser?.role) {
+      switch (userData?.user?.role) {
         case "admin":
           navigate("/admin/dashboard");
           break;
@@ -44,6 +44,9 @@ const Login = () => {
           break;
         case "deliveryboy":
           navigate("/delivery/dashboard");
+          break;
+        case "user":
+          navigate("/user/dashboard");
           break;
         default:
           navigate("/products");
