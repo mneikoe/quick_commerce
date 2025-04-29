@@ -51,7 +51,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
   };
 
   const handleLogin = () => navigate("/login");
-  console.log(currentUser?.role);
+
   return (
     <>
       <AppBar
