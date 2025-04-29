@@ -33,10 +33,15 @@ const AdminOrder = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const shopkeepers =
-    users?.users?.filter((user) => user.role === "shopkeeper") || [];
-  const deliveryBoys =
-    users?.users?.filter((user) => user.role === "deliveryboy") || [];
+const shopkeepers =
+  users?.users?.filter(
+    (user) => user.role === "shopkeeper" && user.isVerified === true
+  ) || [];
+
+const deliveryBoys =
+  users?.users?.filter(
+    (user) => user.role === "deliveryboy" && user.isVerified === true
+  ) || [];
 
   useEffect(() => {
     dispatch(clearAllOrders());
