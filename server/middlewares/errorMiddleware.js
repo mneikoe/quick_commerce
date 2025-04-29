@@ -1,15 +1,14 @@
 // middlewares/errorMiddleware.js
-import  {ErrorHandler}  from "../utils/errorHandler.js";
+import { ErrorHandler } from "../utils/errorHandler.js";
 
 const errorHandler = (err, req, res, next) => {
   // Ensure that the error is an instance of ErrorHandler
   if (typeof err === "string") {
-    err = new ErrorHandler(err, 400); // If it's a string, convert it to a proper error handler
+    err = new ErrorHandler(err, 400); 
   }
-
-  // Default error response setup
-  err.statusCode = err.statusCode || 500; // Default to 500 if no status code is provided
-  err.message = err.message || "Internal Server Error"; // Default message
+  
+  err.statusCode = err.statusCode || 500; 
+  err.message = err.message || "Internal Server Error"; 
 
   // Handle Mongoose CastError (e.g., invalid ObjectId)
   if (err.name === "CastError") {

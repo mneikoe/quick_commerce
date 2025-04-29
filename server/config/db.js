@@ -4,8 +4,6 @@ import config from "./config.js";
 
 dotenv.config();
 
-
-
 export function connectToDb() {
   try {
     mongoose.connect(config.DB_URI, { serverSelectionTimeoutMS: 15000 });

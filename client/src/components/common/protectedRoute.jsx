@@ -1,17 +1,19 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { useSelector } from "react-redux";
 import Loader from "../ui/Loader";
 
-const ProtectedRoute = ({ allowedRoles }) => {
-  const { currentUser, loading } = useContext(AuthContext);
+const ProtectedRoute = ({ allowedRoles = [] }) => {
+  const { currentUser, loading, error } = useSelector(
+    (state) => state.auth || {}
+  );
 
   if (loading) return <Loader />;
+
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!allowedRoles.includes(currentUser.role)) {
+  if (allowedRoles.length > 0 && !allowedRoles.includes(currentUser?.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 

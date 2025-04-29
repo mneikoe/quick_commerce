@@ -10,63 +10,84 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { getMyOrders } from "../actions/OrderAction";
-import { useSelector } from "react-redux";
-// import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+
+import { confirmOrderReady, getMyOrders } from "../actions/OrderAction";
+
+import { showToast } from "../components/ui/ShowToast";
+import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
+
+import NoData from "../components/ui/NoData";
+import Constants from "../constants/Constants";
 
 const ShopkeeperOrders = () => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { orders: getorders } = useSelector((state) => state.orders);
-  //   const fetchOrders = async () => {
-  //     try {
-  //       const res = await axios.get("/api/orders/shopkeeper/myorders");
-  //       setOrders(res.data);
-  //     } catch (error) {
-  //       console.error("Error fetching shopkeeper orders:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const dispatch = useDispatch();
+  const { orders } = useSelector((state) => state.getMyOrders);
+  const [currentOrders, setCurrentOrders] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
-  //   const markOrderReady = async (orderId) => {
-  //     try {
-  //       const res = await axios.put(`/api/orders/shopkeeper/${orderId}/ready`);
-  //       setOrders((prevOrders) =>
-  //         prevOrders.map((order) => (order._id === orderId ? res.data : order))
-  //       );
-  //     } catch (err) {
-  //       console.error("Error marking order as ready", err);
-  //     }
-  //   };
+  const handleOpenDialog = (order) => {
+    setSelectedOrder(order);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedOrder(null);
+  };
 
   useEffect(() => {
-    getMyOrders();
-  }, []);
+    dispatch(getMyOrders());
 
+    const intervalId = setInterval(() => {
+      dispatch(getMyOrders());
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (orders.length > 0) {
+      setCurrentOrders((prevOrders) => {
+        const readyOrders = orders.filter(
+          (order) => order.status === Constants.ORDER_STATUS.ASSIGNED
+        );
+        const newOrders = readyOrders.filter(
+          (order) =>
+            !prevOrders.some((prevOrder) => prevOrder._id === order._id)
+        );
+        return [...prevOrders, ...newOrders];
+      });
+    }
+  }, [orders]);
+
+  const handleConfirmOrerReady = (orderId) => {
+    dispatch(confirmOrderReady(orderId));
+    dispatch(getMyOrders());
+    showToast("order confirm ready successfully", "success");
+  };
   return (
     <Box className="p-4">
       <Paper elevation={3} className="p-4">
         <Typography variant="h5" fontWeight="bold" mb={3}>
           My Orders
         </Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>User</TableCell>
-              <TableCell>Delivery Boy</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Items Count</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
+
+        {currentOrders.length === 0 && <NoData message="No orders ready" />}
+        {currentOrders.length > 0 && (
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={5}>Loading...</TableCell>
+                <TableCell>User</TableCell>
+                <TableCell>Delivery Boy</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Items Count</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
-            ) : getorders.length ? (
-              getorders.map((order) => (
+            </TableHead>
+            <TableBody>
+              {currentOrders?.map((order) => (
                 <TableRow key={order._id}>
                   <TableCell>{order.user?.name || "N/A"}</TableCell>
                   <TableCell>
@@ -75,26 +96,35 @@ const ShopkeeperOrders = () => {
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{order.items?.length || 0}</TableCell>
                   <TableCell align="right">
-                    {order.status !== "ready" && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => markOrderReady(order._id)}
-                      >
-                        Mark Ready
-                      </Button>
-                    )}
+                    <Button
+                      variant="contained"
+                      color="success"
+                      disabled={order.status === Constants.ORDER_STATUS.READY}
+                      onClick={() => handleConfirmOrerReady(order._id)}
+                    >
+                      {order.status === Constants.ORDER_STATUS.READY
+                        ? "Already Ready"
+                        : "Mark Ready"}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => handleOpenDialog(order)}
+                    >
+                      View Details
+                    </Button>
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5}>No orders found.</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </Paper>
+      <OrderDetailsDialog
+        open={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        selectedOrder={selectedOrder}
+      />
     </Box>
   );
 };

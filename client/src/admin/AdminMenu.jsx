@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Table,
@@ -11,34 +12,50 @@ import {
   IconButton,
   Tooltip,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { Edit, Delete, Visibility, Add } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
   createMenuItem,
   deleteMenuItem,
   getMenuItems,
   updateMenuItem,
 } from "../actions/MenuAction";
-import MenuFormModal from "../components/ui/MenuFormModal";
 import { getAllCategories } from "../actions/CategoryAction";
-// import { updateCartQuantity } from "../actions/CartAction";
+
+import MenuFormModal from "../components/ui/MenuFormModal";
+import { showToast } from "../components/ui/ShowToast";
 
 const AdminMenu = () => {
   const dispatch = useDispatch();
-  const { menuItems, loading } = useSelector((state) => state.menu); // assuming state shape
-  const { categories } = useSelector((state) => state.category); // assuming state shape
-  console.log("menu items", menuItems.data);
+  const { menuItems, loading } = useSelector((state) => state.menu);
+  const {
+    categories,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useSelector((state) => state.category);
+
   useEffect(() => {
     dispatch(getMenuItems());
     dispatch(getAllCategories());
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this menu item?")) {
-      dispatch(deleteMenuItem(id));
-    }
+    setConfirmDeleteDialogOpen(true);
+    setItemToDelete(id);
+    getAllCategories();
   };
+
+  const handleConfirmDelete = () => {
+    dispatch(deleteMenuItem(itemToDelete));
+    showToast("Menu item deleted successfully", "success");
+    setConfirmDeleteDialogOpen(false);
+  };
+
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isViewMode, setIsViewMode] = useState(false);
@@ -54,14 +71,19 @@ const AdminMenu = () => {
     setSelectedItem(null);
     setIsViewMode(false);
   };
+
   const handleCreateOrUpdate = (data) => {
-    // console.log("sleected item", selectedItem);
     if (selectedItem?._id) {
       dispatch(updateMenuItem(selectedItem._id, data));
+      showToast("updated menu successfully", "success");
     } else {
       dispatch(createMenuItem(data));
+      showToast("created menu successfully", "success");
     }
   };
+
+  const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   return (
     <Box className="p-4">
@@ -90,7 +112,6 @@ const AdminMenu = () => {
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
-          <div>{menuItems?.data.length}</div>
           <TableBody>
             {loading ? (
               <TableRow>
@@ -150,6 +171,28 @@ const AdminMenu = () => {
         viewOnly={isViewMode}
         categories={categories}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={confirmDeleteDialogOpen}
+        onClose={() => setConfirmDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this menu item?
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setConfirmDeleteDialogOpen(false)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

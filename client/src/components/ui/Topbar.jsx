@@ -12,20 +12,20 @@ import {
   Divider,
   Chip,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Menu as MenuIcon, ShoppingCart, X } from "lucide-react";
 
-import { AuthContext } from "../../context/AuthContext";
 import UserProfileMenu from "./UserProfileMenu";
 import Button from "./Button";
 import TextInput from "./TextInput";
 import CartModal from "./CartModal";
 import { allowedRoles, isRolePath } from "../../utils/isRolePath";
+import { logoutUser } from "../../actions/AuthAction";
 
 const Topbar = ({ onToggleSidebar, open }) => {
-  const { currentUser, logout } = useContext(AuthContext);
+  const { currentUser } = useSelector((s) => s.auth);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
@@ -33,20 +33,22 @@ const Topbar = ({ onToggleSidebar, open }) => {
   const isRoleRoute = isRolePath(location.pathname, [
     "admin",
     "shopkeeper",
+    "user",
     "deliveryboy",
   ]);
-
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems || []);
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const [cartOpen, setCartOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState("");
   const handleMenuOpen = (e) => setMenuAnchor(e.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
 
   const handleLogout = () => {
-    logout();
+    dispatch(logoutUser());
     navigate("/login");
   };
 
@@ -106,7 +108,12 @@ const Topbar = ({ onToggleSidebar, open }) => {
                 <Typography>Products</Typography>
               </NavLink>
               <Typography sx={{ color: "white" }}>Contact</Typography>
-              <TextInput size="small" placeholder="Search item" />
+              <TextInput
+                size="small"
+                placeholder="Search item"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </Box>
           )}
 
@@ -132,7 +139,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
               isRoleRoute ? (
                 <>
                   <Typography sx={{ color: "white" }}>
-                    {currentUser?.name}
+                    {!isMobile && currentUser?.name}
                   </Typography>
                   <Button variant="contained" onClick={handleLogout}>
                     Logout
@@ -140,7 +147,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
                 </>
               ) : (
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
-                  <UserProfileMenu />
+                  <UserProfileMenu logout={handleLogout} />
                 </Box>
               )
             ) : (

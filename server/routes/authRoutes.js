@@ -3,16 +3,12 @@ import { register, login, getMyOrders } from "../controllers/authController.js";
 import {
   logout,
   refresh,
-  // forgotPassword,
   resetPassword,
 } from "../controllers/authController.js";
-// import { validateRegister } from "../middlewares/validate.js";
 import { protect } from "../middlewares/authMiddleware.js";
-// import { getMyOrders } from "../controllers/userController.js";
 
 const authRoutes = express.Router();
 
-// Routes for authentication actions
 authRoutes.post("/register", register);
 authRoutes.post("/login", login);
 authRoutes.get("/me", protect, (req, res) => {

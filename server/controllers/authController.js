@@ -6,12 +6,9 @@ import { Constants } from "../constants/constants.js";
 import { generateToken } from "../utils/generateToken.js";
 import Order from "../models/Order.js";
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
 export const register = asyncHandler(async (req, res) => {
   const { name, email, phone, address, password, role } = req.body;
-  // Check if either email or phone is provided
+
   if (!email && !phone) {
     res.status(400);
     throw new Error("Either email or phone must be provided.");
@@ -21,13 +18,11 @@ export const register = asyncHandler(async (req, res) => {
     throw new Error("Invalid email provided.");
   }
 
-  // Optional: check for valid role
   if (!Object.values(Constants.USER).includes(role)) {
     res.status(400);
     throw new Error("Invalid role specified.");
   }
 
-  // Check if user already exists
   let userExists;
   if (email) {
     userExists = await User.findOne({ email });
@@ -55,14 +50,13 @@ export const register = asyncHandler(async (req, res) => {
     role,
   };
 
-  // Only include phone if it's provided
   if (phone) {
     userData.phone = phone;
   }
   if (email) {
     userData.email = email;
   }
-  // Create the new user
+
   const user = await User.create(userData);
   const token = generateToken(user);
 
@@ -150,37 +144,31 @@ export const resetPassword = asyncHandler(async (req, res) => {
   res.json({ message: "Password updated successfully" });
 });
 
-// @desc    Get orders based on user role (Shopkeeper, User, or DeliveryBoy)
-// @route   GET /api/orders/myOrders
-// @access  Private
 export const getMyOrders = async (req, res) => {
   try {
     let query = {};
     let populateFields = "";
 
-    // Check user's role and assign query accordingly
     if (req.user.role === Constants.USER.SHOPKEEPER) {
-      query = { shopkeeper: req.user.id }; // For shopkeepers, fetch orders assigned to them
-      populateFields = "user deliveryBoy"; // Populate user and deliveryBoy data
+      query = { shopkeeper: req.user.id };
+      populateFields = "user deliveryBoy items.menuItem";
     } else if (req.user.role === Constants.USER.USER) {
-      query = { user: req.user.id }; // For users, fetch their placed orders
-      populateFields = "shopkeeper deliveryBoy"; // Populate shopkeeper and deliveryBoy data
+      query = { user: req.user.id };
+      populateFields = "shopkeeper deliveryBoy items.menuItem";
     } else if (req.user.role === Constants.USER.DELIVERYBOY) {
-      query = { deliveryBoy: req.user.id }; // For delivery boys, fetch orders assigned to them
-      populateFields = "user shopkeeper"; // Populate user and shopkeeper data
+      query = { deliveryBoy: req.user.id };
+      populateFields = "user shopkeeper items.menuItem";
     } else {
       return res.status(403).json({ message: "Unauthorized role" });
     }
 
-    // Fetch the orders based on the query and populate relevant fields
     const orders = await Order.find(query)
       .populate(populateFields)
       .sort("-createdAt");
     console.log(orders);
     res.json(orders);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
-
-

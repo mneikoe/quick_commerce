@@ -1,27 +1,38 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import { ShoppingBag, Divide } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Rocket,
+  ShieldCheck,
+  Users,
+  Zap,
+  GaugeCircle,
+  ShoppingBag,
+} from "lucide-react";
 import { motion } from "framer-motion";
+
 import TextInput from "../ui/TextInput";
 import SelectBox from "../ui/SelectBox";
-import { Rocket, ShieldCheck, Users, Zap, GaugeCircle } from "lucide-react";
-import Constants from "../../constants/constants";
+import { showToast } from "../ui/ShowToast";
+
+import { registerUser } from "../../actions/AuthAction";
+
+import Constants from "../../constants/Constants";
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: "user",
+    role: "",
     phone: "",
   });
+  const { currentUser } = useSelector((s) => s.auth);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -30,17 +41,34 @@ const Register = () => {
     setError("");
     setLoading(true);
 
-    try {
-      const userData = await register(formData);
+    if (!formData.email && !formData.phone) {
+      setError("Either email or phone must be provided.");
+      setLoading(false);
+      return;
+    }
 
-      switch (userData.role) {
+    try {
+      const userData = await dispatch(
+        registerUser(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.role,
+          formData.phone
+        )
+      );
+
+      showToast("regsitered successfully", "success");
+
+      // Switch based on role
+      switch (currentUser?.role) {
         case "admin":
           navigate("/admin/dashboard");
           break;
         case "shopkeeper":
           navigate("/shopkeeper/dashboard");
           break;
-        case "deliveryBoy":
+        case "deliveryboy":
           navigate("/delivery/dashboard");
           break;
         default:
@@ -75,7 +103,7 @@ const Register = () => {
       text: "Ultra-Fast Performance – Built for scale and speed.",
     },
   ];
-  console.log("Current Role Value:", formData.role);
+
   return (
     <div className="flex items-center justify-center min-h-screen px-6 py-8 bg-gray-100">
       <motion.div
@@ -194,6 +222,7 @@ const Register = () => {
                   //   placeholder=""
                   onChange={handleChange}
                   //   required
+                  // required={false}
                   //   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Enter your  phone"
                 />

@@ -49,8 +49,10 @@ Customer Review Component (CustomerReview)
 - product card details
 <!-- - toggle functionality not works -->
 - rating system
-login and logout feature
-<!-- - dashboard badge button in like `seller dashboard `
-  `admin dashboard` -->
+  <!-- login and logout feature -->
+  <!-- - dashboard badge button in like `seller dashboard `
+    `admin dashboard` -->
 - admin dashboard design
-- confirm adn assigned order(mainly assigned order issue)
+<!-- - confirm adn assigned order(mainly assigned order issue) -->
+- deliveryboy order me
+- image uplaod

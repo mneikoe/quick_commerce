@@ -8,31 +8,38 @@ import * as cartReducer from "./CartReducer";
 import * as orderReducer from "./OrderReducer";
 import * as menuReducer from "./MenuReducer";
 import * as categoryReducer from "./CategoryReducer";
+import * as authReducer from "./AuthReducer";
 
 // Persist configuration
 const persistConfig = {
   key: "root",
   storage,
-  // specify which reducers to persist
 };
 
 // Root Reducer
 const rootReducer = combineReducers({
-  // user related reducer
+  // user
   userList: userReducer.userListReducer,
   userVerify: userReducer.userVerifyReducer,
 
-  // CART
+  // auth
+  auth: authReducer.authReducer,
+
+  // cart
   cart: cartReducer.cartReducer,
 
   // order
-  // orderCreate: orderReducer.orderCreateReducer,
-  // orderList: orderReducer.orderListReducer,
-  // orderDetails: orderReducer.orderDetailsReducer,
-  // orderTrack: orderReducer.orderTrackReducer,
-  // orderStatusUpdate: orderReducer.orderStatusUpdateReducer,
   orders: orderReducer.orderReducer,
+  allOrders: orderReducer.getAllOrdersReducer,
+  getMyOrders: orderReducer.getMyOrdersReducer,
+  getUserOrders: orderReducer.getUserOrdersReducer,
+  getDeliveryBoyOrders: orderReducer.getDeliveryBoyOrdersReducer,
+  deliveryBoyOrders: orderReducer.deliveryBoyOrdersReducer,
+
+  // menu
   menu: menuReducer.menuReducer,
+
+  // category
   category: categoryReducer.categoryReducer,
 });
 

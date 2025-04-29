@@ -26,7 +26,6 @@ const CategorySchema = new Schema(
   }
 );
 
-// Soft delete plugin
 CategorySchema.plugin(mongooseDelete, {
   deletedAt: true,
   overrideMethods: "all",

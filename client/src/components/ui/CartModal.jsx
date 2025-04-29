@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Dialog,
   DialogTitle,
@@ -12,14 +14,14 @@ import {
   DialogContentText,
   Dialog as MuiDialog,
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
 import { X, Plus, Minus, Trash, ShoppingCart } from "lucide-react";
+
 import { removeFromCart, updateCartQuantity } from "../../actions/CartAction";
 import { placeOrder } from "../../actions/OrderAction";
+
 import CART_CONSTANTS from "../../constants/CartConstants";
+
 import { showToast } from "../../components/ui/ShowToast";
-// import { placeOrder } from "../../actions/orderActions"; // Import the placeOrder action
 
 const CartModal = ({ open, handleClose }) => {
   const cartItems = useSelector((state) => state.cart.cartItems || []);
@@ -51,25 +53,20 @@ const CartModal = ({ open, handleClose }) => {
   const handlePlaceOrder = () => {
     const orderData = {
       items: cartItems.map((item) => ({
-        menuItem: item.productId, // ensure productId is the MongoDB _id of Menu item
+        menuItem: item.productId,
         quantity: item.quantity,
       })),
 
       totalPrice: getTotal(),
       deliveryAddress,
     };
-    // console.log(orderData);
 
     dispatch(placeOrder(orderData));
-    // showToas("Order placed successfully!");
+
     showToast("Order placed successfully", "success");
     dispatch({ type: CART_CONSTANTS.CLEAR_CART });
     handleClose();
-    // setDeliveryAddress("");
-
-    // Dispatch placeOrder action
   };
-  // console.log("cart item at modal", cartItems);
 
   return (
     <>
@@ -214,7 +211,7 @@ const CartModal = ({ open, handleClose }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handlePlaceOrder} // Handle the place order
+                onClick={handlePlaceOrder}
                 fullWidth
               >
                 Place Order

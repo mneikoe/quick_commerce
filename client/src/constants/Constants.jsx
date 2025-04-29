@@ -7,11 +7,11 @@ const Constants = {
   },
   ORDER_STATUS: {
     PENDING: "pending",
-    CONFIRMED: "confirmed",
-    ASSIGNED: "assigned",
-    READY: "ready",
-    PICKEDUP: "pickedup",
-    DELIVERED: "delivered",
+    CONFIRMED: "confirmed", //admiin
+    ASSIGNED: "assigned", //admin
+    READY: "ready", //shopkeerp
+    PICKEDUP: "pickedup", //deliveryboy
+    DELIVERED: "delivered", //deliveryboy
   },
   STATUS: {
     ACTIVE: "active",

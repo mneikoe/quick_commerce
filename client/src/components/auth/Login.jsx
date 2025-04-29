@@ -1,24 +1,24 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, CheckCircle } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-
-import { AuthContext } from "../../context/AuthContext";
 
 import TextInput from "../ui/TextInput";
 import { showToast } from "../ui/ShowToast";
+import { loginUser } from "../../actions/AuthAction";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const { currentUser } = useSelector((s) => s.auth);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -27,24 +27,26 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
-      const userData = await login(formData.email, formData.password);
-      console.log(userData);
-      showToast("login successfully", "success");
-      switch (userData.role) {
+      const userData = await dispatch(
+        loginUser(formData.email, formData.password)
+      );
+
+      showToast("Login successfully", "success");
+
+      switch (currentUser?.role) {
         case "admin":
           navigate("/admin/dashboard");
           break;
         case "shopkeeper":
           navigate("/shopkeeper/dashboard");
           break;
-        case "deliveryBoy":
+        case "deliveryboy":
           navigate("/delivery/dashboard");
           break;
-
         default:
           navigate("/products");
-        // navigate("/");
       }
     } catch (error) {
       setError(error.toString());
@@ -54,7 +56,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-6 py-8 bg-gray-100 ">
+    <div className="flex items-center justify-center min-h-screen px-6 py-8 bg-gray-100">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

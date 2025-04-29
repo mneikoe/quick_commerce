@@ -1,5 +1,3 @@
-// CustomDialog.js
-
 import React from "react";
 import {
   Dialog,

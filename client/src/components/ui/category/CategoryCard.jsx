@@ -10,11 +10,16 @@ const CategoryCard = ({ name, image, to }) => {
       sx={{
         textDecoration: "none",
         borderRadius: 3,
-        boxShadow: 3,
-        transition: "0.3s",
-        "&:hover": { boxShadow: 6 },
+        boxShadow: 2,
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        "&:hover": {
+          transform: "scale(1.03)",
+          boxShadow: 5,
+        },
         overflow: "hidden",
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       {image ? (
@@ -24,14 +29,14 @@ const CategoryCard = ({ name, image, to }) => {
           alt={name}
           sx={{
             width: "100%",
-            height: 160, // Fixed height
-            objectFit: "contain", // Ensures image fills and crops if needed
+            height: { xs: 140, md: 160 },
+            objectFit: "cover",
           }}
         />
       ) : (
         <CardMedia
           sx={{
-            height: 160,
+            height: { xs: 140, md: 160 },
             backgroundColor: "#f0f0f0",
             display: "flex",
             justifyContent: "center",
@@ -43,8 +48,20 @@ const CategoryCard = ({ name, image, to }) => {
           No Image
         </CardMedia>
       )}
-      <CardContent sx={{ textAlign: "center" }}>
-        <Typography variant="subtitle1" fontWeight="bold">
+      <CardContent
+        sx={{
+          textAlign: "center",
+          flexGrow: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: "0.9rem", md: "1rem" } }}
+        >
           {name}
         </Typography>
       </CardContent>

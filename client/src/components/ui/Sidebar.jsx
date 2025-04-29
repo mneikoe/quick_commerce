@@ -15,8 +15,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import { Menu } from "lucide-react";
+import { ListOrdered, ListOrderedIcon, Menu, User2 } from "lucide-react";
 import { Category } from "@mui/icons-material";
+import UserProfile from "../../pages/UserProfile";
 
 // Role-based navigation items
 const navItems = {
@@ -25,12 +26,14 @@ const navItems = {
     { label: "Users", path: "/admin/users", icon: <PeopleIcon /> },
     { label: "Menu", path: "/admin/menu", icon: <Menu /> },
     { label: "Category", path: "/admin/category", icon: <Category /> },
-    // { label: "Menu", path: "/admin/menu", icon: <RestaurantMenuIcon /> },
-    // { label: "Shipping", path: "/admin/shipping", icon: <LocalShippingIcon /> },
+    { label: "Order", path: "/admin/order", icon: <ListOrdered /> },
+    { label: "Profile", path: "/admin/profile", icon: <User2 /> },
   ],
   user: [
     { label: "Dashboard", path: "/user/dashboard", icon: <DashboardIcon /> },
     { label: "Menu", path: "/user/menu", icon: <RestaurantMenuIcon /> },
+    { label: "Profile", path: "/user/profile", icon: <User2 /> },
+    { label: "Order", path: "/user/order", icon: <ListOrderedIcon /> },
   ],
   shopkeeper: [
     {
@@ -43,22 +46,30 @@ const navItems = {
       path: "/shopkeeper/myOrders",
       icon: <ShoppingCartIcon />,
     },
+    {
+      label: "Profile",
+      path: "/shopkeeper/profile",
+      icon: <User2 />,
+    },
   ],
   deliveryboy: [
     {
       label: "Dashboard",
-      path: "/delivery/dashboard",
+      path: "/deliveryboy/dashboard",
       icon: <DashboardIcon />,
     },
     {
-      label: "Deliveries",
-      path: "/delivery/orders",
+      label: "Orders",
+      path: "/deliveryboy/myOrders",
       icon: <ShoppingCartIcon />,
+    },
+    {
+      label: "Profile",
+      path: "/deliveryboy/profile",
+      icon: <User2 />,
     },
   ],
 };
-
-// Get the navigation items based on user role
 
 // Sidebar component
 const Sidebar = ({
@@ -70,9 +81,7 @@ const Sidebar = ({
 }) => {
   const location = useLocation();
 
-  // Get the nav items based on the user role
-  // const roleNavItems = navItems[userRole] || navItems["shopkeeper"]; // Default to shopkeeper if role not found
-  const roleNavItems = navItems[userRole] || navItems["shopkeeper"]; // Default to shopkeeper if role is not found
+  const roleNavItems = navItems[userRole] || navItems["user"];
 
   return (
     <Drawer

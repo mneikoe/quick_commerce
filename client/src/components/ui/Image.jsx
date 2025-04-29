@@ -1,14 +1,14 @@
 import React from "react";
-// server side par multiple size image  upload
+
 const Image = ({
   src,
-  srcSet = "", // comma-separated srcset string
-  sizes = "100vw", // default sizes
+  srcSet = "",
+  sizes = "100vw",
   alt,
   width,
   height,
   aspectRatio = "4/3",
-  sources = [], // source objects for <picture> (webp, avif, etc.)
+  sources = [],
   className = "",
   style = {},
   loading = "lazy",
