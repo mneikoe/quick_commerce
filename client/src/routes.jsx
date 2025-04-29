@@ -21,6 +21,7 @@ import DeliveryBoyOrders from "./deliveryboy/DeliveryBoyOrders";
 import DeliveryBoyDashboard from "./deliveryboy/DeliveryBoyDashboard";
 
 import UserDashboard from "./user/UserDashboard";
+import UserOrder from "./user/UserOrder";
 
 export const publicRoutes = [
   { path: "/", element: <HomePage /> },
@@ -51,6 +52,7 @@ export const deliveryRoutes = [
 export const userRoutes = [
   { path: "profile", element: <UserProfile /> },
   { path: "dashboard", element: <UserDashboard /> },
+  { path: "order", element: <UserOrder /> },
 ];
 
 export const commonRoutes = [

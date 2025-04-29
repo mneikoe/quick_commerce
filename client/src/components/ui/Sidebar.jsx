@@ -15,7 +15,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import { ListOrdered, Menu, User2 } from "lucide-react";
+import { ListOrdered, ListOrderedIcon, Menu, User2 } from "lucide-react";
 import { Category } from "@mui/icons-material";
 import UserProfile from "../../pages/UserProfile";
 
@@ -33,6 +33,7 @@ const navItems = {
     { label: "Dashboard", path: "/user/dashboard", icon: <DashboardIcon /> },
     { label: "Menu", path: "/user/menu", icon: <RestaurantMenuIcon /> },
     { label: "Profile", path: "/user/profile", icon: <User2 /> },
+    { label: "Order", path: "/user/order", icon: <ListOrderedIcon /> },
   ],
   shopkeeper: [
     {

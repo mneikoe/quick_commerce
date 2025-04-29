@@ -121,9 +121,8 @@ const UserProfile = () => {
 
             {loading ? (
               <Typography>Loading Orders...</Typography>
-            ) : error ? (
-              <Typography color="error">{error}</Typography>
-            ) : orders && orders.length > 0 ? (
+            ) : // <Typography color="error">{error}</Typography>
+            orders && orders.length > 0 ? (
               orders.map((order) => (
                 <Card
                   key={order._id}

@@ -83,8 +83,6 @@ const DeliveryBoyOrders = () => {
       <Paper elevation={3} className="p-4">
         {loading ? (
           <Loader />
-        ) : error ? (
-          <Typography color="error">{error}</Typography>
         ) : currentOrders.length ? (
           <>
             <Typography variant="h5" fontWeight="bold" mb={3}>
