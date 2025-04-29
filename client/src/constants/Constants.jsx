@@ -1,6 +1,5 @@
 const Constants = {
   USER_ROLE: {
-    ADMIN: "admin",
     DELIVERYBOY: "deliveryboy",
     SHOPKEEPER: "shopkeeper",
     USER: "user",

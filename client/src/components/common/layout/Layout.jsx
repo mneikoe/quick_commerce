@@ -32,6 +32,7 @@ const Layout = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Topbar onToggleSidebar={handleToggleSidebar} open={sidebarOpen} />
+
       <Box sx={{ display: "flex", flexGrow: 1 }}>
         {/* Sidebar with transition */}
         {isRoleRoute && (
