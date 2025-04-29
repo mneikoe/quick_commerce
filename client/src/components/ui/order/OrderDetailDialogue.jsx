@@ -10,91 +10,125 @@ import {
   TableCell,
   TableRow,
   TableHead,
+  Box,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React from "react";
+import { format } from "date-fns";
 
 const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   if (!selectedOrder) return null;
+
+  const formatDate = (date) =>
+    date ? format(new Date(date), "dd MMM yyyy, hh:mm a") : "N/A";
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
       <DialogTitle>Order Details</DialogTitle>
       <DialogContent dividers>
         {/* User Info */}
-        {typeof selectedOrder.user === "object" &&
-          selectedOrder.user !== null && (
-            <>
-              <Typography variant="h6" gutterBottom>
-                User Details
-              </Typography>
-              <Typography>Name: {selectedOrder.user.name || "N/A"}</Typography>
-              <Typography>
-                Email: {selectedOrder.user.email || "N/A"}
-              </Typography>
-              <Typography>
-                Status: {selectedOrder.user.status || "N/A"}
-              </Typography>
-            </>
-          )}
+        {selectedOrder.user && typeof selectedOrder.user === "object" && (
+          <Box mb={3}>
+            <Typography variant="h6" gutterBottom>
+              User Details
+            </Typography>
+            <Typography variant="body2">
+              <strong>Name:</strong> {selectedOrder.user.name || "N/A"}
+            </Typography>
+            <Typography variant="body2">
+              <strong>Email:</strong> {selectedOrder.user.email || "N/A"}
+            </Typography>
+            <Typography variant="body2">
+              <strong>Status:</strong> {selectedOrder.user.status || "N/A"}
+            </Typography>
+          </Box>
+        )}
 
         {/* Delivery Boy Info */}
-        {typeof selectedOrder.deliveryBoy === "object" &&
-          selectedOrder.deliveryBoy !== null && (
-            <>
-              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        {selectedOrder.deliveryBoy &&
+          typeof selectedOrder.deliveryBoy === "object" && (
+            <Box mb={3}>
+              <Typography variant="h6" gutterBottom>
                 Delivery Boy Details
               </Typography>
-              <Typography>
-                Name: {selectedOrder.deliveryBoy.name || "Not Assigned"}
+              <Typography variant="body2">
+                <strong>Name:</strong>{" "}
+                {selectedOrder.deliveryBoy.name || "Not Assigned"}
               </Typography>
-              <Typography>
-                Email: {selectedOrder.deliveryBoy.email || "N/A"}
+              <Typography variant="body2">
+                <strong>Email:</strong>{" "}
+                {selectedOrder.deliveryBoy.email || "N/A"}
               </Typography>
-              <Typography>
-                Status: {selectedOrder.deliveryBoy.status || "N/A"}
+              <Typography variant="body2">
+                <strong>Status:</strong>{" "}
+                {selectedOrder.deliveryBoy.status || "N/A"}
               </Typography>
-            </>
+            </Box>
           )}
 
         {/* Shopkeeper Info */}
-        {typeof selectedOrder.shopkeeper === "object" &&
-          selectedOrder.shopkeeper !== null && (
-            <>
-              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        {selectedOrder.shopkeeper &&
+          typeof selectedOrder.shopkeeper === "object" && (
+            <Box mb={3}>
+              <Typography variant="h6" gutterBottom>
                 Shopkeeper Details
               </Typography>
-              <Typography>
-                Name: {selectedOrder.shopkeeper.name || "Not Assigned"}
+              <Typography variant="body2">
+                <strong>Name:</strong>{" "}
+                {selectedOrder.shopkeeper.name || "Not Assigned"}
               </Typography>
-              <Typography>
-                Email: {selectedOrder.shopkeeper.email || "N/A"}
+              <Typography variant="body2">
+                <strong>Email:</strong>{" "}
+                {selectedOrder.shopkeeper.email || "N/A"}
               </Typography>
-              <Typography>
-                Status: {selectedOrder.shopkeeper.status || "N/A"}
+              <Typography variant="body2">
+                <strong>Status:</strong>{" "}
+                {selectedOrder.shopkeeper.status || "N/A"}
               </Typography>
-            </>
+            </Box>
           )}
 
         {/* Order Info */}
-        <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-          Order Info
-        </Typography>
-        <Typography>Status: {selectedOrder.status || "N/A"}</Typography>
-        <Typography>Total Price: ₹{selectedOrder.totalPrice || 0}</Typography>
+        <Box mb={3}>
+          <Typography variant="h6" gutterBottom>
+            Order Info
+          </Typography>
+          <Typography variant="body2">
+            <strong>Status:</strong> {selectedOrder.status || "N/A"}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Total Price:</strong> ₹{selectedOrder.totalPrice || 0}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Created At:</strong> {formatDate(selectedOrder.createdAt)}
+          </Typography>
+        </Box>
 
         {/* Items Table */}
-        {selectedOrder.items && selectedOrder.items.length > 0 && (
+        {selectedOrder.items?.length > 0 && (
           <>
-            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+            <Typography variant="h6" gutterBottom>
               Items
             </Typography>
-            <Table size="small">
+            <Table size={isMobile ? "small" : "medium"}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Item Name</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  <TableCell>Total</TableCell>
+                  <TableCell>
+                    <strong>Item Name</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Price</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Quantity</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Total</strong>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

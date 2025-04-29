@@ -69,7 +69,7 @@ const Register = () => {
           navigate("/shopkeeper/dashboard");
           break;
         case "deliveryboy":
-          navigate("/delivery/dashboard");
+          navigate("/deliveryboy/dashboard");
           break;
         default:
           navigate("/products");

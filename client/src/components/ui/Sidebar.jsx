@@ -37,7 +37,7 @@ const navItems = {
   ],
   user: [
     { label: "Dashboard", path: "/user/dashboard", icon: <DashboardIcon /> },
-    { label: "Menu", path: "/user/menu", icon: <RestaurantMenuIcon /> },
+    // { label: "Menu", path: "/user/menu", icon: <RestaurantMenuIcon /> },
     { label: "Profile", path: "/user/profile", icon: <User2 /> },
     { label: "Order", path: "/user/order", icon: <ListOrderedIcon /> },
   ],

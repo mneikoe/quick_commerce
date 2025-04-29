@@ -16,6 +16,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,12 +32,15 @@ import {
 
 const AdminCategory = () => {
   const dispatch = useDispatch();
-  const { categories, loading, error } = useSelector((state) => state.category);
+  const { categories, loading } = useSelector((state) => state.category);
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [editId, setEditId] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     dispatch(getAllCategories());
@@ -84,38 +90,46 @@ const AdminCategory = () => {
   };
 
   if (loading) return <Loader />;
-  return (
-    <Box className="p-4">
-      <Paper className="p-4">
-        <Box className="flex items-center justify-between mb-4">
-          <Typography variant="h5" fontWeight="bold">
-            Categories
-          </Typography>
-          <Button
-            startIcon={<Add />}
-            variant="contained"
-            onClick={() => openModal()}
-          >
-            Add Category
-          </Button>
-        </Box>
 
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
+  return (
+    <Box px={{ xs: 2, sm: 3, md: 4 }} py={2}>
+      <Paper elevation={3} sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={2}
+          mb={3}
+        >
+          <Grid item xs={12} sm="auto">
+            <Typography variant={isXs ? "h6" : "h5"} fontWeight="bold">
+              Categories
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm="auto">
+            <Button
+              startIcon={<Add />}
+              variant="contained"
+              fullWidth={isXs}
+              onClick={() => openModal()}
+            >
+              Add Category
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Box sx={{ overflowX: "auto" }}>
+          <Table size="small">
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={4}>Loading...</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
-            ) : (
-              categories.map((category) => (
+            </TableHead>
+            <TableBody>
+              {categories.map((category) => (
                 <TableRow key={category._id}>
                   <TableCell>{category.name}</TableCell>
                   <TableCell>{category.description}</TableCell>
@@ -139,32 +153,50 @@ const AdminCategory = () => {
                     </Tooltip>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
       </Paper>
 
-      {/* Edit / Add Category Modal */}
-      <Dialog open={modalOpen} onClose={closeModal} fullWidth maxWidth="sm">
+      {/* Add / Edit Modal */}
+      <Dialog
+        open={modalOpen}
+        onClose={closeModal}
+        fullWidth
+        maxWidth="sm"
+        // fullScreen={isXs}
+        sx={{
+          "& .MuiDialog-paper": {
+            m: isXs ? 0 : 2,
+            borderRadius: isXs ? 0 : 2,
+          },
+        }}
+      >
         <DialogTitle>{editId ? "Edit Category" : "Add Category"}</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
             label="Category Name"
-            name="name"
             margin="normal"
             value={formData.name}
+            InputLabelProps={{
+              sx: { color: theme.palette.text.primary },
+            }}
+            sx={{ color: theme.palette.text.primary }}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <TextField
             fullWidth
             label="Description"
-            name="description"
             margin="normal"
             multiline
             rows={3}
             value={formData.description}
+            InputLabelProps={{
+              sx: { color: theme.palette.text.primary },
+            }}
+            sx={{ color: theme.palette.text.primary }}
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
@@ -172,14 +204,18 @@ const AdminCategory = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeModal}>Cancel</Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
+          <Button onClick={handleSubmit} variant="contained">
             {editId ? "Update" : "Create"}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Delete Confirmation Modal */}
-      <Dialog open={deleteModalOpen} onClose={closeDeleteModal}>
+      {/* Delete Modal */}
+      <Dialog
+        open={deleteModalOpen}
+        onClose={closeDeleteModal}
+        // fullScreen={isXs}
+      >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>
@@ -187,9 +223,7 @@ const AdminCategory = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDeleteModal} color="secondary">
-            Cancel
-          </Button>
+          <Button onClick={closeDeleteModal}>Cancel</Button>
           <Button onClick={confirmDelete} variant="contained" color="error">
             Delete
           </Button>

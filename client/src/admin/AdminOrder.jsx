@@ -1,4 +1,16 @@
 import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  useTheme,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   confirmOrder,
@@ -9,9 +21,10 @@ import { listUsers } from "../actions/userAction";
 import { showToast } from "../components/ui/ShowToast";
 import { clearAllOrders } from "../reducer/OrderReducer";
 import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
-import { Button } from "@mui/material";
+import SelectBox from "../components/ui/SelectBox";
 
 const AdminOrder = () => {
+  const theme = useTheme();
   const dispatch = useDispatch();
 
   const {
@@ -20,28 +33,24 @@ const AdminOrder = () => {
     error: allOrdersError,
   } = useSelector((state) => state.allOrders);
 
-  const {
-    users,
-    loading: usersLoading,
-    error: usersError,
-  } = useSelector((state) => state.userList);
-  const { currentUser, token } = useSelector((s) => s.auth);
-
+  const { users } = useSelector((state) => state.userList);
+  const { currentUser } = useSelector((s) => s.auth);
+  console.log(allOrders);
   const [shopkeeperId, setShopkeeperId] = useState("");
   const [deliveryBoyId, setDeliveryBoyId] = useState("");
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-const shopkeepers =
-  users?.users?.filter(
-    (user) => user.role === "shopkeeper" && user.isVerified === true
-  ) || [];
+  const shopkeepers =
+    users?.users?.filter(
+      (user) => user.role === "shopkeeper" && user.isVerified
+    ) || [];
 
-const deliveryBoys =
-  users?.users?.filter(
-    (user) => user.role === "deliveryboy" && user.isVerified === true
-  ) || [];
+  const deliveryBoys =
+    users?.users?.filter(
+      (user) => user.role === "deliveryboy" && user.isVerified
+    ) || [];
 
   useEffect(() => {
     dispatch(clearAllOrders());
@@ -60,17 +69,14 @@ const deliveryBoys =
       await dispatch(confirmOrder(orderId));
       dispatch(getAllOrders());
       showToast("Order Confirmed Successfully!", "success");
-    } catch (error) {
+    } catch {
       showToast("Failed to Confirm Order!", "error");
     }
   };
 
   const handleAssignOrder = async () => {
     if (!shopkeeperId || !deliveryBoyId || !selectedOrderId) {
-      return showToast(
-        "Please select Order, Shopkeeper, and Delivery Boy!",
-        "error"
-      );
+      return showToast("Please select all fields", "error");
     }
     try {
       await dispatch(assignOrder(selectedOrderId, shopkeeperId, deliveryBoyId));
@@ -79,7 +85,7 @@ const deliveryBoys =
       setSelectedOrderId(null);
       dispatch(getAllOrders());
       showToast("Order Assigned Successfully!", "success");
-    } catch (error) {
+    } catch {
       showToast("Failed to Assign Order!", "error");
     }
   };
@@ -94,200 +100,144 @@ const deliveryBoys =
     setSelectedOrder(null);
   };
 
-  if (allOrdersError) {
-    showToast("Error during get all orders", "error");
+  const renderOrderSection = (title, filterStatus, actions = null) => {
+    const orders = allOrders.filter((order) => order.status === filterStatus);
 
-    return <p>Error: {allOrdersError}</p>;
-  }
+    return (
+      <Box
+        sx={{
+          mt: 4,
+          bgcolor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: 700, color: theme.palette.text.primary }}
+        >
+          {title}
+        </Typography>
 
-  return (
-    <div className="p-4">
-      <h1 className="mb-4 text-2xl font-bold">Admin Orders</h1>
-      {/* Pending Orders Section */}
-      <div>
-        <h2 className="mb-2 text-xl font-semibold">Pending Orders</h2>
-        {allOrders.filter((order) => order.status === "pending").length ===
-        0 ? (
-          <p>No pending orders.</p>
+        {orders.length === 0 ? (
+          <Typography>No {filterStatus} orders.</Typography>
         ) : (
-          <ul className="space-y-4">
-            {allOrders
-              .filter((order) => order.status === "pending")
-              .map((order) => (
-                <li
-                  key={order._id}
-                  className="flex items-center justify-between p-4 border rounded"
-                >
-                  <span>Order ID: {order._id}</span>
-                  <Button
-                    variant="contained"
-                    onClick={() => handleConfirmOrder(order._id)}
-                  >
-                    Confirm
-                  </Button>
-                  <Button onClick={() => openOrderDetailsDialog(order)}>
-                    View Details
-                  </Button>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
-      {/* Confirmed Orders Section */}
-      <div className="mt-8">
-        <h2 className="mb-2 text-xl font-semibold">
-          Confirmed Orders (Assign Shopkeeper & DeliveryBoy)
-        </h2>
-        {allOrders.filter((order) => order.status === "confirmed").length ===
-        0 ? (
-          <p>No confirmed orders to assign.</p>
-        ) : (
-          <ul className="space-y-4">
-            {allOrders
-              .filter((order) => order.status === "confirmed")
-              .map((order) => (
-                <li key={order._id} className="p-4 border rounded">
-                  <div className="flex flex-col gap-2">
-                    <span>Order ID: {order._id}</span>
+          <Grid container spacing={2}>
+            {orders.map((order) => (
+              <Grid item xs={12} md={6} key={order._id}>
+                <Paper elevation={3} sx={{ p: 2 }}>
+                  <Typography>Order ID: {order._id}</Typography>
 
-                    <div className="flex gap-4">
-                      <select
-                        className="p-2 border rounded"
+                  {filterStatus === "pending" && (
+                    <Box mt={2} display="flex" gap={2}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleConfirmOrder(order._id)}
+                      >
+                        Confirm
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={() => openOrderDetailsDialog(order)}
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                  )}
+
+                  {filterStatus === "confirmed" && (
+                    <Box mt={2} display="flex" flexDirection="column" gap={2}>
+                      <SelectBox
+                        label="Shopkeeper"
+                        name="shopkeeper"
                         value={shopkeeperId}
                         onChange={(e) => {
                           setShopkeeperId(e.target.value);
                           setSelectedOrderId(order._id);
                         }}
-                      >
-                        <option value="">Select Shopkeeper</option>
-                        {shopkeepers.map((shopkeeper) => (
-                          <option key={shopkeeper._id} value={shopkeeper._id}>
-                            {shopkeeper.name}
-                          </option>
-                        ))}
-                      </select>
+                        options={shopkeepers.map((sk) => ({
+                          label: sk.name,
+                          value: sk._id,
+                        }))}
+                        placeholder="Select Shopkeeper"
+                      />
 
-                      <select
-                        className="p-2 border rounded"
+                      <SelectBox
+                        label="Delivery Boy"
+                        name="deliveryBoy"
                         value={deliveryBoyId}
                         onChange={(e) => {
                           setDeliveryBoyId(e.target.value);
                           setSelectedOrderId(order._id);
                         }}
-                      >
-                        <option value="">Select Delivery Boy</option>
-                        {deliveryBoys.map((deliveryBoy) => (
-                          <option key={deliveryBoy._id} value={deliveryBoy._id}>
-                            {deliveryBoy.name}
-                          </option>
-                        ))}
-                      </select>
+                        options={deliveryBoys.map((db) => ({
+                          label: db.name,
+                          value: db._id,
+                        }))}
+                        placeholder="Select Delivery Boy"
+                      />
 
-                      <Button variant="contained" onClick={handleAssignOrder}>
-                        Assign
-                      </Button>
-                      <Button onClick={() => openOrderDetailsDialog(order)}>
+                      <Box display="flex" gap={2}>
+                        <Button variant="contained" onClick={handleAssignOrder}>
+                          Assign
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          onClick={() => openOrderDetailsDialog(order)}
+                        >
+                          View Details
+                        </Button>
+                      </Box>
+                    </Box>
+                  )}
+
+                  {["assigned", "ready", "pickedup", "delivered"].includes(
+                    filterStatus
+                  ) && (
+                    <Box mt={2}>
+                      <Button
+                        variant="outlined"
+                        onClick={() => openOrderDetailsDialog(order)}
+                      >
                         View Details
                       </Button>
-                    </div>
-                  </div>
-                </li>
-              ))}
-          </ul>
+                    </Box>
+                  )}
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
         )}
-      </div>
-      {/* Assigned Orders Section */}
-      <div className="mt-8">
-        <h2 className="mb-2 text-xl font-semibold">Assigned Orders</h2>
-        {allOrders.filter((order) => order.status === "assigned").length ===
-        0 ? (
-          <p>No assigned orders.</p>
-        ) : (
-          <ul className="space-y-4">
-            {allOrders
-              .filter((order) => order.status === "assigned")
-              .map((order) => (
-                <li key={order._id} className="p-4 border rounded">
-                  <span>Order ID: {order._id} (Assigned)</span>
-                  <Button onClick={() => openOrderDetailsDialog(order)}>
-                    View Details
-                  </Button>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
+      </Box>
+    );
+  };
 
-      {/* Ready Orders Section (Shopkeeper) */}
-      <div className="mt-8">
-        <h2 className="mb-2 text-xl font-semibold">Ready Orders</h2>
-        {allOrders.filter((order) => order.status === "ready").length === 0 ? (
-          <p>No ready orders.</p>
-        ) : (
-          <ul className="space-y-4">
-            {allOrders
-              .filter((order) => order.status === "ready")
-              .map((order) => (
-                <li key={order._id} className="p-4 border rounded">
-                  <span>Order ID: {order._id} (Ready)</span>
-                  <Button onClick={() => openOrderDetailsDialog(order)}>
-                    View Details
-                  </Button>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
+  if (allOrdersError) {
+    showToast("Error during get all orders", "error");
+    return <Typography color="error">Error: {allOrdersError}</Typography>;
+  }
 
-      {/* Picked Up Orders Section (Delivery Boy) */}
-      <div className="mt-8">
-        <h2 className="mb-2 text-xl font-semibold">Picked Up Orders</h2>
-        {allOrders.filter((order) => order.status === "pickedup").length ===
-        0 ? (
-          <p>No picked-up orders.</p>
-        ) : (
-          <ul className="space-y-4">
-            {allOrders
-              .filter((order) => order.status === "pickedup")
-              .map((order) => (
-                <li key={order._id} className="p-4 border rounded">
-                  <span>Order ID: {order._id} (Picked Up)</span>
-                  <Button onClick={() => openOrderDetailsDialog(order)}>
-                    View Details
-                  </Button>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
+  return (
+    <Box sx={{ p: { xs: 2, md: 4, bgcolor: theme.palette.background.paper } }}>
+      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
+        Admin Orders
+      </Typography>
 
-      {/* Delivered Orders Section (Delivery Boy) */}
-      <div className="mt-8">
-        <h2 className="mb-2 text-xl font-semibold">Delivered Orders</h2>
-        {allOrders.filter((order) => order.status === "delivered").length ===
-        0 ? (
-          <p>No delivered orders.</p>
-        ) : (
-          <ul className="space-y-4">
-            {allOrders
-              .filter((order) => order.status === "delivered")
-              .map((order) => (
-                <li key={order._id} className="p-4 border rounded">
-                  <span>Order ID: {order._id} (Delivered)</span>
-                  <Button onClick={() => openOrderDetailsDialog(order)}>
-                    View Details
-                  </Button>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
+      {renderOrderSection("Pending Orders", "pending")}
+      {renderOrderSection(
+        "Confirmed Orders (Assign Shopkeeper & DeliveryBoy)",
+        "confirmed"
+      )}
+      {renderOrderSection("Assigned Orders", "assigned")}
+      {renderOrderSection("Ready Orders", "ready")}
+      {renderOrderSection("Picked Up Orders", "pickedup")}
+      {renderOrderSection("Delivered Orders", "delivered")}
+
       <OrderDetailsDialog
         open={dialogOpen}
         handleClose={closeOrderDetailsDialog}
         selectedOrder={selectedOrder}
       />
-    </div>
+    </Box>
   );
 };
 

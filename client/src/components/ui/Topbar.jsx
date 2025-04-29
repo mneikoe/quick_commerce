@@ -58,7 +58,10 @@ const Topbar = ({ onToggleSidebar, open }) => {
     <>
       <AppBar
         position="fixed"
-        sx={{ zIndex: theme.zIndex.drawer + 1 }}
+        sx={{
+          zIndex: theme.zIndex.drawer + 1,
+          bgcolor: theme.palette.background.default,
+        }}
         elevation={1}
       >
         <Toolbar
@@ -67,10 +70,10 @@ const Topbar = ({ onToggleSidebar, open }) => {
           {/* Sidebar toggle / Logo  */}
           {/* only by user with role */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {currentUser && isRoleRoute && (
+            {currentUser && isRoleRoute && !isMobile && (
               <IconButton
                 onClick={onToggleSidebar}
-                sx={{ color: "white" }}
+                sx={{ color: theme.palette.text.secondary }}
                 aria-label="Toggle Sidebar"
               >
                 {open ? <X size={20} /> : <MenuIcon size={20} />}
@@ -78,7 +81,10 @@ const Topbar = ({ onToggleSidebar, open }) => {
             )}
 
             {/* Optional logo/brand */}
-            <Typography variant="h6" sx={{ color: "white", fontWeight: 600 }}>
+            <Typography
+              variant="h6"
+              sx={{ color: theme.palette.text.tertiary, fontWeight: 600 }}
+            >
               ShopMate
             </Typography>
           </Box>
@@ -97,17 +103,25 @@ const Topbar = ({ onToggleSidebar, open }) => {
 
               <NavLink
                 to="/"
-                style={{ textDecoration: "none", color: "white" }}
+                style={{
+                  textDecoration: "none",
+                  color: theme.palette.text.secondary,
+                }}
               >
                 <Typography>Home</Typography>
               </NavLink>
               <NavLink
                 to="/products"
-                style={{ textDecoration: "none", color: "white" }}
+                style={{
+                  textDecoration: "none",
+                  color: theme.palette.text.secondary,
+                }}
               >
                 <Typography>Products</Typography>
               </NavLink>
-              <Typography sx={{ color: "white" }}>Contact</Typography>
+              <Typography sx={{ color: theme.palette.text.secondary }}>
+                Contact
+              </Typography>
               <TextInput
                 size="small"
                 placeholder="Search item"
@@ -125,7 +139,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
                   setCartOpen(true);
                   handleMenuClose();
                 }}
-                sx={{ color: "white" }}
+                sx={{ color: theme.palette.text.secondary }}
                 aria-label="Open Cart"
               >
                 <Badge badgeContent={itemCount} color="secondary">
@@ -138,10 +152,14 @@ const Topbar = ({ onToggleSidebar, open }) => {
             {currentUser ? (
               isRoleRoute ? (
                 <>
-                  <Typography sx={{ color: "white" }}>
+                  <Typography sx={{ color: theme.palette.text.secondary }}>
                     {!isMobile && currentUser?.name}
                   </Typography>
-                  <Button variant="contained" onClick={handleLogout}>
+                  <Button
+                    variant="contained"
+                    onClick={handleLogout}
+                    sx={{ color: theme.palette.text.secondary }}
+                  >
                     Logout
                   </Button>
                 </>
@@ -151,7 +169,13 @@ const Topbar = ({ onToggleSidebar, open }) => {
                 </Box>
               )
             ) : (
-              <Button variant="contained" onClick={handleLogin}>
+              <Button
+                variant="contained"
+                onClick={handleLogin}
+                sx={{
+                  color: theme.palette.text.secondary,
+                }}
+              >
                 Login
               </Button>
             )}
@@ -161,7 +185,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
               <>
                 <IconButton
                   onClick={handleMenuOpen}
-                  sx={{ color: "white" }}
+                  sx={{ color: theme.palette.text.secondary }}
                   aria-label="Open Menu"
                 >
                   <MenuIcon />

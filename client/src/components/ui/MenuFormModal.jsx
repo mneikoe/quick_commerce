@@ -8,6 +8,7 @@ import {
   TextField,
   Switch,
   FormControlLabel,
+  useTheme,
 } from "@mui/material";
 import SelectBox from "./SelectBox";
 
@@ -25,7 +26,7 @@ const MenuFormModal = ({
     price: "",
     isAvailable: true,
   });
-
+  const theme = useTheme();
   useEffect(() => {
     if (item) {
       setFormData({
@@ -80,6 +81,9 @@ const MenuFormModal = ({
           value={formData.title}
           onChange={handleChange}
           disabled={viewOnly}
+          InputLabelProps={{
+            sx: { color: theme.palette.text.primary },
+          }}
         />
         {/* Category Select Box */}
         <SelectBox
@@ -99,6 +103,9 @@ const MenuFormModal = ({
           fullWidth
           label="Price"
           name="price"
+          InputLabelProps={{
+            sx: { color: theme.palette.text.primary },
+          }}
           margin="normal"
           type="number"
           value={formData.price}

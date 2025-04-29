@@ -1,6 +1,4 @@
-// import React from "react";
 import React, { useState, useEffect } from "react";
-
 import {
   Grid,
   Card,
@@ -14,6 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMyOrdersByUser } from "../actions/OrderAction";
 import OrderDetailsDialog from "../components/ui/order/OrderDetailDialogue";
 import OrderStatusTimeline from "../components/ui/order/OrderStatusTimeline";
+import Loader from "../components/ui/Loader";
+import NoData from "../components/ui/NoData";
+
 const UserOrder = () => {
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -21,11 +22,10 @@ const UserOrder = () => {
 
   const { orders, loading, error } = useSelector((s) => s.getUserOrders);
   const { currentUser: user } = useSelector((s) => s.auth);
+
   useEffect(() => {
     dispatch(getMyOrdersByUser());
   }, [dispatch]);
-
-  console.log(orders, loading, error);
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
@@ -37,57 +37,61 @@ const UserOrder = () => {
     setSelectedOrder(null);
   };
 
-  console.log(orders);
+  if (loading) return <Loader />;
+
   return (
     <div>
-      {/* Orders List */}
-      {user?.role === "user" && (
-        <>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h5" sx={{ mb: 2 }}>
-                My Orders
-              </Typography>
-
-              {loading ? (
-                <Typography>Loading Orders...</Typography>
-              ) : // <Typography color="error">{error}</Typography>
-              orders && orders.length > 0 ? (
-                orders.map((order) => (
-                  <Card
-                    key={order._id}
-                    sx={{
-                      mb: 2,
-                      p: 2,
-                      cursor: "pointer",
-                      transition: "0.3s",
-                      "&:hover": { boxShadow: 6 },
-                    }}
-                    onClick={() => handleOpenDialog(order)}
-                  >
-                    <CardContent>
-                      <Typography variant="subtitle1">
-                        Order Status: {order.status}
-                      </Typography>
-                      <Typography variant="body2">
-                        Total Price: ₹{order.totalPrice}
-                      </Typography>
-                      <OrderStatusTimeline currentStatus={order.status} />
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                <Typography>No orders found.</Typography>
-              )}
-            </Grid>
-            {/* Dialog for Order Details */}
-            <OrderDetailsDialog
-              open={dialogOpen}
-              handleClose={handleCloseDialog}
-              selectedOrder={selectedOrder}
-            />
+          <Grid item xs={12}>
+            <Typography
+              variant="h5"
+              sx={{ mb: 2, textAlign: { xs: "center", sm: "left" } }}
+            >
+              My Orders
+            </Typography>
           </Grid>
-        </>
+      {user?.role === "user" && (
+        <Grid container spacing={3}>
+
+          {orders && orders.length > 0 ? (
+            orders.map((order) => (
+              <Grid item xs={12} sm={6} md={4} key={order._id}>
+                <Card
+                  sx={{
+                    p: 2,
+                    height: "100%",
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    transition: "0.3s",
+                    "&:hover": { boxShadow: 6 },
+                  }}
+                  onClick={() => handleOpenDialog(order)}
+                >
+                  <CardContent>
+                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                      Order Status: {order.status}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      Total Price: ₹{order.totalPrice}
+                    </Typography>
+                    <OrderStatusTimeline currentStatus={order.status} />
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <NoData message="No orders found" />
+            </Grid>
+          )}
+
+          <OrderDetailsDialog
+            open={dialogOpen}
+            handleClose={handleCloseDialog}
+            selectedOrder={selectedOrder}
+          />
+        </Grid>
       )}
     </div>
   );

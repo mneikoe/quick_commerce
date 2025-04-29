@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 import Sidebar from "../../ui/Sidebar";
 import Topbar from "../../ui/Topbar";
@@ -12,7 +12,7 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { currentUser } = useSelector((s) => s.auth);
-
+  const theme = useTheme();
   const handleToggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -30,7 +30,17 @@ const Layout = () => {
   const sidebarWidth = sidebarOpen ? 162 : 60;
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "auto",
+        minHeight: "100vh",
+        width: "100vw",
+
+        bgcolor: theme.palette.background.paper,
+      }}
+    >
       <Topbar onToggleSidebar={handleToggleSidebar} open={sidebarOpen} />
 
       <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -62,6 +72,8 @@ const Layout = () => {
             p: 3,
             transition: "margin 0.3s ease",
             marginTop: "64px",
+            // marginTop: "64/px",
+            width: "100%",
           }}
         >
           <Outlet />
