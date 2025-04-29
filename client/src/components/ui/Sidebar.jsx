@@ -8,6 +8,10 @@ import {
   Tooltip,
   Box,
   Divider,
+  useMediaQuery,
+  useTheme,
+  BottomNavigation,
+  BottomNavigationAction,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -17,8 +21,10 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { ListOrdered, ListOrderedIcon, Menu, User2 } from "lucide-react";
 import { Category } from "@mui/icons-material";
-import UserProfile from "../../pages/UserProfile";
 
+// Blinkit-inspired color scheme
+const BLINKIT_YELLOW = "#f8d521";
+const DARK_BG = "#1a1a1a";
 // Role-based navigation items
 const navItems = {
   admin: [
@@ -80,9 +86,56 @@ const Sidebar = ({
   userRole,
 }) => {
   const location = useLocation();
-
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const roleNavItems = navItems[userRole] || navItems["user"];
 
+  // Mobile bottom navigation
+  if (isSmallScreen) {
+    return (
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          backgroundColor: DARK_BG,
+          borderTop: `2px solid ${BLINKIT_YELLOW}`,
+        }}
+      >
+        <BottomNavigation
+          showLabels
+          sx={{
+            bgcolor: DARK_BG,
+            "& .Mui-selected": { color: BLINKIT_YELLOW },
+            height: 64,
+          }}
+        >
+          {roleNavItems.map((item) => (
+            <BottomNavigationAction
+              key={item.path}
+              component={Link}
+              to={item.path}
+              label={item.label}
+              icon={item.icon}
+              selected={location.pathname === item.path}
+              sx={{
+                minWidth: 80,
+                color: "#fff",
+                "&.Mui-selected": {
+                  color: BLINKIT_YELLOW,
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          ))}
+        </BottomNavigation>
+      </Box>
+    );
+  }
+
+  // Desktop sidebar
   return (
     <Drawer
       variant={isMobile ? "temporary" : "permanent"}
@@ -93,11 +146,10 @@ const Sidebar = ({
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: open ? drawerWidth : 60,
-          boxSizing: "border-box",
-          backgroundColor: (theme) => theme.palette.secondary.light,
-          color: (theme) => theme.palette.primary.main,
-          transition: "width 0.3s",
-          overflowX: "hidden",
+          bgcolor: DARK_BG,
+          color: "#fff",
+          transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          borderRight: `2px solid ${BLINKIT_YELLOW}`,
         },
       }}
     >
@@ -108,6 +160,15 @@ const Sidebar = ({
               title={open ? "" : item.label}
               placement="right"
               key={item.path}
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    bgcolor: DARK_BG,
+                    color: BLINKIT_YELLOW,
+                    border: `1px solid ${BLINKIT_YELLOW}`,
+                  },
+                },
+              }}
             >
               <ListItemButton
                 component={Link}
@@ -116,16 +177,23 @@ const Sidebar = ({
                 sx={{
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
+                  py: 1.5,
+                  margin: 1,
+                  borderRadius: 2,
                   "&.Mui-selected": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: "#fff",
+                    bgcolor: BLINKIT_YELLOW,
+                    color: DARK_BG,
+                    fontWeight: "bold",
+                    "&:hover": {
+                      bgcolor: "#fae052",
+                    },
                   },
                   "&:hover": {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    color: "#fff",
+                    bgcolor: "#333333",
+                    color: BLINKIT_YELLOW,
                   },
+                  transition: "all 0.3s ease",
                 }}
-                className="transition-all duration-300"
               >
                 <ListItemIcon
                   sx={{
@@ -134,16 +202,35 @@ const Sidebar = ({
                     mr: open ? 2 : "auto",
                     justifyContent: "center",
                   }}
-                  color="secondary"
                 >
-                  {item.icon}
+                  {React.cloneElement(item.icon, {
+                    style: {
+                      color:
+                        location.pathname === item.path ? DARK_BG : "inherit",
+                    },
+                  })}
                 </ListItemIcon>
-                {open && <ListItemText primary={item.label} />}
+                {open && (
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{
+                      fontWeight: "medium",
+                      fontSize: "0.875rem",
+                    }}
+                  />
+                )}
               </ListItemButton>
             </Tooltip>
           ))}
         </List>
-        <Divider sx={{ my: 1, backgroundColor: "#475569" }} />
+        <Divider
+          sx={{
+            my: 1,
+            bgcolor: `${BLINKIT_YELLOW}40`,
+            width: "80%",
+            mx: "auto",
+          }}
+        />
       </Box>
     </Drawer>
   );
