@@ -1,4 +1,4 @@
-import "dotenv/config"; 
+import "dotenv/config";
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
@@ -32,7 +32,7 @@ app.use(
 
 // Routes
 app.use("/api/v1", router);
-
+app.use("/uploads", express.static("uploads"));
 app.use(errorHandler);
 
 // Database & Socket

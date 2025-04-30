@@ -37,7 +37,7 @@ const SelectBox = ({
         id={name}
         name={name}
         displayEmpty
-        value={value}
+        value={value ?? ""}
         sx={{ color: theme.palette.text.primary }}
         onChange={onChange}
         label={label}

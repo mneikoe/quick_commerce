@@ -9,6 +9,8 @@ import {
   Switch,
   FormControlLabel,
   useTheme,
+  Box,
+  Typography,
 } from "@mui/material";
 import SelectBox from "./SelectBox";
 
@@ -20,20 +22,24 @@ const MenuFormModal = ({
   viewOnly = false,
   categories = [],
 }) => {
+  const [preview, setPreview] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     category: "",
     price: "",
     isAvailable: true,
+    image: null,
   });
   const theme = useTheme();
+  console.log(formData);
   useEffect(() => {
     if (item) {
       setFormData({
         title: item.title || "",
-        category: item.category?.name || "",
+        category: item.category?._id || "",
         price: item.price || "",
         isAvailable: item.isAvailable || false,
+        image: null,
       });
     } else {
       setFormData({
@@ -41,25 +47,44 @@ const MenuFormModal = ({
         category: "",
         price: "",
         isAvailable: true,
+        image: null,
       });
     }
   }, [item]);
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value, type, checked, files } = e.target;
+    if (name === "image" && files.length) {
+      const file = files[0];
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }));
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
-
   const onSubmit = () => {
-    handleSubmit(formData);
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("category", formData.category);
+    data.append("price", formData.price);
+    data.append("isAvailable", formData.isAvailable);
+    if (formData.image) data.append("image", formData.image);
+
+    handleSubmit(data);
+
     setFormData({
       title: "",
       category: "",
       price: "",
       isAvailable: true,
+      image: null,
     });
+    setPreview(null);
     handleClose();
   };
 
@@ -124,6 +149,33 @@ const MenuFormModal = ({
           }
           label="Available"
         />
+        {!viewOnly && (
+          <Box mt={2}>
+            <Button variant="outlined" component="label">
+              Upload Image
+              <input
+                type="file"
+                hidden
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </Button>
+          </Box>
+        )}
+
+        {(preview || item?.image) && (
+          <Box mt={2}>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              Image Preview:
+            </Typography>
+            <img
+              src={preview || item?.image}
+              alt="Preview"
+              style={{ maxHeight: "200px", borderRadius: 8 }}
+            />
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

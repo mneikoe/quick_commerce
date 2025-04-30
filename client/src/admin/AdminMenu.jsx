@@ -112,6 +112,7 @@ const AdminMenu = () => {
   const { categories, loading: categoryLoading } = useSelector(
     (state) => state.category
   );
+  console.log(menuItems);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -395,26 +396,31 @@ const AdminMenu = () => {
             <Table size="medium" sx={{ minWidth: 750 }}>
               <TableHead>
                 <TableRow>
-                  {["Name", "Category", "Price", "Status", "Actions"].map(
-                    (header, index) => (
-                      <TableCell
-                        key={header}
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "0.85rem",
-                          color: theme.palette.text.secondary,
-                          bgcolor: "#ffffff",
-                          py: 2,
-                          px: 3,
-                          borderBottom: `1px solid ${theme.palette.divider}`,
-                          ...(index === 4 && { textAlign: "right" }),
-                          whiteSpace: "nowrap", // Prevents text wrapping
-                        }}
-                      >
-                        {header}
-                      </TableCell>
-                    )
-                  )}
+                  {[
+                    "Image",
+                    "Name",
+                    "Category",
+                    "Price",
+                    "Status",
+                    "Actions",
+                  ].map((header, index) => (
+                    <TableCell
+                      key={header}
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: "0.85rem",
+                        color: theme.palette.text.secondary,
+                        bgcolor: "#ffffff",
+                        py: 2,
+                        px: 3,
+                        borderBottom: `1px solid ${theme.palette.divider}`,
+                        ...(index === 4 && { textAlign: "right" }),
+                        whiteSpace: "nowrap", // Prevents text wrapping
+                      }}
+                    >
+                      {header}
+                    </TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
 
@@ -431,6 +437,27 @@ const AdminMenu = () => {
                         },
                       }}
                     >
+                      <TableCell
+                        sx={{
+                          py: 2.5,
+                          px: 3,
+                          borderBottom: `1px solid ${theme.palette.divider}`,
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={item?.image} // assuming your backend sends `item.image` as image URL
+                          alt={item?.title}
+                          sx={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 1,
+                            objectFit: "cover",
+                            boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+                          }}
+                        />
+                      </TableCell>
+
                       <TableCell
                         sx={{
                           fontWeight: 500,

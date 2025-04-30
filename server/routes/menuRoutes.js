@@ -9,18 +9,29 @@ import {
 import { protect } from "../middlewares/authMiddleware.js";
 import { Constants } from "../constants/constants.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import { uploadMenuImage } from "../middlewares/upload.js";
 
 const menuRoutes = express.Router();
 
 menuRoutes
   .route("/")
-  .post(protect, authorizeRoles(Constants.USER.ADMIN), createMenuItem)
+  .post(
+    protect,
+    authorizeRoles(Constants.USER.ADMIN),
+    uploadMenuImage,
+    createMenuItem
+  )
   .get(getAllMenuItems);
 
 menuRoutes
   .route("/:id")
   .get(protect, authorizeRoles(Constants.USER.ADMIN), getMenuItemById)
-  .put(protect, authorizeRoles(Constants.USER.ADMIN), updateMenuItem)
+  .put(
+    protect,
+    authorizeRoles(Constants.USER.ADMIN),
+    uploadMenuImage,
+    updateMenuItem
+  )
   .delete(protect, authorizeRoles(Constants.USER.ADMIN), deleteMenuItem);
 
 export default menuRoutes;

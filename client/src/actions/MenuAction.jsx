@@ -22,7 +22,9 @@ export const getMenuItems = () => async (dispatch) => {
 export const createMenuItem = (menuData) => async (dispatch) => {
   try {
     dispatch({ type: MENU_CONSTANTS.CREATE_MENU.REQUEST });
-    const { data } = await axiosInstance.post("/menu", menuData);
+    const { data } = await axiosInstance.post("/menu", menuData, {
+      isMultipart: true,
+    });
 
     dispatch({
       type: MENU_CONSTANTS.CREATE_MENU.SUCCESS,
@@ -59,7 +61,9 @@ export const updateMenuItem = (id, updatedData) => async (dispatch) => {
   try {
     dispatch({ type: MENU_CONSTANTS.UPDATE_MENU.REQUEST });
 
-    const { data } = await axiosInstance.put(`/menu/${id}`, updatedData);
+    const { data } = await axiosInstance.put(`/menu/${id}`, updatedData, {
+      isMultipart: true,
+    });
 
     dispatch({
       type: MENU_CONSTANTS.UPDATE_MENU.SUCCESS,
