@@ -13,6 +13,7 @@ import {
   DialogActions,
   DialogContentText,
   Dialog as MuiDialog,
+  useTheme,
 } from "@mui/material";
 import { X, Plus, Minus, Trash, ShoppingCart } from "lucide-react";
 
@@ -26,7 +27,7 @@ import { showToast } from "../../components/ui/ShowToast";
 const CartModal = ({ open, handleClose }) => {
   const cartItems = useSelector((state) => state.cart.cartItems || []);
   const dispatch = useDispatch();
-
+  const theme = useTheme();
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
 
@@ -202,6 +203,14 @@ const CartModal = ({ open, handleClose }) => {
               <Button
                 variant="outlined"
                 color="error"
+                sx={{
+                  bgcolor: theme.palette.error.main,
+                  color: theme.palette.error.light,
+                  ":hover": {
+                    bgcolor: theme.palette.error.dark,
+                    color: theme.palette.primary.light,
+                  },
+                }}
                 startIcon={<Trash size={16} />}
                 onClick={() => setClearConfirmOpen(true)}
                 fullWidth

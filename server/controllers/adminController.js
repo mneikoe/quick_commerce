@@ -58,15 +58,16 @@ export const verifyUser = asyncHandler(async (req, res) => {
 
 export const confirmOrder = asyncHandler(async (req, res, next) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.orderId,
-      { status: Constants.ORDER_STATUS.CONFIRMED },
-      { new: true }
-    );
+    const order = await Order.findById(req.params.orderId);
 
     if (!order) {
       return next(new ErrorHandler("Order not found", 404));
     }
+
+    order.status = Constants.ORDER_STATUS.CONFIRMED;
+    order.statusTimestamps.set(Constants.ORDER_STATUS.CONFIRMED, new Date());
+
+    await order.save();
 
     req.io.emit("orderUpdate", order);
 
@@ -91,27 +92,31 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
       );
     }
 
-    const order = await Order.findByIdAndUpdate(
-      req.params.orderId,
-      {
-        status: Constants.ORDER_STATUS.ASSIGNED,
-        shopkeeper: shopkeeperId,
-        deliveryBoy: deliveryBoyId,
-        assignedBy: req.user.id,
-      },
-      { new: true }
-    ).populate("shopkeeper deliveryBoy items.menuItem");
+    const order = await Order.findById(req.params.orderId);
 
     if (!order) {
       return next(new ErrorHandler("Order not found", 404));
     }
 
-    req.io.emit("orderUpdate", order);
+    // Update status, assignees, and timestamp
+    order.status = Constants.ORDER_STATUS.ASSIGNED;
+    order.shopkeeper = shopkeeperId;
+    order.deliveryBoy = deliveryBoyId;
+    order.assignedBy = req.user.id;
+    order.statusTimestamps.set(Constants.ORDER_STATUS.ASSIGNED, new Date());
+
+    await order.save();
+
+    const populatedOrder = await Order.findById(order._id).populate(
+      "shopkeeper deliveryBoy items.menuItem"
+    );
+
+    req.io.emit("orderUpdate", populatedOrder);
 
     res.json({
       success: true,
       message: "Order assigned successfully",
-      order,
+      order: populatedOrder,
     });
   } catch (error) {
     console.error("Error assigning order:", error);

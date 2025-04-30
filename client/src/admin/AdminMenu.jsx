@@ -105,7 +105,7 @@ const premiumTheme = {
 const AdminMenu = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
-  theme.palette = { ...theme.palette, ...premiumTheme };
+  theme.palette = { ...theme.palette };
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { menuItems, loading } = useSelector((state) => state.menu);
@@ -646,7 +646,7 @@ const AdminMenu = () => {
                               borderRadius: 2,
                               px: 3,
                               borderColor: theme.palette.primary.main,
-                              color: theme.palette.primary.main,
+                              color: theme.palette.primary.contrastText,
                             }}
                           >
                             Clear Filters

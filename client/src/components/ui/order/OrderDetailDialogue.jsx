@@ -20,7 +20,7 @@ import { format } from "date-fns";
 const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  console.log(selectedOrder);
   if (!selectedOrder) return null;
 
   const formatDate = (date) =>
@@ -28,21 +28,41 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle>Order Details</DialogTitle>
-      <DialogContent dividers>
+      <DialogTitle
+        sx={{
+          bgcolor: theme.palette.primary.light,
+          color: theme.palette.primary.contrastText,
+        }}
+      >
+        Order Details
+      </DialogTitle>
+      <DialogContent dividers sx={{ bgcolor: theme.palette.background.paper }}>
         {/* User Info */}
         {selectedOrder.user && typeof selectedOrder.user === "object" && (
           <Box mb={3}>
-            <Typography variant="h6" gutterBottom>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ color: theme.palette.text.primary }}
+            >
               User Details
             </Typography>
-            <Typography variant="body2">
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.text.secondary }}
+            >
               <strong>Name:</strong> {selectedOrder.user.name || "N/A"}
             </Typography>
-            <Typography variant="body2">
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.text.secondary }}
+            >
               <strong>Email:</strong> {selectedOrder.user.email || "N/A"}
             </Typography>
-            <Typography variant="body2">
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.text.secondary }}
+            >
               <strong>Status:</strong> {selectedOrder.user.status || "N/A"}
             </Typography>
           </Box>
@@ -52,18 +72,31 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
         {selectedOrder.deliveryBoy &&
           typeof selectedOrder.deliveryBoy === "object" && (
             <Box mb={3}>
-              <Typography variant="h6" gutterBottom>
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{ color: theme.palette.text.primary }}
+              >
                 Delivery Boy Details
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
                 <strong>Name:</strong>{" "}
                 {selectedOrder.deliveryBoy.name || "Not Assigned"}
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
                 <strong>Email:</strong>{" "}
                 {selectedOrder.deliveryBoy.email || "N/A"}
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
                 <strong>Status:</strong>{" "}
                 {selectedOrder.deliveryBoy.status || "N/A"}
               </Typography>
@@ -74,18 +107,31 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
         {selectedOrder.shopkeeper &&
           typeof selectedOrder.shopkeeper === "object" && (
             <Box mb={3}>
-              <Typography variant="h6" gutterBottom>
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{ color: theme.palette.text.primary }}
+              >
                 Shopkeeper Details
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
                 <strong>Name:</strong>{" "}
                 {selectedOrder.shopkeeper.name || "Not Assigned"}
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
                 <strong>Email:</strong>{" "}
                 {selectedOrder.shopkeeper.email || "N/A"}
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
                 <strong>Status:</strong>{" "}
                 {selectedOrder.shopkeeper.status || "N/A"}
               </Typography>
@@ -94,16 +140,29 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
 
         {/* Order Info */}
         <Box mb={3}>
-          <Typography variant="h6" gutterBottom>
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ color: theme.palette.text.primary }}
+          >
             Order Info
           </Typography>
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             <strong>Status:</strong> {selectedOrder.status || "N/A"}
           </Typography>
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             <strong>Total Price:</strong> ₹{selectedOrder.totalPrice || 0}
           </Typography>
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             <strong>Created At:</strong> {formatDate(selectedOrder.createdAt)}
           </Typography>
         </Box>
@@ -111,22 +170,37 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
         {/* Items Table */}
         {selectedOrder.items?.length > 0 && (
           <>
-            <Typography variant="h6" gutterBottom>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ color: theme.palette.text.primary }}
+            >
               Items
             </Typography>
-            <Table size={isMobile ? "small" : "medium"}>
+            <Table
+              size={isMobile ? "small" : "medium"}
+              sx={{ bgcolor: theme.palette.background.paper }}
+            >
               <TableHead>
                 <TableRow>
-                  <TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: theme.palette.text.primary }}
+                  >
                     <strong>Item Name</strong>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: theme.palette.text.primary }}
+                  >
                     <strong>Price</strong>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: theme.palette.text.primary }}
+                  >
                     <strong>Quantity</strong>
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: theme.palette.text.primary }}
+                  >
                     <strong>Total</strong>
                   </TableCell>
                 </TableRow>

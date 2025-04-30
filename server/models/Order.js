@@ -29,6 +29,11 @@ const orderSchema = new mongoose.Schema(
       enum: Object.values(Constants.ORDER_STATUS),
       default: Constants.ORDER_STATUS.PENDING,
     },
+    statusTimestamps: {
+      type: Map,
+      of: Date,
+      default: {},
+    },
     totalPrice: { type: Number, required: true },
     // deliveryAddress: { type: String, required: true },
     assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

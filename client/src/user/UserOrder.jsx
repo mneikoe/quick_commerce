@@ -41,17 +41,16 @@ const UserOrder = () => {
 
   return (
     <div>
-          <Grid item xs={12}>
-            <Typography
-              variant="h5"
-              sx={{ mb: 2, textAlign: { xs: "center", sm: "left" } }}
-            >
-              My Orders
-            </Typography>
-          </Grid>
+      <Grid item xs={12}>
+        <Typography
+          variant="h5"
+          sx={{ mb: 2, textAlign: { xs: "center", sm: "left" } }}
+        >
+          My Orders
+        </Typography>
+      </Grid>
       {user?.role === "user" && (
         <Grid container spacing={3}>
-
           {orders && orders.length > 0 ? (
             orders.map((order) => (
               <Grid item xs={12} sm={6} md={4} key={order._id}>
@@ -69,14 +68,26 @@ const UserOrder = () => {
                   onClick={() => handleOpenDialog(order)}
                 >
                   <CardContent>
-                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      gutterBottom
+                    >
                       Order Status: {order.status}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
                       Total Price: ₹{order.totalPrice}
                     </Typography>
-                    <OrderStatusTimeline currentStatus={order.status} />
                   </CardContent>
+                  {/* <Box> */}
+                    <OrderStatusTimeline
+                      currentStatus={order.status}
+                      order={order}
+                      timestamps={order.statusTimestamps}
+                      onCancel={() => console.log("disabled feature")}
+                      onView={() => console.log("disabled feature")}
+                    />
+                  {/* </Box> */}
                 </Card>
               </Grid>
             ))

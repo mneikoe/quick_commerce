@@ -1,3 +1,4 @@
+import { Constants } from "../constants/constants.js";
 import Order from "../models/Order.js";
 
 export const getMyOrders = async (req, res) => {
@@ -13,14 +14,24 @@ export const getMyOrders = async (req, res) => {
 
 export const confirmPickup = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.orderId,
-      { status: "pickedup" },
-      { new: true }
-    ).populate("user shopkeeper");
+    const order = await Order.findById(req.params.orderId);
 
-    req.io.to(order._id.toString()).emit("orderUpdate", order);
-    res.json(order);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Update status and timestamp
+    order.status = Constants.ORDER_STATUS.PICKEDUP;
+    order.statusTimestamps.set(Constants.ORDER_STATUS.PICKEDUP, new Date());
+
+    await order.save();
+
+    const populatedOrder = await Order.findById(order._id).populate(
+      "user shopkeeper"
+    );
+
+    req.io.to(order._id.toString()).emit("orderUpdate", populatedOrder);
+    res.json(populatedOrder);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -28,14 +39,24 @@ export const confirmPickup = async (req, res) => {
 
 export const confirmDelivery = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.orderId,
-      { status: "delivered" },
-      { new: true }
-    ).populate("user shopkeeper");
+    const order = await Order.findById(req.params.orderId);
 
-    req.io.to(order._id.toString()).emit("orderUpdate", order);
-    res.json(order);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Update status and timestamp
+    order.status = Constants.ORDER_STATUS.DELIVERED;
+    order.statusTimestamps.set(Constants.ORDER_STATUS.DELIVERED, new Date());
+
+    await order.save();
+
+    const populatedOrder = await Order.findById(order._id).populate(
+      "user shopkeeper"
+    );
+
+    req.io.to(order._id.toString()).emit("orderUpdate", populatedOrder);
+    res.json(populatedOrder);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

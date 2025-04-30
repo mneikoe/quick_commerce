@@ -60,7 +60,7 @@ const Topbar = ({ onToggleSidebar, open }) => {
         position="fixed"
         sx={{
           zIndex: theme.zIndex.drawer + 1,
-          bgcolor: theme.palette.background.default,
+          bgcolor: theme.palette.primary.light,
         }}
         elevation={1}
       >
@@ -83,7 +83,13 @@ const Topbar = ({ onToggleSidebar, open }) => {
             {/* Optional logo/brand */}
             <Typography
               variant="h6"
-              sx={{ color: theme.palette.text.tertiary, fontWeight: 600 }}
+              sx={{
+                color: theme.palette.primary.contrastText,
+                ":hover": {
+                  color: theme.palette.primary.dark,
+                },
+                fontWeight: 600,
+              }}
             >
               ShopMate
             </Typography>
@@ -108,7 +114,16 @@ const Topbar = ({ onToggleSidebar, open }) => {
                   color: theme.palette.text.secondary,
                 }}
               >
-                <Typography>Home</Typography>
+                <Typography
+                  sx={{
+                    color: theme.palette.primary.contrastText,
+                    ":hover": {
+                      color: theme.palette.primary.dark,
+                    },
+                  }}
+                >
+                  Home
+                </Typography>
               </NavLink>
               <NavLink
                 to="/products"
@@ -117,9 +132,25 @@ const Topbar = ({ onToggleSidebar, open }) => {
                   color: theme.palette.text.secondary,
                 }}
               >
-                <Typography>Products</Typography>
+                <Typography
+                  sx={{
+                    color: theme.palette.primary.contrastText,
+                    ":hover": {
+                      color: theme.palette.primary.dark,
+                    },
+                  }}
+                >
+                  Products
+                </Typography>
               </NavLink>
-              <Typography sx={{ color: theme.palette.text.secondary }}>
+              <Typography
+                sx={{
+                  color: theme.palette.primary.contrastText,
+                  ":hover": {
+                    color: theme.palette.primary.dark,
+                  },
+                }}
+              >
                 Contact
               </Typography>
               <TextInput

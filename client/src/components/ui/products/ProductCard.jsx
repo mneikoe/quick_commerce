@@ -11,6 +11,7 @@ import {
   Box,
   IconButton,
   Rating,
+  useTheme,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -33,6 +34,7 @@ const ProductCard = ({
 }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const theme = useTheme();
 
   const cartItem = cartItems.find((item) => item.productId === id);
 
@@ -148,8 +150,7 @@ const ProductCard = ({
               variant="outlined"
               sx={{
                 textTransform: "none",
-                color: "#60b246",
-                borderColor: "#60b246",
+
                 fontSize: "0.75rem",
                 px: 2,
                 borderRadius: 1,
@@ -163,7 +164,7 @@ const ProductCard = ({
               sx={{
                 display: "flex",
                 alignItems: "center",
-                backgroundColor: "green",
+                backgroundColor: theme.palette.success.main,
                 borderRadius: "4px",
               }}
             >
@@ -180,7 +181,7 @@ const ProductCard = ({
               <IconButton
                 size="small"
                 onClick={handleAdd}
-                sx={{ color: "white" }}
+                sx={{ color: theme.palette.primary.light }}
               >
                 <AddIcon fontSize="small" />
               </IconButton>

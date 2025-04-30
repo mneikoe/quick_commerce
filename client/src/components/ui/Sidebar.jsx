@@ -24,11 +24,11 @@ import { Category } from "@mui/icons-material";
 
 // Updated color scheme to match Admin Menu
 const SIDEBAR_COLORS = {
-  primary: "#3d5a80",
+  primary: "#F0B6A1",
   secondary: "#e0fbfc",
   background: "#ffffff",
   textPrimary: "#293241",
-  textSecondary: "#5e6977",
+  textSecondary: "#F0B6A1",
   divider: "#eaeff4",
   hoverBg: "#f5f8fa",
 };
