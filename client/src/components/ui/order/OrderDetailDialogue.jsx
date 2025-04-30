@@ -163,7 +163,7 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
             variant="body2"
             sx={{ color: theme.palette.text.secondary }}
           >
-            <strong>Created At:</strong> {formatDate(selectedOrder.createdAt)}
+            <strong>Ordered At:</strong> {formatDate(selectedOrder.createdAt)}
           </Typography>
         </Box>
 

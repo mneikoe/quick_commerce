@@ -68,7 +68,6 @@ const Topbar = ({ onToggleSidebar, open }) => {
           sx={{ justifyContent: "space-between", px: 2, flexWrap: "wrap" }}
         >
           {/* Sidebar toggle / Logo  */}
-          {/* only by user with role */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {currentUser && isRoleRoute && !isMobile && (
               <IconButton
@@ -80,23 +79,29 @@ const Topbar = ({ onToggleSidebar, open }) => {
               </IconButton>
             )}
 
-            {/* Optional logo/brand */}
-            <Typography
-              variant="h6"
-              sx={{
+            {/* Brand name with navigation */}
+            <NavLink
+              to="/"
+              style={{
+                textDecoration: "none",
                 color: theme.palette.primary.contrastText,
-                ":hover": {
-                  color: theme.palette.primary.dark,
-                },
-                fontWeight: 600,
               }}
             >
-              ShopMate
-            </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  ":hover": {
+                    color: theme.palette.primary.dark,
+                  },
+                  fontWeight: 600,
+                }}
+              >
+                ShopMate
+              </Typography>
+            </NavLink>
           </Box>
 
           {/* Middle Section - Navigation + Search */}
-          {/* only by user without role */}
           {!isMobile && currentUser?.role && !isRoleRoute && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               {allowedRoles.includes(currentUser.role) && (

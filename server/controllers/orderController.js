@@ -100,3 +100,57 @@ export const getAllOrders = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+export const getOrdersByDate = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Validate dates
+    if (!startDate || !endDate) {
+      return res
+        .status(400)
+        .json({ message: "Both start and end dates are required" });
+    }
+
+    // Build query based on user role
+    const dateQuery = {
+      createdAt: {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      },
+    };
+
+    // Apply different filters based on user role
+    let query = {};
+
+    if (req.user.role === "admin") {
+      // Admin can see all orders
+      query = dateQuery;
+    } else if (req.user.role === "shopkeeper") {
+      // Shopkeeper can only see orders assigned to them
+      query = {
+        ...dateQuery,
+        shopkeeper: req.user.id,
+      };
+    } else {
+      // Regular users can only see their own orders
+      query = {
+        ...dateQuery,
+        user: req.user.id,
+      };
+    }
+
+    const orders = await Order.find(query).populate(
+      "user shopkeeper deliveryBoy items.menuItem"
+    );
+
+    res.json({
+      count: orders.length,
+      orders,
+      startDate,
+      endDate,
+    });
+  } catch (err) {
+    console.error("Date filter error:", err);
+    res.status(500).json({ message: "Error filtering orders by date" });
+  }
+};

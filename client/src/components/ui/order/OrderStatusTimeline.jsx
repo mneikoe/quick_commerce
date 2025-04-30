@@ -6,7 +6,6 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import { Typography, Box, Button, Paper } from "@mui/material";
-// import Constants from "../../constants/Constants";
 import Constants from "../../../constants/Constants";
 
 export default function OrderStatusTimeline({
@@ -27,8 +26,8 @@ export default function OrderStatusTimeline({
         const isActive = index <= getStatusIndex(currentStatus);
         const rawDate =
           timestamps?.[status] ||
-          (status === Constants.ORDER_STATUS.PENDING && order?.createdAt)
-            ? new Date(timestamps?.[status] || order?.createdAt)
+          (status === Constants.ORDER_STATUS.PENDING && order?.updatedAt)
+            ? new Date(timestamps?.[status] || order?.updatedAt)
             : null;
 
         const formattedDate = rawDate
@@ -46,77 +45,76 @@ export default function OrderStatusTimeline({
               hour12: true,
             })
           : null;
+
         return (
-          <>
-            <TimelineItem key={status}>
-              <TimelineSeparator>
-                <TimelineDot
+          <TimelineItem key={status}>
+            <TimelineSeparator>
+              <TimelineDot
+                sx={{
+                  backgroundColor: isActive ? "primary.main" : "grey.400",
+                }}
+              />
+              {index !== statusSteps.length - 1 && (
+                <TimelineConnector
                   sx={{
-                    backgroundColor: isActive ? "primary.main" : "grey.400",
+                    backgroundColor: isActive ? "primary.main" : "grey.300",
                   }}
                 />
-                {index !== statusSteps.length - 1 && (
-                  <TimelineConnector
-                    sx={{
-                      backgroundColor: isActive ? "primary.main" : "grey.300",
-                    }}
-                  />
-                )}
-              </TimelineSeparator>
-              <TimelineContent sx={{ pb: 3, px: 1 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    gap: 0.5,
-                    width: "100%",
-                  }}
+              )}
+            </TimelineSeparator>
+            <TimelineContent sx={{ pb: 3, px: 1 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: 0.5,
+                  width: "100%",
+                }}
+              >
+                <Typography
+                  fontWeight={isActive ? 600 : 400}
+                  color={isActive ? "primary.main" : "text.secondary"}
+                  textTransform="capitalize"
                 >
-                  <Typography
-                    fontWeight={isActive ? 600 : 400}
-                    color={isActive ? "primary.main" : "text.secondary"}
-                    textTransform="capitalize"
+                  {status}
+                </Typography>
+
+                {formattedDate && (
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {formattedDate}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {formattedTime}
+                    </Typography>
+                  </Box>
+                )}
+
+                {status === Constants.ORDER_STATUS.CANCELLED && (
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={onCancel}
+                    sx={{ textTransform: "none", mt: 1 }}
                   >
-                    {status}
-                  </Typography>
+                    Cancelled
+                  </Button>
+                )}
 
-                  {formattedDate && (
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        {formattedDate}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {formattedTime}
-                      </Typography>
-                    </Box>
-                  )}
-
-                  {status === Constants.ORDER_STATUS.CANCELLED && (
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={onCancel}
-                      sx={{ textTransform: "none", mt: 1 }}
-                    >
-                      Cancelled
-                    </Button>
-                  )}
-
-                  {status === Constants.ORDER_STATUS.DELIVERED && (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={onView}
-                      sx={{ textTransform: "none", mt: 1 }}
-                    >
-                      View Order
-                    </Button>
-                  )}
-                </Box>
-              </TimelineContent>
-            </TimelineItem>
-          </>
+                {status === Constants.ORDER_STATUS.DELIVERED && (
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={onView}
+                    sx={{ textTransform: "none", mt: 1 }}
+                  >
+                    View Order
+                  </Button>
+                )}
+              </Box>
+            </TimelineContent>
+          </TimelineItem>
         );
       })}
     </Timeline>
