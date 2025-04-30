@@ -39,8 +39,10 @@ const OrderPicker = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { token, user, currentUser } = useSelector((state) => state.auth || {});
-  const userRole = currentUser?.role || user?.role || "user";
+  const { token, currentUser } = useSelector((state) => state.auth || {});
+
+  console.log(currentUser);
+  const userRole = currentUser?.role || "user";
 
   useEffect(() => {
     if (orders.length > 0) {

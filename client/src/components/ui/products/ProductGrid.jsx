@@ -1,22 +1,24 @@
 import React from "react";
 import ProductCard from "./ProductCard";
+import { Grid } from "@mui/material";
 
 const ProductGrid = ({ products }) => {
   return (
-    <div className="grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <Grid container spacing={2}>
       {products.map((product) => (
-        <ProductCard
-          key={product._id}
-          id={product._id}
-          image={product.image}
-          title={product.title}
-          price={product.price}
-          mrp={product.mrp}
-          category={product.category?.name || "Uncategorized"}
-          rating={product.rating}
-        />
+        <Grid item key={product._id} xs={12} sm={6} md={4} lg={3}>
+          <ProductCard
+            id={product._id}
+            image={product.image}
+            title={product.title}
+            price={product.price}
+            mrp={product.mrp}
+            category={product.category?.name || "Uncategorized"}
+            rating={product.rating}
+          />
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
 

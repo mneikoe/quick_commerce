@@ -15,7 +15,12 @@ import {
   X,
   ChevronRight,
   Star,
+  ChevronRightIcon,
 } from "lucide-react";
+import ProductGrid from "../components/ui/products/ProductGrid";
+import { useSelector } from "react-redux";
+import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 // Mock data for categories
 const categories = [
@@ -94,13 +99,13 @@ const topDeals = [
 const CategoryCarousel = () => {
   return (
     <div className="py-4 overflow-x-auto hide-scrollbar">
-      <div className="flex space-x-4 px-2 min-w-max">
+      <div className="flex px-2 space-x-4 min-w-max">
         {categories.map((category, idx) => (
           <div
             key={idx}
             className={`flex flex-col items-center justify-center p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md w-24 h-24 ${category.color}`}
           >
-            <span className="text-2xl mb-1">{category.icon}</span>
+            <span className="mb-1 text-2xl">{category.icon}</span>
             <span className="text-xs font-medium text-center text-gray-800">
               {category.name}
             </span>
@@ -113,21 +118,21 @@ const CategoryCarousel = () => {
 
 const DealsSection = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+    <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
       {topDeals.map((deal, idx) => (
         <div
           key={idx}
           className={`relative overflow-hidden rounded-xl cursor-pointer transition-transform hover:scale-105 h-36 ${deal.color}`}
         >
           <div className="absolute inset-0 flex items-center">
-            <div className="pl-6 flex-1">
-              <h3 className="text-white font-bold text-xl">{deal.discount}</h3>
-              <p className="text-white text-sm mt-1">{deal.name}</p>
-              <button className="mt-2 bg-white text-xs font-medium py-1 px-3 rounded-full flex items-center">
+            <div className="flex-1 pl-6">
+              <h3 className="text-xl font-bold text-white">{deal.discount}</h3>
+              <p className="mt-1 text-sm text-white">{deal.name}</p>
+              <button className="flex items-center px-3 py-1 mt-2 text-xs font-medium bg-white rounded-full">
                 Shop Now <ChevronRight size={14} className="ml-1" />
               </button>
             </div>
-            <div className="w-1/3 flex justify-center">
+            <div className="flex justify-center w-1/3">
               <img
                 src={deal.image}
                 alt={deal.name}
@@ -143,20 +148,20 @@ const DealsSection = () => {
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
+    <div className="overflow-hidden transition-all bg-white shadow-sm rounded-xl hover:shadow-md">
       <div className="relative">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full object-cover h-40"
+          className="object-cover w-full h-40"
         />
         {product.discount && (
-          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+          <span className="absolute px-2 py-1 text-xs font-bold text-white bg-red-500 rounded top-2 left-2">
             {product.discount}
           </span>
         )}
         {product.tag && (
-          <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+          <span className="absolute px-2 py-1 text-xs font-bold text-white bg-green-500 rounded top-2 right-2">
             {product.tag}
           </span>
         )}
@@ -207,66 +212,70 @@ const Button = ({
 
 const HomePage = () => {
   const [isVisible, setIsVisible] = useState(false);
-
+  const { menuItems } = useSelector((s) => s.menu);
+  console.log(menuItems);
   useEffect(() => {
     setIsVisible(true);
   }, []);
+  const latestProducts = [...(menuItems?.data || [])]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort latest first
+    .slice(0, 6);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <main className="max-w-7xl mx-auto px-4 pb-12">
+    <div className="min-h-screen bg-gray-50">
+      <main className="px-4 pb-12 mx-auto max-w-7xl">
         {/* Hero Section */}
         <section
           className={`mt-6 md:mt-8 transition-all duration-700 ${isVisible ? "opacity-100" : "opacity-0 translate-y-10"}`}
         >
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500 to-green-700">
-            <div className="absolute top-0 right-0 w-1/2 h-full hidden md:block">
-              <div className="h-full w-full bg-white/10 backdrop-blur-sm">
+            <div className="absolute top-0 right-0 hidden w-1/2 h-full md:block">
+              <div className="w-full h-full bg-white/10 backdrop-blur-sm">
                 <img
                   src="/api/placeholder/600/500"
                   alt="Fresh Groceries"
-                  className="object-cover h-full w-full mix-blend-overlay opacity-70"
+                  className="object-cover w-full h-full mix-blend-overlay opacity-70"
                 />
               </div>
             </div>
 
             <div className="relative z-10 p-6 md:p-12 md:w-3/5">
-              <h1 className="text-3xl md:text-5xl font-extrabold text-white">
+              <h1 className="text-3xl font-extrabold text-white md:text-5xl">
                 Fresh Groceries, <br />
                 <span className="text-green-100">Delivered Fast</span>
               </h1>
-              <p className="mt-4 text-green-50 max-w-md">
+              <p className="max-w-md mt-4 text-green-50">
                 Your trusted online grocery partner – delivering freshness and
                 savings straight to your doorstep in 30 minutes or less!
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button className="px-6 py-3 rounded-full text-sm md:text-base flex items-center gap-2">
+              <div className="flex flex-wrap gap-4 mt-8">
+                <Button className="flex items-center gap-2 px-6 py-3 text-sm rounded-full md:text-base">
                   <ShoppingCart size={18} /> Shop Now
                 </Button>
                 <Button
                   variant="outlined"
-                  className="px-6 py-3 rounded-full border-white text-white hover:bg-white/20 text-sm md:text-base flex items-center gap-2"
+                  className="flex items-center gap-2 px-6 py-3 text-sm text-white border-white rounded-full hover:bg-white/20 md:text-base"
                 >
                   <Compass size={18} /> How It Works
                 </Button>
               </div>
 
-              <div className="mt-8 hidden md:flex gap-6">
+              <div className="hidden gap-6 mt-8 md:flex">
                 <div className="flex items-center gap-2">
-                  <div className="bg-green-100 p-2 rounded-full">
+                  <div className="p-2 bg-green-100 rounded-full">
                     <Truck size={16} className="text-green-700" />
                   </div>
                   <span className="text-xs text-white">Fast Delivery</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="bg-green-100 p-2 rounded-full">
+                  <div className="p-2 bg-green-100 rounded-full">
                     <Leaf size={16} className="text-green-700" />
                   </div>
                   <span className="text-xs text-white">Organic Options</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="bg-green-100 p-2 rounded-full">
+                  <div className="p-2 bg-green-100 rounded-full">
                     <DollarSign size={16} className="text-green-700" />
                   </div>
                   <span className="text-xs text-white">Best Prices</span>
@@ -278,11 +287,11 @@ const HomePage = () => {
 
         {/* Top Deals Section */}
         <section className="mt-10">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
               Top Deals
             </h2>
-            <Button variant="text" className="text-sm flex items-center">
+            <Button variant="text" className="flex items-center text-sm">
               View All <ChevronRight size={16} className="ml-1" />
             </Button>
           </div>
@@ -291,11 +300,11 @@ const HomePage = () => {
 
         {/* Categories Section */}
         <section className="mt-10">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
               Shop By Category
             </h2>
-            <Button variant="text" className="text-sm flex items-center">
+            <Button variant="text" className="flex items-center text-sm">
               View All <ChevronRight size={16} className="ml-1" />
             </Button>
           </div>
@@ -303,11 +312,11 @@ const HomePage = () => {
         </section>
 
         {/* Features Section */}
-        <section className="mt-10 py-8 px-6 bg-white rounded-2xl shadow-sm">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800 text-center mb-8">
+        <section className="px-6 py-8 mt-10 bg-white shadow-sm rounded-2xl">
+          <h2 className="mb-8 text-xl font-bold text-center text-gray-800 md:text-2xl">
             Why Shop With Us
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {[
               {
                 icon: <Truck className="text-green-600" size={24} />,
@@ -332,62 +341,93 @@ const HomePage = () => {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="flex flex-col items-center text-center p-4"
+                className="flex flex-col items-center p-4 text-center"
               >
-                <div className="mb-3 p-3 bg-green-100 rounded-full">
+                <div className="p-3 mb-3 bg-green-100 rounded-full">
                   {item.icon}
                 </div>
                 <h3 className="font-semibold text-gray-800">{item.title}</h3>
-                <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                <p className="mt-1 text-xs text-gray-500">{item.desc}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Featured Products */}
-        <section className="mt-10">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+        {/* <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
               Featured Products
             </h2>
-            <Button variant="text" className="text-sm flex items-center">
+            <Button variant="text" className="flex items-center text-sm">
               View All <ChevronRight size={16} className="ml-1" />
             </Button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <ProductGrid products={menuItems?.data} />
           </div>
-        </section>
+        </section> */}
+        <Box component="section" sx={{ mt: 5 }}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            mb={2}
+          >
+            <Typography variant="h6" color="text.primary" fontWeight="bold">
+              Featured Products
+            </Typography>
+            <Link to="/products">
+              <Button
+                endIcon={<ChevronRightIcon />}
+                size="small"
+                variant="text"
+                component={Link}
+                to="/products"
+              >
+                View All
+              </Button>
+            </Link>
+          </Box>
+
+          {/* Responsive Grid */}
+          <ProductGrid products={latestProducts} />
+        </Box>
+        {/* <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
+              Featured Products
+            </h2>
+          </div>
+        </section> */}
 
         {/* App Promotion */}
-        <section className="mt-10 relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600">
-          <div className="absolute top-0 right-0 h-full w-1/3 hidden md:block">
+        <section className="relative mt-10 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600">
+          <div className="absolute top-0 right-0 hidden w-1/3 h-full md:block">
             <img
               src="/api/placeholder/300/600"
               alt="Mobile App"
-              className="h-full object-cover blend-overlay"
+              className="object-cover h-full blend-overlay"
             />
           </div>
 
           <div className="p-6 md:p-10 md:w-2/3">
-            <h2 className="text-2xl md:text-3xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-white md:text-3xl">
               Download Our App
             </h2>
-            <p className="mt-2 text-white/80 max-w-md">
+            <p className="max-w-md mt-2 text-white/80">
               Get exclusive deals, track your orders in real-time, and enjoy a
               seamless shopping experience.
             </p>
-            <div className="mt-6 flex flex-wrap gap-4">
-              <Button className="bg-black text-white hover:bg-gray-800 px-4 py-2 rounded-xl flex items-center">
+            <div className="flex flex-wrap gap-4 mt-6">
+              <Button className="flex items-center px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-xl">
                 <span className="mr-2">🍎</span>
                 <div className="flex flex-col items-start">
                   <span className="text-xs">Download on the</span>
                   <span className="font-medium">App Store</span>
                 </div>
               </Button>
-              <Button className="bg-black text-white hover:bg-gray-800 px-4 py-2 rounded-xl flex items-center">
+              <Button className="flex items-center px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-xl">
                 <span className="mr-2">🤖</span>
                 <div className="flex flex-col items-start">
                   <span className="text-xs">Get it on</span>
@@ -399,11 +439,11 @@ const HomePage = () => {
         </section>
 
         {/* Contact & Support */}
-        <section className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 bg-white rounded-xl shadow-sm flex flex-col items-center md:items-start text-center md:text-left">
-            <Phone className="text-green-600 mb-3" size={24} />
+        <section className="grid grid-cols-1 gap-6 mt-10 md:grid-cols-3">
+          <div className="flex flex-col items-center p-6 text-center bg-white shadow-sm rounded-xl md:items-start md:text-left">
+            <Phone className="mb-3 text-green-600" size={24} />
             <h3 className="font-semibold text-gray-800">Customer Support</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="mt-1 text-sm text-gray-500">
               Need help? Our team is available 24/7
             </p>
             <Button variant="text" className="mt-3 text-sm">
@@ -411,10 +451,10 @@ const HomePage = () => {
             </Button>
           </div>
 
-          <div className="p-6 bg-white rounded-xl shadow-sm flex flex-col items-center md:items-start text-center md:text-left">
-            <MapPin className="text-green-600 mb-3" size={24} />
+          <div className="flex flex-col items-center p-6 text-center bg-white shadow-sm rounded-xl md:items-start md:text-left">
+            <MapPin className="mb-3 text-green-600" size={24} />
             <h3 className="font-semibold text-gray-800">Store Locator</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="mt-1 text-sm text-gray-500">
               Find our physical stores across the country
             </p>
             <Button variant="text" className="mt-3 text-sm">
@@ -422,19 +462,19 @@ const HomePage = () => {
             </Button>
           </div>
 
-          <div className="p-6 bg-white rounded-xl shadow-sm flex flex-col items-center md:items-start text-center md:text-left">
-            <Mail className="text-green-600 mb-3" size={24} />
+          <div className="flex flex-col items-center p-6 text-center bg-white shadow-sm rounded-xl md:items-start md:text-left">
+            <Mail className="mb-3 text-green-600" size={24} />
             <h3 className="font-semibold text-gray-800">Newsletter</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="mt-1 text-sm text-gray-500">
               Subscribe for deals and updates
             </p>
-            <div className="mt-3 flex w-full">
+            <div className="flex w-full mt-3">
               <input
                 type="email"
                 placeholder="Your email"
-                className="py-1 px-3 text-sm bg-gray-100 rounded-l-lg flex-1 border-none focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="flex-1 px-3 py-1 text-sm bg-gray-100 border-none rounded-l-lg focus:outline-none focus:ring-1 focus:ring-green-500"
               />
-              <Button className="py-1 px-3 text-sm rounded-r-lg rounded-l-none">
+              <Button className="px-3 py-1 text-sm rounded-l-none rounded-r-lg">
                 Subscribe
               </Button>
             </div>
@@ -443,15 +483,15 @@ const HomePage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-green-900 text-white mt-12 py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <footer className="py-8 mt-12 text-white bg-green-900">
+        <div className="px-4 mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             <div>
-              <h3 className="font-bold text-lg mb-4">ShopMart</h3>
-              <p className="text-green-100 text-sm">
+              <h3 className="mb-4 text-lg font-bold">ShopMart</h3>
+              <p className="text-sm text-green-100">
                 Your trusted online grocery partner since 2020.
               </p>
-              <div className="flex space-x-4 mt-4">
+              <div className="flex mt-4 space-x-4">
                 <a href="#" className="text-white hover:text-green-100">
                   <span className="sr-only">Facebook</span>
                   📱
@@ -468,7 +508,7 @@ const HomePage = () => {
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">Quick Links</h3>
+              <h3 className="mb-4 font-bold">Quick Links</h3>
               <ul className="space-y-2 text-sm text-green-100">
                 <li>
                   <a href="#" className="hover:text-white">
@@ -494,7 +534,7 @@ const HomePage = () => {
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">Categories</h3>
+              <h3 className="mb-4 font-bold">Categories</h3>
               <ul className="space-y-2 text-sm text-green-100">
                 <li>
                   <a href="#" className="hover:text-white">
@@ -520,29 +560,29 @@ const HomePage = () => {
             </div>
 
             <div>
-              <h3 className="font-bold mb-4">Contact</h3>
+              <h3 className="mb-4 font-bold">Contact</h3>
               <ul className="space-y-2 text-sm text-green-100">
                 <li className="flex items-start">
-                  <MapPin size={16} className="mr-2 mt-1 flex-shrink-0" />
+                  <MapPin size={16} className="flex-shrink-0 mt-1 mr-2" />
                   <span>Patna, Bihar, India</span>
                 </li>
                 <li className="flex items-center">
-                  <Phone size={16} className="mr-2 flex-shrink-0" />
+                  <Phone size={16} className="flex-shrink-0 mr-2" />
                   <span>+91-9876543210</span>
                 </li>
                 <li className="flex items-center">
-                  <Mail size={16} className="mr-2 flex-shrink-0" />
+                  <Mail size={16} className="flex-shrink-0 mr-2" />
                   <span>support@ShopMart.com</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-green-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col items-center justify-between pt-6 mt-8 border-t border-green-800 md:flex-row">
             <p className="text-sm text-green-100">
               © 2025 ShopMart. All rights reserved.
             </p>
-            <div className="mt-4 md:mt-0 flex space-x-6 text-sm text-green-100">
+            <div className="flex mt-4 space-x-6 text-sm text-green-100 md:mt-0">
               <a href="#" className="hover:text-white">
                 Privacy Policy
               </a>
@@ -560,7 +600,7 @@ const HomePage = () => {
       {/* Float-to-top button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-6 right-6 p-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-all"
+        className="fixed p-3 text-white transition-all bg-green-600 rounded-full shadow-lg bottom-6 right-6 hover:bg-green-700"
         aria-label="Back to top"
       >
         <svg

@@ -54,7 +54,8 @@ const Register = () => {
           formData.email,
           formData.password,
           formData.role,
-          formData.phone
+          formData.phone,
+          formData.address
         )
       );
 
@@ -234,10 +235,24 @@ const Register = () => {
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  options={Object.values(Constants.USER_ROLE)}
+                  options={Object.values(Constants.USER_ROLE).filter(
+                    (role) => role !== Constants.USER_ROLE.ADMIN
+                  )}
                 />
               </div>
-
+              <div>
+                <TextInput
+                  label="address"
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  //   placeholder=""
+                  onChange={handleChange}
+                  //   required
+                  //   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  placeholder="Enter your full address"
+                />
+              </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}

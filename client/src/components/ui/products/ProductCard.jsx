@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   Card,
   CardContent,
@@ -37,7 +36,6 @@ const ProductCard = ({
   const theme = useTheme();
 
   const cartItem = cartItems.find((item) => item.productId === id);
-
   const count = cartItem ? cartItem.quantity : 0;
 
   const handleAdd = () => {
@@ -65,69 +63,83 @@ const ProductCard = ({
       dispatch(updateCartQuantity(id, count - 1));
     }
   };
+
   return (
     <Card
       sx={{
-        p: 1,
+        height: "100%",
+        // width: 20,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
         border: "1px solid #e0e0e0",
-        borderRadius: 3,
-        boxShadow: 2,
+        borderRadius: 2,
+        boxShadow: 1,
         transition: "0.3s",
-        "&:hover": {
-          boxShadow: 4,
-        },
+        "&:hover": { boxShadow: 4 },
       }}
     >
       <Link to={`/product/${id}`}>
         <CardMedia
           component="img"
           image={image}
-          srcSet={`${image}?w=400 400w, ${image}?w=800 800w, ${image}?w=1200 1200w`} // Using srcSet for responsive image sizes
-          sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
           alt={title}
-          sx={{ height: 240, width: "100%", objectFit: "contain" }}
+          sx={{
+            height: { xs: 180, sm: 200, md: 220 },
+            width: "100%",
+            objectFit: "contain",
+            // objectFit: "contain",
+            objectPosition: "center",
+            // p: 2,
+            backgroundColor: "#f9f9f9",
+            p: 1,
+          }}
         />
       </Link>
-      <CardContent sx={{ px: 1, textAlign: "center" }}>
-        {/* cateogry */}
-        <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
+
+      <CardContent sx={{ flexGrow: 1, textAlign: "center", px: 1 }}>
+        <Typography variant="body2" sx={{ color: "gray", mb: 0.5 }} noWrap>
           {category}
         </Typography>
-        {/* Title */}
+
         <Typography
           variant="subtitle1"
-          sx={{ fontWeight: "bold", color: "#212121" }}
+          sx={{
+            fontWeight: 600,
+            color: "#212121",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
         >
           {title}
         </Typography>
+
         <Rating
-          name="rating"
           value={rating}
           readOnly
           precision={0.5}
           size="small"
-          sx={{ mt: 1 }}
+          sx={{ mt: 0.5 }}
         />
 
-        {/* Size */}
-        <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
-          {size}
-        </Typography>
+        {size && (
+          <Typography variant="body2" sx={{ color: "gray", mt: 1 }}>
+            Size: {size}
+          </Typography>
+        )}
 
-        {/* Price & Counter */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             mt: 2,
+            px: 0.5,
           }}
         >
-          <Box>
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: "bold", color: "black" }}
-            >
+          <Box textAlign="left">
+            <Typography variant="body1" fontWeight="bold">
               ₹{price}
             </Typography>
             {mrp && mrp > price && (
@@ -144,13 +156,13 @@ const ProductCard = ({
             )}
           </Box>
 
-          {/* Add/Remove Controls */}
+          {/* Add/Remove Buttons */}
           {count === 0 ? (
             <Button
               variant="outlined"
+              size="small"
               sx={{
                 textTransform: "none",
-
                 fontSize: "0.75rem",
                 px: 2,
                 borderRadius: 1,
@@ -165,17 +177,21 @@ const ProductCard = ({
                 display: "flex",
                 alignItems: "center",
                 backgroundColor: theme.palette.success.main,
-                borderRadius: "4px",
+                borderRadius: 1,
+                px: 1,
               }}
             >
               <IconButton
                 size="small"
                 onClick={handleRemove}
-                sx={{ color: "white" }}
+                sx={{ color: "#fff" }}
               >
                 <RemoveIcon fontSize="small" />
               </IconButton>
-              <Typography sx={{ mx: 1, fontWeight: "bold", color: "white" }}>
+              <Typography
+                variant="body2"
+                sx={{ mx: 1, fontWeight: "bold", color: "#fff" }}
+              >
                 {count}
               </Typography>
               <IconButton
