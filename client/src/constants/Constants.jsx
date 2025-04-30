@@ -3,6 +3,7 @@ const Constants = {
     DELIVERYBOY: "deliveryboy",
     SHOPKEEPER: "shopkeeper",
     USER: "user",
+    ADMIN: "admin",
   },
   ORDER_STATUS: {
     PENDING: "pending",
