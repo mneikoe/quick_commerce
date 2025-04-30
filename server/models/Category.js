@@ -15,6 +15,9 @@ const CategorySchema = new Schema(
       type: String,
       default: "",
     },
+    image: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ["active", "inactive"],

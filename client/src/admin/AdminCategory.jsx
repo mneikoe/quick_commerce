@@ -17,6 +17,7 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  MenuItem,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -29,13 +30,22 @@ import {
   updateCategory,
   deleteCategory,
 } from "../actions/CategoryAction";
+import { showToast } from "../components/ui/ShowToast";
 
 const AdminCategory = () => {
   const dispatch = useDispatch();
   const { categories, loading } = useSelector((state) => state.category);
+  console.log(categories);
   const [modalOpen, setModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: null,
+    existingImage: null,
+    status: "active",
+  });
   const [editId, setEditId] = useState(null);
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
 
@@ -48,10 +58,22 @@ const AdminCategory = () => {
 
   const openModal = (item = null) => {
     if (item) {
-      setFormData({ name: item.name, description: item.description });
+      setFormData({
+        name: item.name,
+        description: item.description,
+        image: null,
+        existingImage: item.image,
+        status: item.status || "active",
+      });
       setEditId(item._id);
     } else {
-      setFormData({ name: "", description: "" });
+      setFormData({
+        name: "",
+        description: "",
+        image: null,
+        existingImage: null,
+        status: "active",
+      });
       setEditId(null);
     }
     setModalOpen(true);
@@ -59,16 +81,38 @@ const AdminCategory = () => {
 
   const closeModal = () => {
     setModalOpen(false);
-    setFormData({ name: "", description: "" });
+    setFormData({
+      name: "",
+      description: "",
+      image: null,
+      existingImage: null,
+      status: "active",
+    });
     setEditId(null);
   };
 
   const handleSubmit = () => {
-    if (editId) {
-      dispatch(updateCategory(editId, formData));
-    } else {
-      dispatch(createCategory(formData));
+    if (!formData.name || !formData.description) {
+      showToast("Please fill all required fields", "error");
+      return;
     }
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("status", formData.status);
+    if (formData.image) {
+      data.append("image", formData.image);
+    }
+
+    if (editId) {
+      dispatch(updateCategory(editId, data));
+      showToast("Category updated successfully", "success");
+    } else {
+      dispatch(createCategory(data));
+      showToast("Category created successfully", "success");
+    }
+
     closeModal();
   };
 
@@ -84,8 +128,10 @@ const AdminCategory = () => {
 
   const confirmDelete = () => {
     if (categoryToDelete) {
-      dispatch(deleteCategory(categoryToDelete._id));
-      closeDeleteModal();
+      dispatch(deleteCategory(categoryToDelete._id)).then(() => {
+        showToast("Category deleted successfully", "success");
+        closeDeleteModal();
+      });
     }
   };
 
@@ -122,6 +168,7 @@ const AdminCategory = () => {
           <Table size="small">
             <TableHead>
               <TableRow>
+                <TableCell>Image</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Status</TableCell>
@@ -131,6 +178,22 @@ const AdminCategory = () => {
             <TableBody>
               {categories.map((category) => (
                 <TableRow key={category._id}>
+                  <TableCell>
+                    {category.image ? (
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        style={{
+                          width: 60,
+                          height: 60,
+                          objectFit: "cover",
+                          borderRadius: 4,
+                        }}
+                      />
+                    ) : (
+                      "No Image"
+                    )}
+                  </TableCell>
                   <TableCell>{category.name}</TableCell>
                   <TableCell>{category.description}</TableCell>
                   <TableCell>{category.status}</TableCell>
@@ -165,7 +228,6 @@ const AdminCategory = () => {
         onClose={closeModal}
         fullWidth
         maxWidth="sm"
-        // fullScreen={isXs}
         sx={{
           "& .MuiDialog-paper": {
             m: isXs ? 0 : 2,
@@ -180,10 +242,6 @@ const AdminCategory = () => {
             label="Category Name"
             margin="normal"
             value={formData.name}
-            InputLabelProps={{
-              sx: { color: theme.palette.text.primary },
-            }}
-            sx={{ color: theme.palette.text.primary }}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <TextField
@@ -193,14 +251,55 @@ const AdminCategory = () => {
             multiline
             rows={3}
             value={formData.description}
-            InputLabelProps={{
-              sx: { color: theme.palette.text.primary },
-            }}
-            sx={{ color: theme.palette.text.primary }}
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
           />
+          <TextField
+            select
+            fullWidth
+            label="Status"
+            margin="normal"
+            value={formData.status}
+            onChange={(e) =>
+              setFormData({ ...formData, status: e.target.value })
+            }
+          >
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="inactive">Inactive</MenuItem>
+          </TextField>
+          <TextField
+            fullWidth
+            type="file"
+            inputProps={{ accept: "image/*" }}
+            onChange={(e) =>
+              setFormData({ ...formData, image: e.target.files[0] })
+            }
+            margin="normal"
+          />
+          {formData.image ? (
+            <img
+              src={URL.createObjectURL(formData.image)}
+              alt="Preview"
+              style={{
+                width: "100%",
+                maxHeight: 200,
+                objectFit: "contain",
+                marginTop: 10,
+              }}
+            />
+          ) : formData.existingImage ? (
+            <img
+              src={formData.existingImage}
+              alt="Existing"
+              style={{
+                width: "100%",
+                maxHeight: 200,
+                objectFit: "contain",
+                marginTop: 10,
+              }}
+            />
+          ) : null}
         </DialogContent>
         <DialogActions>
           <Button onClick={closeModal}>Cancel</Button>
@@ -210,12 +309,8 @@ const AdminCategory = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Delete Modal */}
-      <Dialog
-        open={deleteModalOpen}
-        onClose={closeDeleteModal}
-        // fullScreen={isXs}
-      >
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteModalOpen} onClose={closeDeleteModal}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>

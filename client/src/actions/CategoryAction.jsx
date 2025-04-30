@@ -8,7 +8,10 @@ export const createCategory = (categoryData) => async (dispatch) => {
 
     const { data } = await axiosInstance.post(
       "/admin/categories",
-      categoryData
+      categoryData,
+      {
+        isMultipart: true,
+      }
     );
 
     dispatch({
@@ -77,7 +80,10 @@ export const updateCategory = (id, categoryData) => async (dispatch) => {
 
     const { data } = await axiosInstance.put(
       `/admin/categories/${id}`,
-      categoryData
+      categoryData,
+      {
+        isMultipart: true,
+      }
     );
 
     dispatch({

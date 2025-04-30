@@ -144,11 +144,16 @@ export const createCategory = asyncHandler(async (req, res) => {
   if (existing) {
     throw new ErrorHandler("Category already exists", 400);
   }
-
+  const imagePath = req.file
+    ? `${req.protocol}://${req.get("host")}/uploads/category/${
+        req.file.filename
+      }`
+    : null;
   const category = await Category.create({
     name,
     description,
     status,
+    image: imagePath,
   });
 
   res.status(201).json({
@@ -190,12 +195,21 @@ export const updateCategory = asyncHandler(async (req, res) => {
     );
   }
 
+  // Update fields conditionally
   category.name = name ?? category.name;
   category.description = description ?? category.description;
   category.status = status ?? category.status;
 
+  // ✅ Update image if new one is uploaded
+  if (req.file) {
+    category.image = `${req.protocol}://${req.get("host")}/uploads/category/${
+      req.file.filename
+    }`;
+  }
+
   const updated = await category.save();
 
+  // ✅ Update menu item references if name or description changed
   if (name || description) {
     await Menu.updateMany(
       { category: category._id },

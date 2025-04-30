@@ -15,6 +15,7 @@ import {
 import { protect } from "../middlewares/authMiddleware.js";
 import { Constants } from "../constants/constants.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import { uploadCategoryImage } from "../middlewares/categoryUpload.js";
 
 const adminRoutes = express.Router();
 
@@ -26,11 +27,14 @@ adminRoutes.get("/users", getAllUsers);
 adminRoutes.put("/orders/confirm/:orderId", confirmOrder);
 adminRoutes.put("/orders/assign/:orderId", assignOrder);
 adminRoutes.get("/orders", getAllOrders);
-adminRoutes.route("/categories").get(getAllCategories).post(createCategory);
+adminRoutes
+  .route("/categories")
+  .get(getAllCategories)
+  .post(uploadCategoryImage, createCategory);
 adminRoutes
   .route("/categories/:id")
   .get(getCategoryById)
-  .put(updateCategory)
+  .put(uploadCategoryImage, updateCategory)
   .delete(deleteCategory);
 
 export default adminRoutes;
