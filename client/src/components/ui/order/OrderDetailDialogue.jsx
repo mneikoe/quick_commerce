@@ -63,7 +63,7 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
               variant="body2"
               sx={{ color: theme.palette.text.secondary }}
             >
-              <strong>Email:</strong> {selectedOrder.user.address || "N/A"}
+              <strong>Address:</strong> {selectedOrder.user.address || "N/A"}
             </Typography>
             <Typography
               variant="body2"
@@ -103,7 +103,7 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
                 variant="body2"
                 sx={{ color: theme.palette.text.secondary }}
               >
-                <strong>Email:</strong>{" "}
+                <strong>Address:</strong>{" "}
                 {selectedOrder.deliveryBoy.address || "N/A"}
               </Typography>
               <Typography
@@ -145,7 +145,7 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
                 variant="body2"
                 sx={{ color: theme.palette.text.secondary }}
               >
-                <strong>Email:</strong>{" "}
+                <strong>Address:</strong>{" "}
                 {selectedOrder.shopkeeper.address || "N/A"}
               </Typography>
               <Typography
