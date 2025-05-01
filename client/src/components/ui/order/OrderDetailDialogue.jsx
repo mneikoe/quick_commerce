@@ -71,6 +71,12 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
             >
               <strong>Status:</strong> {selectedOrder.user.status || "N/A"}
             </Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.text.secondary }}
+            >
+              <strong>Phone:</strong> {selectedOrder.user.phone || "N/A"}
+            </Typography>
           </Box>
         )}
 
