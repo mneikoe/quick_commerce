@@ -2,12 +2,19 @@ import "dotenv/config";
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import path from "path";
+import { fileURLToPath } from "url"; // Added import
+import { dirname } from "path"; // Added import
 
+// Create __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Rest of your imports...
 import { connectToDb } from "./config/db.js";
 import socketHandler from "./sockets/socketHandler.js";
 import router from "./routes/index.js";
 import errorHandler from "./middlewares/errorMiddleware.js";
-
 import cors from "cors";
 
 const app = express();
@@ -25,7 +32,7 @@ app.use((req, res, next) => {
 // CORS middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
@@ -33,6 +40,12 @@ app.use(
 // Routes
 app.use("/api/v1", router);
 app.use("/uploads", express.static("uploads"));
+
+// Production static files
+app.use(express.static(path.join(__dirname, "dist")));
+app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "/dist/index.html"));
+});
 app.use(errorHandler);
 
 // Database & Socket
