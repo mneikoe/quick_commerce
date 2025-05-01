@@ -3,12 +3,15 @@ import CATEGORY_CONSTANTS from "../constants/CategoryConstants";
 export const categoryReducer = (state = { categories: [] }, action) => {
   switch (action.type) {
     case CATEGORY_CONSTANTS.LIST_REQUEST:
+    case CATEGORY_CONSTANTS.ALL_REQUEST:
       return { ...state, loading: true };
 
     case CATEGORY_CONSTANTS.LIST_SUCCESS:
+    case CATEGORY_CONSTANTS.ALL_SUCCESS:
       return { ...state, loading: false, categories: action.payload };
 
     case CATEGORY_CONSTANTS.LIST_FAIL:
+    case CATEGORY_CONSTANTS.ALL_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     case CATEGORY_CONSTANTS.CREATE_REQUEST:

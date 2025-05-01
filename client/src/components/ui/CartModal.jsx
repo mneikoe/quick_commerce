@@ -14,6 +14,7 @@ import {
   DialogContentText,
   Dialog as MuiDialog,
   useTheme,
+  TextField,
 } from "@mui/material";
 import { X, Plus, Minus, Trash, ShoppingCart } from "lucide-react";
 
@@ -26,10 +27,12 @@ import { showToast } from "../../components/ui/ShowToast";
 
 const CartModal = ({ open, handleClose }) => {
   const cartItems = useSelector((state) => state.cart.cartItems || []);
+
   const dispatch = useDispatch();
   const theme = useTheme();
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const { currentUser } = useSelector((s) => s.auth);
 
   const handleDecrease = (item) => {
     if (item.quantity > 1) {
@@ -59,7 +62,7 @@ const CartModal = ({ open, handleClose }) => {
       })),
 
       totalPrice: getTotal(),
-      deliveryAddress,
+      deliveryAddress: deliveryAddress || currentUser?.address,
     };
 
     dispatch(placeOrder(orderData));
@@ -182,6 +185,13 @@ const CartModal = ({ open, handleClose }) => {
               </Box>
             ))
           )}
+          <TextField
+            fullWidth
+            label="Delivery Address"
+            value={deliveryAddress}
+            onChange={(e) => setDeliveryAddress(e.target.value)}
+            sx={{ mb: 2 }}
+          />
         </DialogContent>
 
         {cartItems.length > 0 && (

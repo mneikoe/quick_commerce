@@ -35,7 +35,7 @@ const orderSchema = new mongoose.Schema(
       default: {},
     },
     totalPrice: { type: Number, required: true },
-    // deliveryAddress: { type: String, required: true },
+    deliveryAddress: { type: String },
     assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

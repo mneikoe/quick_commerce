@@ -51,7 +51,29 @@ export const getAllCategories = () => async (dispatch) => {
   }
 };
 
-// Get category by ID
+// Get all categories
+export const getCategories = () => async (dispatch) => {
+  try {
+    dispatch({ type: CATEGORY_CONSTANTS.ALL_REQUEST });
+
+    const { data } = await axiosInstance.get("/menu/categories");
+
+    dispatch({
+      type: CATEGORY_CONSTANTS.ALL_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: CATEGORY_CONSTANTS.ALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const getCategoryById = (id) => async (dispatch) => {
   try {
     dispatch({ type: CATEGORY_CONSTANTS.LIST_REQUEST });

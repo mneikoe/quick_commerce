@@ -16,7 +16,7 @@ export const placeOrder = async (req, res) => {
       user: req.user.id,
       items: req.body.items,
       totalPrice: req.body.totalPrice,
-      deliveryAddress: req.body.deliveryAddress,
+      deliveryAddress: req.user.address || req.body,
     });
     res.status(201).json(order);
   } catch (err) {

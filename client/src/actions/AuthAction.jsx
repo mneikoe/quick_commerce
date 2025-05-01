@@ -29,7 +29,7 @@ export const loginUser = (email, password) => async (dispatch) => {
 };
 
 export const registerUser =
-  (name, email, password, role, phone) => async (dispatch) => {
+  (name, email, password, role, phone, address) => async (dispatch) => {
     dispatch({ type: USER.REGISTER.REQUEST });
     try {
       const response = await axiosInstance.post("/auth/register", {
@@ -38,6 +38,7 @@ export const registerUser =
         password,
         role,
         phone,
+        address,
       });
       const { user, token } = response.data;
       localStorage.setItem("token", token);

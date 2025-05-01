@@ -25,6 +25,7 @@ const Register = () => {
     password: "",
     role: "",
     phone: "",
+    address: "",
   });
   const { currentUser } = useSelector((s) => s.auth);
 

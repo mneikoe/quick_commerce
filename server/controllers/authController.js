@@ -59,7 +59,6 @@ export const register = asyncHandler(async (req, res) => {
 
   const user = await User.create(userData);
   const token = generateToken(user);
-
   res.status(201).json({
     message: `${user.role} registered successfully`,
     token: token,
@@ -165,10 +164,9 @@ export const getMyOrders = async (req, res) => {
     const orders = await Order.find(query)
       .populate(populateFields)
       .sort("-createdAt");
-    console.log(orders);
+
     res.json(orders);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };

@@ -10,6 +10,7 @@ import { protect } from "../middlewares/authMiddleware.js";
 import { Constants } from "../constants/constants.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 import { uploadMenuImage } from "../middlewares/upload.js";
+import { getAllCategories } from "../controllers/adminController.js";
 
 const menuRoutes = express.Router();
 
@@ -22,6 +23,7 @@ menuRoutes
     createMenuItem
   )
   .get(getAllMenuItems);
+menuRoutes.get("/categories", getAllCategories);
 
 menuRoutes
   .route("/:id")
