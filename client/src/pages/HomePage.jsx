@@ -558,24 +558,6 @@ const HomePage = () => {
                 </li>
               </ul>
             </div>
-
-            <div>
-              <h3 className="mb-4 font-bold">Contact</h3>
-              <ul className="space-y-2 text-sm text-green-100">
-                <li className="flex items-start">
-                  <MapPin size={16} className="flex-shrink-0 mt-1 mr-2" />
-                  <span>Patna, Bihar, India</span>
-                </li>
-                <li className="flex items-center">
-                  <Phone size={16} className="flex-shrink-0 mr-2" />
-                  <span>+91-9876543210</span>
-                </li>
-                <li className="flex items-center">
-                  <Mail size={16} className="flex-shrink-0 mr-2" />
-                  <span>support@ShopMart.com</span>
-                </li>
-              </ul>
-            </div>
           </div>
 
           <div className="flex flex-col items-center justify-between pt-6 mt-8 border-t border-green-800 md:flex-row">
