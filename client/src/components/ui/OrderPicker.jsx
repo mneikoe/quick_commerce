@@ -235,14 +235,19 @@ const OrderPicker = () => {
               <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Order ID</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Total Price</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell className="whitespace-nowrap">Date</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      Total Price
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">Status</TableCell>
                     {userRole === "admin" && <TableCell>Customer</TableCell>}
-                    <TableCell>Shopkeeper</TableCell>
-                    <TableCell>Delivery Boy</TableCell>
-                    <TableCell>Items</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      Shopkeeper
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      Delivery Boy
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">Items</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -254,26 +259,30 @@ const OrderPicker = () => {
                           order.status === "Cancelled" ? "#ffe5e5" : "inherit",
                       }}
                     >
-                      <TableCell>{order?._id || "N/A"}</TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {order?.createdAt
                           ? new Date(order.createdAt).toLocaleString()
                           : "N/A"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         ₹{order?.totalPrice?.toFixed(2) || "0.00"}
                       </TableCell>
-                      <TableCell>{order?.status || "Unknown"}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {" "}
+                        {order?.status || "Unknown"}
+                      </TableCell>
                       {userRole === "admin" && (
-                        <TableCell>{order?.user?.name || "N/A"}</TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {order?.user?.name || "N/A"}
+                        </TableCell>
                       )}
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {order?.shopkeeper?.name || "Not Assigned"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {order?.deliveryBoy?.name || "Not Assigned"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {Array.isArray(order?.items)
                           ? order.items.map((item, idx) => (
                               <div key={item?.menuItem?._id || idx}>
@@ -291,7 +300,6 @@ const OrderPicker = () => {
               </Table>
             </TableContainer>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
                 <Pagination
