@@ -63,6 +63,12 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
               variant="body2"
               sx={{ color: theme.palette.text.secondary }}
             >
+              <strong>Email:</strong> {selectedOrder.user.address || "N/A"}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.text.secondary }}
+            >
               <strong>Status:</strong> {selectedOrder.user.status || "N/A"}
             </Typography>
           </Box>
@@ -92,6 +98,13 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
               >
                 <strong>Email:</strong>{" "}
                 {selectedOrder.deliveryBoy.email || "N/A"}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
+                <strong>Email:</strong>{" "}
+                {selectedOrder.deliveryBoy.address || "N/A"}
               </Typography>
               <Typography
                 variant="body2"
@@ -127,6 +140,13 @@ const OrderDetailsDialog = ({ open, handleClose, selectedOrder }) => {
               >
                 <strong>Email:</strong>{" "}
                 {selectedOrder.shopkeeper.email || "N/A"}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ color: theme.palette.text.secondary }}
+              >
+                <strong>Email:</strong>{" "}
+                {selectedOrder.shopkeeper.address || "N/A"}
               </Typography>
               <Typography
                 variant="body2"
