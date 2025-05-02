@@ -69,8 +69,6 @@ export const confirmOrder = asyncHandler(async (req, res, next) => {
 
     await order.save();
 
-    req.io.emit("orderUpdate", order);
-
     res.json({
       success: true,
       message: "Order confirmed successfully",
@@ -110,8 +108,6 @@ export const assignOrder = asyncHandler(async (req, res, next) => {
     const populatedOrder = await Order.findById(order._id).populate(
       "shopkeeper deliveryBoy items.menuItem"
     );
-
-    req.io.emit("orderUpdate", populatedOrder);
 
     res.json({
       success: true,
