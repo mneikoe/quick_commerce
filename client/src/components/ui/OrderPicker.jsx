@@ -17,11 +17,14 @@ import {
   CardContent,
   Grid,
   Pagination,
+  IconButton,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import OrderDetailsDialog from "./order/OrderDetailDialogue";
+import { Visibility } from "@mui/icons-material";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -115,6 +118,18 @@ const OrderPicker = () => {
       default:
         return "My Order History";
     }
+  };
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleViewOrder = (order) => {
+    setSelectedOrder(order);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedOrder(null);
   };
 
   const formattedStart = startDate?.toLocaleDateString() || "";
@@ -239,15 +254,15 @@ const OrderPicker = () => {
                     <TableCell className="whitespace-nowrap">
                       Total Price
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">Status</TableCell>
+                    {/* <TableCell className="whitespace-nowrap">Status</TableCell>
                     {userRole === "admin" && <TableCell>Customer</TableCell>}
                     <TableCell className="whitespace-nowrap">
                       Shopkeeper
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       Delivery Boy
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">Items</TableCell>
+                    </TableCell> */}
+                    <TableCell className="whitespace-nowrap">Views</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -267,7 +282,7 @@ const OrderPicker = () => {
                       <TableCell className="whitespace-nowrap">
                         ₹{order?.totalPrice?.toFixed(2) || "0.00"}
                       </TableCell>
-                      <TableCell className="whitespace-nowrap">
+                      {/* <TableCell className="whitespace-nowrap">
                         {" "}
                         {order?.status || "Unknown"}
                       </TableCell>
@@ -281,8 +296,8 @@ const OrderPicker = () => {
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
                         {order?.deliveryBoy?.name || "Not Assigned"}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
+                      </TableCell> */}
+                      {/* <TableCell className="whitespace-nowrap">
                         {Array.isArray(order?.items)
                           ? order.items.map((item, idx) => (
                               <div key={item?.menuItem?._id || idx}>
@@ -293,6 +308,16 @@ const OrderPicker = () => {
                               </div>
                             ))
                           : "No items"}
+                      </TableCell> */}
+                      <TableCell>
+                        <IconButton
+                          // variant="outlined"
+                          size="small"
+                          // color="primary"
+                          onClick={() => handleViewOrder(order)}
+                        >
+                          {<Visibility />}
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -313,6 +338,11 @@ const OrderPicker = () => {
           </Box>
         )}
       </Paper>
+      <OrderDetailsDialog
+        open={dialogOpen}
+        handleClose={handleCloseDialog}
+        selectedOrder={selectedOrder}
+      />
     </Box>
   );
 };
