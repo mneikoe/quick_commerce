@@ -1,4 +1,4 @@
- Live Deployment: qc.atithikripa.com This is a live project deployed for a real-world client and currently in production use.
+ Live Deployment: https://qc.atithikripa.com This is a live project deployed for a real-world client and currently in production use.
 
 🚀 Local Setup Instructions To set up and run the project on your local machine, please follow the steps below carefully:
 
