@@ -15,173 +15,174 @@ import {
   X,
   ChevronRight,
   Star,
-  ChevronRightIcon,
+  ChevronLeft,
+  Instagram,
+  Twitter,
+  Facebook,
+  Linkedin,
+  Clock,
+  Shield,
+  Award,
 } from "lucide-react";
 import ProductGrid from "../components/ui/products/ProductGrid";
-import { useSelector } from "react-redux";
-import { Box, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Box,
+  Typography,
+  Grid,
+  Avatar,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+  Container,
+  Button as MuiButton,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  Divider,
+  TextField,
+} from "@mui/material";
 import { Link } from "react-router-dom";
+import { getMenuItems } from "../actions/MenuAction";
+import { motion } from "framer-motion";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { getSubcategories } from "../actions/CategoryAction";
 
-// Mock data for categories
-const categories = [
-  { name: "Fruits & Vegetables", icon: "🍎", color: "bg-red-100" },
-  { name: "Dairy & Eggs", icon: "🥛", color: "bg-yellow-100" },
-  { name: "Bakery", icon: "🍞", color: "bg-amber-100" },
-  { name: "Meat & Seafood", icon: "🥩", color: "bg-orange-100" },
-  { name: "Beverages", icon: "🥤", color: "bg-blue-100" },
-  { name: "Snacks", icon: "🍿", color: "bg-purple-100" },
-  { name: "Household", icon: "🧹", color: "bg-gray-100" },
-  { name: "Personal Care", icon: "🧴", color: "bg-pink-100" },
-];
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
 
-// Mock data for featured products
-const featuredProducts = [
-  {
-    id: 1,
-    name: "Organic Apples",
-    price: 2.99,
-    rating: 4.8,
-    image: "/api/placeholder/200/200",
-    discount: "20% OFF",
-    tag: "Organic",
-  },
-  {
-    id: 2,
-    name: "Farm Fresh Eggs",
-    price: 3.49,
-    rating: 4.7,
-    image: "/api/placeholder/200/200",
-    discount: "",
-    tag: "Local",
-  },
-  {
-    id: 3,
-    name: "Whole Grain Bread",
-    price: 1.99,
-    rating: 4.5,
-    image: "/api/placeholder/200/200",
-    discount: "Buy 1 Get 1",
-    tag: "",
-  },
-  {
-    id: 4,
-    name: "Premium Coffee",
-    price: 9.99,
-    rating: 4.9,
-    image: "/api/placeholder/200/200",
-    discount: "",
-    tag: "Premium",
-  },
-];
-
-// Mock data for top deals
 const topDeals = [
   {
     name: "Fresh Berries",
     discount: "30% OFF",
     image: "/api/placeholder/120/120",
-    color: "bg-red-500",
+    color: "#EF4444",
   },
   {
     name: "Dairy Products",
     discount: "25% OFF",
     image: "/api/placeholder/120/120",
-    color: "bg-blue-500",
+    color: "#3B82F6",
   },
   {
     name: "Breakfast Items",
     discount: "Buy 2 Get 1",
     image: "/api/placeholder/120/120",
-    color: "bg-yellow-500",
+    color: "#F59E0B",
   },
 ];
 
-const CategoryCarousel = () => {
-  return (
-    <div className="py-4 overflow-x-auto hide-scrollbar">
-      <div className="flex px-2 space-x-4 min-w-max">
-        {categories.map((category, idx) => (
-          <div
-            key={idx}
-            className={`flex flex-col items-center justify-center p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md w-24 h-24 ${category.color}`}
-          >
-            <span className="mb-1 text-2xl">{category.icon}</span>
-            <span className="text-xs font-medium text-center text-gray-800">
-              {category.name}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+const testimonials = [
+  {
+    name: "Rahul Sharma",
+    comment:
+      "Fastest delivery I've ever experienced! My groceries arrived in just 25 minutes.",
+    rating: 5,
+  },
+  {
+    name: "Priya Patel",
+    comment:
+      "The quality of fruits and vegetables is consistently excellent. Very happy customer!",
+    rating: 4,
+  },
+  {
+    name: "Amit Singh",
+    comment:
+      "Great prices and amazing customer service. My go-to grocery app now.",
+    rating: 5,
+  },
+];
 
 const DealsSection = () => {
   return (
-    <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
+    <Grid container spacing={2}>
       {topDeals.map((deal, idx) => (
-        <div
-          key={idx}
-          className={`relative overflow-hidden rounded-xl cursor-pointer transition-transform hover:scale-105 h-36 ${deal.color}`}
-        >
-          <div className="absolute inset-0 flex items-center">
-            <div className="flex-1 pl-6">
-              <h3 className="text-xl font-bold text-white">{deal.discount}</h3>
-              <p className="mt-1 text-sm text-white">{deal.name}</p>
-              <button className="flex items-center px-3 py-1 mt-2 text-xs font-medium bg-white rounded-full">
-                Shop Now <ChevronRight size={14} className="ml-1" />
-              </button>
-            </div>
-            <div className="flex justify-center w-1/3">
-              <img
-                src={deal.image}
-                alt={deal.name}
-                className="object-cover rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
+        <Grid item xs={12} sm={4} key={idx}>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Card
+              sx={{
+                position: "relative",
+                height: 180,
+                borderRadius: 2,
+                overflow: "hidden",
+                bgcolor: deal.color,
+                color: "white",
+                boxShadow: 3,
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  px: 3,
+                }}
+              >
+                <Box sx={{ flex: 1 }}>
+                  <Chip
+                    label={deal.discount}
+                    color="primary"
+                    sx={{
+                      bgcolor: "white",
+                      color: deal.color,
+                      fontWeight: "bold",
+                      mb: 1,
+                    }}
+                  />
+                  <Typography variant="h6" fontWeight="bold">
+                    {deal.name}
+                  </Typography>
+                  <MuiButton
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      mt: 1,
+                      bgcolor: "white",
+                      color: deal.color,
+                      "&:hover": { bgcolor: "rgba(255,255,255,0.9)" },
+                      borderRadius: 20,
+                    }}
+                    endIcon={<ChevronRight size={16} />}
+                  >
+                    Shop Now
+                  </MuiButton>
+                </Box>
+                <Box
+                  sx={{
+                    width: "40%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={deal.image}
+                    alt={deal.name}
+                    sx={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 1,
+                      objectFit: "cover",
+                      boxShadow: 3,
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Card>
+          </motion.div>
+        </Grid>
       ))}
-    </div>
-  );
-};
-
-const ProductCard = ({ product }) => {
-  return (
-    <div className="overflow-hidden transition-all bg-white shadow-sm rounded-xl hover:shadow-md">
-      <div className="relative">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="object-cover w-full h-40"
-        />
-        {product.discount && (
-          <span className="absolute px-2 py-1 text-xs font-bold text-white bg-red-500 rounded top-2 left-2">
-            {product.discount}
-          </span>
-        )}
-        {product.tag && (
-          <span className="absolute px-2 py-1 text-xs font-bold text-white bg-green-500 rounded top-2 right-2">
-            {product.tag}
-          </span>
-        )}
-      </div>
-      <div className="p-3">
-        <h3 className="font-medium text-gray-800">{product.name}</h3>
-        <div className="flex items-center mt-1 text-sm">
-          <span className="flex items-center text-yellow-400">
-            <Star fill="currentColor" size={14} strokeWidth={0} />
-            <span className="ml-1 text-gray-700">{product.rating}</span>
-          </span>
-          <span className="ml-auto font-semibold text-green-700">
-            ${product.price.toFixed(2)}
-          </span>
-        </div>
-        <button className="w-full mt-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition flex items-center justify-center">
-          <ShoppingCart size={14} className="mr-1" /> Add to Cart
-        </button>
-      </div>
-    </div>
+    </Grid>
   );
 };
 
@@ -189,429 +190,990 @@ const Button = ({
   children,
   variant = "primary",
   className = "",
+  size = "medium",
   ...props
 }) => {
-  const baseClasses =
-    "font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2";
+  const baseClasses = "font-medium transition-all focus:outline-none";
+
+  const sizeClasses = {
+    small: "text-sm px-3 py-1.5 rounded-lg",
+    medium: "text-base px-4 py-2 rounded-xl",
+    large: "text-lg px-6 py-3 rounded-xl",
+  };
 
   const variantClasses = {
-    primary: "bg-green-600 text-white hover:bg-green-700",
+    primary: "bg-green-600 text-white hover:bg-green-700 shadow-md",
     outlined: "border-2 border-green-600 text-green-700 hover:bg-green-50",
-    text: "text-green-700 hover:text-green-800 underline",
+    text: "text-green-700 hover:text-green-800 hover:underline",
   };
 
   return (
     <button
-      className={`${baseClasses} ${variantClasses[variant] || variantClasses.primary} ${className}`}
+      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant] || variantClasses.primary} ${className}`}
       {...props}
     >
       {children}
     </button>
   );
 };
+const CategoryCarousel = ({ categories }) => {
+  const theme = useTheme();
+
+  // More precise responsive configuration
+  const responsive = {
+    xxl: {
+      breakpoint: { max: 4000, min: 1800 },
+      items: 8,
+      partialVisibilityGutter: 20,
+    },
+    xl: {
+      breakpoint: { max: 1800, min: 1536 },
+      items: 7,
+      partialVisibilityGutter: 20,
+    },
+    lg: {
+      breakpoint: { max: 1536, min: 1200 },
+      items: 6,
+      partialVisibilityGutter: 20,
+    },
+    md: {
+      breakpoint: { max: 1200, min: 900 },
+      items: 5,
+      partialVisibilityGutter: 15,
+    },
+    sm: {
+      breakpoint: { max: 900, min: 600 },
+      items: 4,
+      partialVisibilityGutter: 15,
+    },
+    xs: {
+      breakpoint: { max: 600, min: 0 },
+      items: 1,
+      partialVisibilityGutter: 10,
+    },
+  };
+
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        px: { xs: 0.5, sm: 2 },
+        mx: { xs: -0.5, sm: 0 }, // Adjust for item padding
+      }}
+    >
+      <Carousel
+        responsive={responsive}
+        infinite
+        // arrows={!useMediaQuery(theme.breakpoints.down("sm"))}
+        showDots={false}
+        swipeable
+        draggable
+        containerClass="category-carousel-container"
+        itemClass="category-carousel-item"
+        partialVisible={false}
+        ssr
+      >
+        {categories.map((category) => (
+          <Box key={category._id} sx={{ px: 0.5 }}>
+            <Link
+              to={`/category/${category._id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 200,
+                    height: 200,
+                    bgcolor: "#ffe",
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    [theme.breakpoints.down("sm")]: {
+                      width: 150,
+                      height: 150,
+                    },
+                  }}
+                >
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    style={{
+                      maxWidth: "90%",
+                      maxHeight: "90%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    textAlign: "center",
+                    fontWeight: 500,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    color: "#000",
+                  }}
+                >
+                  {category.name}
+                </Typography>
+              </Box>
+            </Link>
+          </Box>
+        ))}
+      </Carousel>
+    </Box>
+  );
+};
+
+const Footer = () => {
+  const theme = useTheme();
+  return (
+    <Box sx={{ bgcolor: "grey.900", color: "white", py: 6 }}>
+      <Container maxWidth="xl">
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={3}>
+            <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+              GroceryExpress
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Your trusted online grocery partner delivering freshness and
+              savings straight to your doorstep.
+            </Typography>
+            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+              <IconButton sx={{ color: "white" }}>
+                <Facebook size={20} />
+              </IconButton>
+              <IconButton sx={{ color: "white" }}>
+                <Twitter size={20} />
+              </IconButton>
+              <IconButton sx={{ color: "white" }}>
+                <Instagram size={20} />
+              </IconButton>
+              <IconButton sx={{ color: "white" }}>
+                <Linkedin size={20} />
+              </IconButton>
+            </Box>
+          </Grid>
+
+          <Grid item xs={6} sm={3} md={2}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2 }}>
+              Company
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Link
+                to="/about"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">About Us</Typography>
+              </Link>
+              <Link
+                to="/careers"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Careers</Typography>
+              </Link>
+              <Link
+                to="/blog"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Blog</Typography>
+              </Link>
+              <Link
+                to="/press"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Press</Typography>
+              </Link>
+            </Box>
+          </Grid>
+
+          <Grid item xs={6} sm={3} md={2}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2 }}>
+              Help & Contact
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Link
+                to="/contact"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Contact Us</Typography>
+              </Link>
+              <Link
+                to="/faq"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">FAQs</Typography>
+              </Link>
+              <Link
+                to="/support"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Support</Typography>
+              </Link>
+              <Link
+                to="/returns"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Returns</Typography>
+              </Link>
+            </Box>
+          </Grid>
+
+          <Grid item xs={6} sm={3} md={2}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2 }}>
+              Policies
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Link
+                to="/privacy"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Privacy Policy</Typography>
+              </Link>
+              <Link
+                to="/terms"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Terms of Service</Typography>
+              </Link>
+              <Link
+                to="/shipping"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Shipping Policy</Typography>
+              </Link>
+              <Link
+                to="/refund"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                <Typography variant="body2">Refund Policy</Typography>
+              </Link>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2 }}>
+              Newsletter
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Subscribe to our newsletter for the latest updates and offers.
+            </Typography>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <TextField
+                size="small"
+                placeholder="Your email"
+                variant="outlined"
+                sx={{
+                  flexGrow: 1,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "grey.700",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "grey.500",
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "white",
+                    py: 1,
+                  },
+                }}
+              />
+              <MuiButton
+                variant="contained"
+                color="primary"
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                Subscribe
+              </MuiButton>
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 4, bgcolor: "grey.700" }} />
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body2">
+            © {new Date().getFullYear()} GroceryExpress. All rights reserved.
+          </Typography>
+          <Box sx={{ display: "flex", gap: 2, mt: { xs: 2, sm: 0 } }}>
+            <img
+              src="/images/payment-methods/visa.png"
+              alt="Visa"
+              style={{ height: 24 }}
+            />
+            <img
+              src="/images/payment-methods/mastercard.png"
+              alt="Mastercard"
+              style={{ height: 24 }}
+            />
+            <img
+              src="/images/payment-methods/paypal.png"
+              alt="PayPal"
+              style={{ height: 24 }}
+            />
+            <img
+              src="/images/payment-methods/apple-pay.png"
+              alt="Apple Pay"
+              style={{ height: 24 }}
+            />
+          </Box>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+const TestimonialsSection = () => {
+  const theme = useTheme();
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+
+  return (
+    <Box sx={{ py: 6, bgcolor: "background.default" }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
+        >
+          What Our Customers Say
+        </Typography>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ mb: 4, textAlign: "center" }}
+        >
+          Don't just take our word for it - hear from our happy customers
+        </Typography>
+
+        <Carousel
+          responsive={responsive}
+          infinite={true}
+          autoPlay={true}
+          autoPlaySpeed={5000}
+          keyBoardControl={true}
+          customTransition="all .5"
+          transitionDuration={500}
+          containerClass="carousel-container"
+          itemClass="carousel-item"
+        >
+          {testimonials.map((testimonial, index) => (
+            <Box key={index} sx={{ px: 2 }}>
+              <Card
+                sx={{
+                  height: "100%",
+                  p: 3,
+                  borderRadius: 2,
+                  boxShadow: 1,
+                  "&:hover": { boxShadow: 3 },
+                }}
+              >
+                <Box sx={{ display: "flex", mb: 2 }}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      fill={i < testimonial.rating ? "#F59E0B" : "none"}
+                      color="#F59E0B"
+                    />
+                  ))}
+                </Box>
+                <Typography variant="body1" sx={{ mb: 3, fontStyle: "italic" }}>
+                  "{testimonial.comment}"
+                </Typography>
+                <Typography variant="subtitle1" fontWeight="medium">
+                  - {testimonial.name}
+                </Typography>
+              </Card>
+            </Box>
+          ))}
+        </Carousel>
+      </Container>
+    </Box>
+  );
+};
+function HeroSection({ isVisible }) {
+  return (
+    <motion.section
+      initial="hidden"
+      animate={isVisible ? "visible" : "hidden"}
+      variants={fadeInUp}
+    >
+      <Card
+        sx={{
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: 4,
+          bgcolor: "primary.dark",
+          color: "white",
+          mb: 4,
+          boxShadow: 4,
+        }}
+      >
+        {/* Background Image with Gradient Overlay */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: { xs: "100%", md: "50%" },
+            height: "100%",
+            zIndex: 0,
+            display: "block",
+          }}
+        >
+          <Box
+            component="img"
+            src="/api/placeholder/600/500"
+            alt="Fresh Groceries"
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.7,
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background:
+                "linear-gradient(to left, rgba(0,0,0,0.5), rgba(0,0,0,0.2))",
+            }}
+          />
+        </Box>
+
+        {/* Text Content */}
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            p: { xs: 3, md: 6 },
+            width: { md: "60%" },
+          }}
+        >
+          <Typography
+            variant="overline"
+            sx={{
+              backgroundColor: "rgba(255,255,255,0.2)",
+              px: 2,
+              py: 0.5,
+              borderRadius: 1,
+              fontWeight: 500,
+              mb: 1,
+              display: "inline-block",
+            }}
+          >
+            Trusted by 50,000+ Customers
+          </Typography>
+
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              fontSize: "clamp(2rem, 5vw, 3.5rem)",
+              lineHeight: 1.2,
+              mb: 2,
+            }}
+          >
+            Fresh Groceries, <br />
+            <Box component="span" sx={{ color: "secondary.light" }}>
+              Delivered Fast
+            </Box>
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              maxWidth: "md",
+              mb: 3,
+              color: "primary.100",
+              fontSize: { xs: "0.95rem", md: "1.05rem" },
+            }}
+          >
+            Your trusted online grocery partner – delivering freshness and
+            savings straight to your doorstep in 30 minutes or less!
+          </Typography>
+
+          {/* CTA Buttons */}
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}>
+            <Button
+              size="large"
+              variant="contained"
+              sx={{
+                minWidth: 150,
+                fontWeight: 600,
+                px: 3,
+                py: 1.5,
+                boxShadow: 2,
+                transition: "0.3s",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: 4,
+                },
+              }}
+              className="flex items-center gap-2"
+            >
+              <ShoppingCart size={18} /> Shop Now
+            </Button>
+
+            <Button
+              variant="outlined"
+              size="large"
+              className="flex items-center gap-2"
+              sx={{
+                minWidth: 150,
+                color: "white",
+                borderColor: "white",
+                fontWeight: 600,
+                "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+              }}
+            >
+              <Compass size={18} /> How It Works
+            </Button>
+          </Box>
+
+          {/* Features */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              gap: 4,
+              mt: 3,
+              flexWrap: "wrap",
+            }}
+          >
+            {[
+              { icon: <Truck size={20} />, text: "Fast Delivery" },
+              { icon: <Leaf size={20} />, text: "Organic Options" },
+              { icon: <DollarSign size={20} />, text: "Best Prices" },
+            ].map((item, idx) => (
+              <Box
+                key={idx}
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0.5rem",
+                    borderRadius: "50%",
+                    backgroundColor: "#ffffff33",
+                  }}
+                >
+                  {item.icon}
+                </motion.div>
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  {item.text}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Card>
+    </motion.section>
+  );
+}
 
 const HomePage = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { menuItems } = useSelector((s) => s.menu);
-  console.log(menuItems);
+  const { menuItems, loading } = useSelector((state) => state.menu);
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
+  const { subCategories } = useSelector((state) => state.subCategory);
+  const theme = useTheme();
+  const latestProducts = React.useMemo(() => {
+    return [...(menuItems?.data || [])]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 10);
+  }, [menuItems]);
+
+  const trendingProducts = React.useMemo(() => {
+    return [...(menuItems?.data || [])]
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      .slice(0, 8);
+  }, [menuItems]);
+
+  // Initial data fetch and animation trigger
   useEffect(() => {
+    dispatch(getMenuItems());
+    dispatch(getAllCategories());
+    dispatch(getAllSubcategories());
     setIsVisible(true);
-  }, []);
-  const latestProducts = [...(menuItems?.data || [])]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort latest first
-    .slice(0, 6);
+  }, [dispatch]);
 
+  // Polling with cleanup every 30 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      dispatch(getMenuItems());
+      dispatch(getAllCategories());
+      dispatch(getAllSubcategories());
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="px-4 pb-12 mx-auto max-w-7xl">
-        {/* Hero Section */}
-        <section
-          className={`mt-6 md:mt-8 transition-all duration-700 ${isVisible ? "opacity-100" : "opacity-0 translate-y-10"}`}
-        >
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500 to-green-700">
-            <div className="absolute top-0 right-0 hidden w-1/2 h-full md:block">
-              <div className="w-full h-full bg-white/10 backdrop-blur-sm">
-                <img
-                  src="/api/placeholder/600/500"
-                  alt="Fresh Groceries"
-                  className="object-cover w-full h-full mix-blend-overlay opacity-70"
-                />
-              </div>
-            </div>
-
-            <div className="relative z-10 p-6 md:p-12 md:w-3/5">
-              <h1 className="text-3xl font-extrabold text-white md:text-5xl">
-                Fresh Groceries, <br />
-                <span className="text-green-100">Delivered Fast</span>
-              </h1>
-              <p className="max-w-md mt-4 text-green-50">
-                Your trusted online grocery partner – delivering freshness and
-                savings straight to your doorstep in 30 minutes or less!
-              </p>
-
-              <div className="flex flex-wrap gap-4 mt-8">
-                <Button className="flex items-center gap-2 px-6 py-3 text-sm rounded-full md:text-base">
-                  <ShoppingCart size={18} /> Shop Now
-                </Button>
-                <Button
-                  variant="outlined"
-                  className="flex items-center gap-2 px-6 py-3 text-sm text-white border-white rounded-full hover:bg-white/20 md:text-base"
-                >
-                  <Compass size={18} /> How It Works
-                </Button>
-              </div>
-
-              <div className="hidden gap-6 mt-8 md:flex">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-green-100 rounded-full">
-                    <Truck size={16} className="text-green-700" />
-                  </div>
-                  <span className="text-xs text-white">Fast Delivery</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-green-100 rounded-full">
-                    <Leaf size={16} className="text-green-700" />
-                  </div>
-                  <span className="text-xs text-white">Organic Options</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-green-100 rounded-full">
-                    <DollarSign size={16} className="text-green-700" />
-                  </div>
-                  <span className="text-xs text-white">Best Prices</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Top Deals Section */}
-        <section className="mt-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
-              Top Deals
-            </h2>
-            <Button variant="text" className="flex items-center text-sm">
-              View All <ChevronRight size={16} className="ml-1" />
-            </Button>
-          </div>
-          <DealsSection />
-        </section>
+    <Box sx={{ bgcolor: "background.paper", minHeight: "100vh" }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
+        <HeroSection isVisible={true} />
 
         {/* Categories Section */}
-        <section className="mt-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
-              Shop By Category
-            </h2>
-            <Button variant="text" className="flex items-center text-sm">
-              View All <ChevronRight size={16} className="ml-1" />
-            </Button>
-          </div>
-          <CategoryCarousel />
-        </section>
-
-        {/* Features Section */}
-        <section className="px-6 py-8 mt-10 bg-white shadow-sm rounded-2xl">
-          <h2 className="mb-8 text-xl font-bold text-center text-gray-800 md:text-2xl">
-            Why Shop With Us
-          </h2>
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-            {[
-              {
-                icon: <Truck className="text-green-600" size={24} />,
-                title: "Express Delivery",
-                desc: "In 30 minutes or less",
-              },
-              {
-                icon: <Leaf className="text-green-600" size={24} />,
-                title: "Fresh Products",
-                desc: "Farm to table quality",
-              },
-              {
-                icon: <DollarSign className="text-green-600" size={24} />,
-                title: "Best Prices",
-                desc: "Lowest price guaranteed",
-              },
-              {
-                icon: <Heart className="text-green-600" size={24} />,
-                title: "Trusted by Many",
-                desc: "10,000+ happy customers",
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col items-center p-4 text-center"
-              >
-                <div className="p-3 mb-3 bg-green-100 rounded-full">
-                  {item.icon}
-                </div>
-                <h3 className="font-semibold text-gray-800">{item.title}</h3>
-                <p className="mt-1 text-xs text-gray-500">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Featured Products */}
-        {/* <section className="mt-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
-              Featured Products
-            </h2>
-            <Button variant="text" className="flex items-center text-sm">
-              View All <ChevronRight size={16} className="ml-1" />
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <ProductGrid products={menuItems?.data} />
-          </div>
-        </section> */}
-        <Box component="section" sx={{ mt: 5 }}>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={2}
-          >
-            <Typography variant="h6" color="text.primary" fontWeight="bold">
-              Featured Products
+        <motion.section
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+          transition={{ delay: 0.3 }}
+        >
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
+              Shop by Category
             </Typography>
-            <Link to="/products">
-              <Button
-                endIcon={<ChevronRightIcon />}
-                size="small"
-                variant="text"
-                component={Link}
-                to="/products"
-              >
-                View All
-              </Button>
-            </Link>
+            <CategoryCarousel categories={categories} />
           </Box>
+        </motion.section>
+        {/* Features Section */}
+        {/* Features Section */}
+        <motion.section
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card
+            sx={{
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: 6,
+              borderRadius: 4,
+              // boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
+              border: "1px solid",
+              borderColor: "transparent",
+              backgroundColor: "background.paper",
+              // "&:hover": {
+              //   boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.12)",
+              // },
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+                textAlign: "center",
+                mb: { xs: 3, sm: 4 },
+                fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+                color: "text.primary",
+                position: "relative",
+                "&:after": {
+                  content: '""',
+                  display: "block",
+                  width: "80px",
+                  height: "4px",
+                  backgroundColor: "primary.main",
+                  margin: "16px auto 0",
+                  borderRadius: "2px",
+                },
+              }}
+            >
+              Why Shop With Us
+            </Typography>
 
-          {/* Responsive Grid */}
-          <ProductGrid products={latestProducts} />
-        </Box>
-        {/* <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
-              Featured Products
-            </h2>
-          </div>
-        </section> */}
+            <Grid container spacing={{ xs: 2, sm: 3 }} justifyContent="center">
+              {[
+                {
+                  icon: <Truck size={32} color={theme.palette.primary.main} />,
+                  title: "10-Minute Delivery",
+                  desc: "Lightning fast delivery in record time",
+                  bgColor: "rgba(46, 125, 50, 0.1)", // Green tint
+                },
+                {
+                  icon: <Leaf size={32} color={theme.palette.success.main} />,
+                  title: "Farm Fresh",
+                  desc: "Direct from farms to your doorstep",
+                  bgColor: "rgba(27, 94, 32, 0.1)", // Darker green
+                },
+                {
+                  icon: (
+                    <DollarSign size={32} color={theme.palette.warning.main} />
+                  ),
+                  title: "Best Prices",
+                  desc: "Price match guarantee",
+                  bgColor: "rgba(255, 160, 0, 0.1)", // Orange tint
+                },
+                {
+                  icon: <Award size={32} color={theme.palette.error.main} />,
+                  title: "Quality Assured",
+                  desc: "100% quality checked products",
+                  bgColor: "rgba(211, 47, 47, 0.1)", // Red tint
+                },
+              ].map((item, idx) => (
+                <Grid item xs={12} sm={6} md={3} key={idx}>
+                  <motion.div
+                    whileHover={{
+                      y: -8,
+                      transition: { duration: 0.3 },
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Card
+                      sx={{
+                        height: "100%",
+                        p: 3,
+                        textAlign: "center",
+                        boxShadow: "none",
+                        borderRadius: 3,
+                        border: "none",
+                        backgroundColor: "background.paper",
+                        position: "relative",
+                        overflow: "hidden",
+                        "&:before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: "4px",
+                          backgroundColor: theme.palette.primary.main,
+                        },
+                        "&:hover": {
+                          boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.08)",
+                          "& $iconBox": {
+                            transform: "scale(1.1)",
+                          },
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          p: 2.5,
+                          mb: 2,
+                          backgroundColor: item.bgColor,
+                          borderRadius: "50%",
+                          color: "primary.main",
+                          transition: "transform 0.3s ease",
+                        }}
+                        className="iconBox"
+                      >
+                        {item.icon}
+                      </Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          mb: 1.5,
+                          fontSize: { xs: "1rem", sm: "1.1rem" },
+                          color: "text.primary",
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "text.secondary",
+                          fontSize: { xs: "0.875rem", sm: "0.9375rem" },
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {item.desc}
+                      </Typography>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </Card>
+        </motion.section>
+        {/* Featured Products */}
+        <motion.section
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+          transition={{ delay: 0.5 }}
+        >
+          <Box sx={{ mb: 6 }}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={3}
+            >
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                New Arrivals
+              </Typography>
+              <Link to="/products" style={{ textDecoration: "none" }}>
+                <Button variant="text" endIcon={<ChevronRight size={16} />}>
+                  View All
+                </Button>
+              </Link>
+            </Box>
 
-        {/* App Promotion */}
-        <section className="relative mt-10 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600">
-          <div className="absolute top-0 right-0 hidden w-1/3 h-full md:block">
-            <img
-              src="/api/placeholder/300/600"
-              alt="Mobile App"
-              className="object-cover h-full blend-overlay"
-            />
-          </div>
+            <ProductGrid products={latestProducts} />
+          </Box>
+        </motion.section>
+        {/* Testimonials Section */}
+        <TestimonialsSection />
+        {/* Delivery Info Section */}
+        <motion.section
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0 },
+          }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card
+            sx={{
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: 6,
+              borderRadius: 4,
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
+              border: "1px solid",
+              borderColor: "divider",
+              backgroundColor: "background.paper",
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+                textAlign: "center",
+                mb: { xs: 3, sm: 4 },
+                fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+                color: "text.primary",
+                borderCollapse: "transparent",
+                position: "relative",
+                "&:after": {
+                  content: '""',
+                  display: "block",
+                  width: "80px",
+                  height: "4px",
+                  backgroundColor: "primary.main",
+                  margin: "16px auto 0",
+                  borderRadius: "2px",
+                },
+              }}
+            >
+              How Our Delivery Works
+            </Typography>
 
-          <div className="p-6 md:p-10 md:w-2/3">
-            <h2 className="text-2xl font-bold text-white md:text-3xl">
-              Download Our App
-            </h2>
-            <p className="max-w-md mt-2 text-white/80">
-              Get exclusive deals, track your orders in real-time, and enjoy a
-              seamless shopping experience.
-            </p>
-            <div className="flex flex-wrap gap-4 mt-6">
-              <Button className="flex items-center px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-xl">
-                <span className="mr-2">🍎</span>
-                <div className="flex flex-col items-start">
-                  <span className="text-xs">Download on the</span>
-                  <span className="font-medium">App Store</span>
-                </div>
-              </Button>
-              <Button className="flex items-center px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-xl">
-                <span className="mr-2">🤖</span>
-                <div className="flex flex-col items-start">
-                  <span className="text-xs">Get it on</span>
-                  <span className="font-medium">Google Play</span>
-                </div>
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact & Support */}
-        <section className="grid grid-cols-1 gap-6 mt-10 md:grid-cols-3">
-          <div className="flex flex-col items-center p-6 text-center bg-white shadow-sm rounded-xl md:items-start md:text-left">
-            <Phone className="mb-3 text-green-600" size={24} />
-            <h3 className="font-semibold text-gray-800">Customer Support</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Need help? Our team is available 24/7
-            </p>
-            <Button variant="text" className="mt-3 text-sm">
-              Contact Us
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center p-6 text-center bg-white shadow-sm rounded-xl md:items-start md:text-left">
-            <MapPin className="mb-3 text-green-600" size={24} />
-            <h3 className="font-semibold text-gray-800">Store Locator</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Find our physical stores across the country
-            </p>
-            <Button variant="text" className="mt-3 text-sm">
-              Find Stores
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center p-6 text-center bg-white shadow-sm rounded-xl md:items-start md:text-left">
-            <Mail className="mb-3 text-green-600" size={24} />
-            <h3 className="font-semibold text-gray-800">Newsletter</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Subscribe for deals and updates
-            </p>
-            <div className="flex w-full mt-3">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="flex-1 px-3 py-1 text-sm bg-gray-100 border-none rounded-l-lg focus:outline-none focus:ring-1 focus:ring-green-500"
-              />
-              <Button className="px-3 py-1 text-sm rounded-l-none rounded-r-lg">
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </section>
-      </main>
+            <Grid container spacing={{ xs: 2, sm: 3 }} justifyContent="center">
+              {[
+                {
+                  icon: <Search size={32} color={theme.palette.primary.main} />,
+                  title: "1. Browse & Order",
+                  desc: "Select from 5000+ products",
+                  bgColor: "rgba(25, 118, 210, 0.1)",
+                },
+                {
+                  icon: <Clock size={32} color={theme.palette.warning.main} />,
+                  title: "2. Fast Processing",
+                  desc: "Order prepared in minutes",
+                  bgColor: "rgba(255, 160, 0, 0.1)",
+                },
+                {
+                  icon: <Truck size={32} color={theme.palette.success.main} />,
+                  title: "3. Lightning Delivery",
+                  desc: "At your door in 30 mins",
+                  bgColor: "rgba(46, 125, 50, 0.1)",
+                },
+                {
+                  icon: <Shield size={32} color={theme.palette.error.main} />,
+                  title: "4. Safe Delivery",
+                  desc: "Contactless & hygienic",
+                  bgColor: "rgba(211, 47, 47, 0.1)",
+                },
+              ].map((item, idx) => (
+                <Grid item xs={12} sm={6} md={3} key={idx}>
+                  <motion.div
+                    whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                  >
+                    <Card
+                      sx={{
+                        p: 3,
+                        textAlign: "center",
+                        borderRadius: 3,
+                        backgroundColor: "background.paper",
+                        position: "relative",
+                        boxShadow: "none",
+                        "&:hover": {
+                          boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.08)",
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "inline-flex",
+                          p: 2.5,
+                          mb: 2,
+                          backgroundColor: item.bgColor,
+                          borderRadius: "50%",
+                          transition: "transform 0.3s ease",
+                        }}
+                      >
+                        {item.icon}
+                      </Box>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, mb: 1.5 }}
+                      >
+                        {item.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "text.secondary",
+                          fontSize: { xs: "0.875rem", sm: "0.9375rem" },
+                        }}
+                      >
+                        {item.desc}
+                      </Typography>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </Card>
+        </motion.section>
+      </Container>
 
       {/* Footer */}
-      <footer className="py-8 mt-12 text-white bg-green-900">
-        <div className="px-4 mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            <div>
-              <h3 className="mb-4 text-lg font-bold">ShopMart</h3>
-              <p className="text-sm text-green-100">
-                Your trusted online grocery partner since 2020.
-              </p>
-              <div className="flex mt-4 space-x-4">
-                <a href="#" className="text-white hover:text-green-100">
-                  <span className="sr-only">Facebook</span>
-                  📱
-                </a>
-                <a href="#" className="text-white hover:text-green-100">
-                  <span className="sr-only">Twitter</span>
-                  📱
-                </a>
-                <a href="#" className="text-white hover:text-green-100">
-                  <span className="sr-only">Instagram</span>
-                  📱
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="mb-4 font-bold">Quick Links</h3>
-              <ul className="space-y-2 text-sm text-green-100">
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Products
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="mb-4 font-bold">Categories</h3>
-              <ul className="space-y-2 text-sm text-green-100">
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Fruits & Vegetables
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Dairy & Eggs
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Meat & Seafood
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white">
-                    Beverages
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-between pt-6 mt-8 border-t border-green-800 md:flex-row">
-            <p className="text-sm text-green-100">
-              © 2025 ShopMart. All rights reserved.
-            </p>
-            <div className="flex mt-4 space-x-6 text-sm text-green-100 md:mt-0">
-              <a href="#" className="hover:text-white">
-                Privacy Policy
-              </a>
-              <a href="#" className="hover:text-white">
-                Terms of Service
-              </a>
-              <a href="#" className="hover:text-white">
-                FAQ
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* Float-to-top button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed p-3 text-white transition-all bg-green-600 rounded-full shadow-lg bottom-6 right-6 hover:bg-green-700"
-        aria-label="Back to top"
-      >
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 15l7-7 7 7"
-          />
-        </svg>
-      </button>
-
-      {/* Add some custom styles */}
-      <style jsx global>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-    </div>
+      <Footer />
+    </Box>
   );
 };
 

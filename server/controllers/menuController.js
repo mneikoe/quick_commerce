@@ -7,7 +7,7 @@ import path from "path";
 import mongoose from "mongoose";
 export const createMenuItem = asyncHandler(async (req, res) => {
   try {
-    const { title, description, price, category } = req.body;
+    const { title, description, price, category, subcategory } = req.body;
     console.log(req.body);
     console.log(
       `${req.protocol}://${req.get("host")}/uploads/menu/${req.file.filename}`
@@ -24,6 +24,7 @@ export const createMenuItem = asyncHandler(async (req, res) => {
       description,
       price,
       category,
+      subcategory,
       createdBy: req.user.id,
       image: imagePath,
     });
@@ -32,7 +33,9 @@ export const createMenuItem = asyncHandler(async (req, res) => {
       throw new ErrorHandler("Menu item creation failed", 400);
     }
 
-    const populatedMenuItem = await menuItem.populate("category");
+    const populatedMenuItem = (await menuItem.populate("category")).populate(
+      "subcategory"
+    );
 
     res.status(201).json(populatedMenuItem);
   } catch (err) {
@@ -43,6 +46,7 @@ export const createMenuItem = asyncHandler(async (req, res) => {
 export const getAllMenuItems = asyncHandler(async (req, res) => {
   const menuItems = await Menu.find()
     .populate("category")
+    .populate("subcategory")
     .populate("createdBy", "name email");
   res.status(200).json({
     success: true,
@@ -69,7 +73,7 @@ export const updateMenuItem = asyncHandler(async (req, res, next) => {
   if (!menuItem) {
     return next(new ErrorHandler("Menu item not found", 404));
   }
-  
+
   if (
     req.body.category &&
     !mongoose.Types.ObjectId.isValid(req.body.category)
@@ -83,6 +87,7 @@ export const updateMenuItem = asyncHandler(async (req, res, next) => {
     description: req.body.description || menuItem.description,
     price: req.body.price || menuItem.price,
     category: req.body.category || menuItem.category,
+    subcategory: req.body.subcategory || menuItem.subcategory,
     isAvailable:
       typeof req.body.isAvailable !== "undefined"
         ? req.body.isAvailable
@@ -108,7 +113,9 @@ export const updateMenuItem = asyncHandler(async (req, res, next) => {
     req.params.id,
     { $set: updatedFields },
     { new: true, runValidators: true }
-  ).populate("category");
+  )
+    .populate("category")
+    .populate("subcategory");
 
   res.status(200).json({
     success: true,

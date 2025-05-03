@@ -1,4 +1,6 @@
-import CATEGORY_CONSTANTS from "../constants/CategoryConstants";
+import CATEGORY_CONSTANTS, {
+  SUB_CATEGORY_CONSTANTS,
+} from "../constants/CategoryConstants";
 import axiosInstance from "../utils/config";
 
 // Create a new category
@@ -137,6 +139,152 @@ export const deleteCategory = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CATEGORY_CONSTANTS.DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+// Create a new category
+export const createSubcategory = (categoryData) => async (dispatch) => {
+  try {
+    dispatch({ type: SUB_CATEGORY_CONSTANTS.CREATE_REQUEST });
+
+    const { data } = await axiosInstance.post(
+      "/admin/subcategories",
+      categoryData,
+      {
+        isMultipart: true,
+      }
+    );
+    console.log(data);
+
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.CREATE_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+// Get all categories
+export const getAllSubcategories = () => async (dispatch) => {
+  try {
+    dispatch({ type: SUB_CATEGORY_CONSTANTS.LIST_REQUEST });
+
+    const { data } = await axiosInstance.get("/admin/subcategories");
+
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.LIST_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+// Get all categories
+export const getSubcategories = () => async (dispatch) => {
+  try {
+    dispatch({ type: SUB_CATEGORY_CONSTANTS.ALL_REQUEST });
+
+    const { data } = await axiosInstance.get("/menu/subcategories");
+
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.ALL_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.ALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getSubcategoryById = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: SUB_CATEGORY_CONSTANTS.LIST_REQUEST });
+
+    const { data } = await axiosInstance.get(`/admin/subcategory/${id}`);
+
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.LIST_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+// Update category
+export const updateSubcategory = (id, categoryData) => async (dispatch) => {
+  try {
+    dispatch({ type: SUB_CATEGORY_CONSTANTS.UPDATE_REQUEST });
+
+    const { data } = await axiosInstance.put(
+      `/admin/subcategory/${id}`,
+      categoryData,
+      {
+        isMultipart: true,
+      }
+    );
+
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.UPDATE_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+// Delete category
+export const deleteSubcategory = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: SUB_CATEGORY_CONSTANTS.DELETE_REQUEST });
+
+    const { data } = await axiosInstance.delete(`/admin/subcategory/${id}`);
+
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.DELETE_SUCCESS,
+      payload: id,
+    });
+  } catch (error) {
+    dispatch({
+      type: SUB_CATEGORY_CONSTANTS.DELETE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

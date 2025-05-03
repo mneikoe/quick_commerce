@@ -46,7 +46,10 @@ import {
   getMenuItems,
   updateMenuItem,
 } from "../actions/MenuAction";
-import { getAllCategories } from "../actions/CategoryAction";
+import {
+  getAllCategories,
+  getAllSubcategories,
+} from "../actions/CategoryAction";
 import MenuFormModal from "../components/ui/MenuFormModal";
 import { showToast } from "../components/ui/ShowToast";
 import Loader from "../components/ui/Loader";
@@ -109,22 +112,37 @@ const AdminMenu = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { menuItems, loading } = useSelector((state) => state.menu);
+  console.log(menuItems);
   const { categories, loading: categoryLoading } = useSelector(
     (state) => state.category
   );
+
   console.log(menuItems);
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isViewMode, setIsViewMode] = useState(false);
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
+  const POLLING_INTERVAL = 60000;
   useEffect(() => {
+    // Initial fetch
     dispatch(getMenuItems());
     dispatch(getAllCategories());
+    dispatch(getAllSubcategories());
+
+    // Polling interval
+    const interval = setInterval(() => {
+      dispatch(getMenuItems());
+      dispatch(getAllCategories());
+      dispatch(getAllSubcategories());
+    }, POLLING_INTERVAL);
+
+    // Cleanup
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   const filteredItems = menuItems?.data?.filter((item) => {
@@ -400,6 +418,7 @@ const AdminMenu = () => {
                     "Image",
                     "Name",
                     "Category",
+                    "SubCategory",
                     "Price",
                     "Status",
                     "Actions",
@@ -494,7 +513,28 @@ const AdminMenu = () => {
                           }}
                         />
                       </TableCell>
-
+                      <TableCell
+                        sx={{
+                          py: 2.5,
+                          px: 3,
+                          borderBottom: `1px solid ${theme.palette.divider}`,
+                          whiteSpace: "nowrap", // Prevents text wrapping
+                        }}
+                      >
+                        <Chip
+                          label={item.subcategory?.name || "Unsubcategorized"}
+                          size="small"
+                          sx={{
+                            bgcolor: alpha(theme.palette.warning.light, 0.7),
+                            color: theme.palette.warning.dark,
+                            fontWeight: 500,
+                            borderRadius: 1.5,
+                            px: 1,
+                            py: 0.5,
+                            fontSize: "0.8rem",
+                          }}
+                        />
+                      </TableCell>
                       <TableCell
                         sx={{
                           py: 2.5,

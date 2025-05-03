@@ -13,6 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import SelectBox from "./SelectBox";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllSubcategories } from "../../actions/CategoryAction";
 
 const MenuFormModal = ({
   open,
@@ -21,6 +23,7 @@ const MenuFormModal = ({
   item = {},
   viewOnly = false,
   categories = [],
+  // subcategory = [],
 }) => {
   const [preview, setPreview] = useState(null);
   const [formData, setFormData] = useState({
@@ -29,14 +32,35 @@ const MenuFormModal = ({
     price: "",
     isAvailable: true,
     image: null,
+    subcategory: "",
   });
+
+  const { subCategories } = useSelector((state) => state.subCategory);
+  const subCategoryIncategory = subCategories.filter((subCat) =>
+    categories.some((cat) => cat._id === subCat.category._id)
+  );
+  const dispatch = useDispatch();
+  const [filteredSubcategories, setFilteredSubcategories] = useState([]);
   const theme = useTheme();
   console.log(formData);
+  const POLLING_INTERVAL = 60000;
+  useEffect(() => {
+    dispatch(getAllSubcategories());
+
+    // Polling interval
+    const interval = setInterval(() => {
+      dispatch(getAllSubcategories());
+    }, POLLING_INTERVAL);
+
+    // Cleanup
+    return () => clearInterval(interval);
+  }, [dispatch]);
   useEffect(() => {
     if (item) {
       setFormData({
         title: item.title || "",
         category: item.category?._id || "",
+        subcategory: item.subcategory?._id || "",
         price: item.price || "",
         isAvailable: item.isAvailable || false,
         image: null,
@@ -47,6 +71,7 @@ const MenuFormModal = ({
         category: "",
         price: "",
         isAvailable: true,
+        subcategory: "",
         image: null,
       });
     }
@@ -67,10 +92,21 @@ const MenuFormModal = ({
       }));
     }
   };
+  useEffect(() => {
+    if (formData.category) {
+      const filtered = subCategories.filter(
+        (subCat) => subCat.category?._id === formData.category
+      );
+      setFilteredSubcategories(filtered);
+    } else {
+      setFilteredSubcategories([]);
+    }
+  }, [formData.category, subCategories]);
   const onSubmit = () => {
     const data = new FormData();
     data.append("title", formData.title);
     data.append("category", formData.category);
+    data.append("subcategory", formData.subcategory);
     data.append("price", formData.price);
     data.append("isAvailable", formData.isAvailable);
     if (formData.image) data.append("image", formData.image);
@@ -80,6 +116,7 @@ const MenuFormModal = ({
     setFormData({
       title: "",
       category: "",
+      subcategory: "",
       price: "",
       isAvailable: true,
       image: null,
@@ -124,6 +161,21 @@ const MenuFormModal = ({
           required={!viewOnly}
           disabled={viewOnly}
         />
+        {/* Category Select Box */}
+        <SelectBox
+          label="SubCategory"
+          name="subcategory"
+          value={formData.subcategory}
+          onChange={handleChange}
+          options={filteredSubcategories.map((sub) => ({
+            value: sub._id,
+            label: sub.name,
+          }))}
+          placeholder="Select Subcategory"
+          required={!viewOnly}
+          disabled={viewOnly}
+        />
+
         <TextField
           fullWidth
           label="Price"

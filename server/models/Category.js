@@ -15,6 +15,13 @@ const CategorySchema = new Schema(
       type: String,
       default: "",
     },
+    subcategory: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SubCategory",
+        // required: true,
+      },
+    ],
     image: {
       type: String,
     },

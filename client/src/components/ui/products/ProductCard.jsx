@@ -36,7 +36,7 @@ const ProductCard = ({
   rating = 0,
   unit,
   size,
-  stock = 10, // Default stock if not provided
+  stock = 10,
 }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -116,7 +116,8 @@ const ProductCard = ({
       <Card
         sx={{
           borderRadius: "12px",
-          boxShadow: theme.shadows[2],
+          minWidth: "260px", // Fixed to include 'px' unit
+          maxWidth: "100%", // Ensures it doesn't overflow its container
           transition: "all 0.3s ease",
           height: "100%",
           display: "flex",
@@ -169,10 +170,11 @@ const ProductCard = ({
             sx={{
               position: "relative",
               width: "100%",
-              pt: "100%",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "12px 12px 0 0",
+              height: 0,
+              paddingTop: "100%", // 1:1 Aspect Ratio
+              backgroundColor: "#f5f5f5",
               overflow: "hidden",
+              borderRadius: "12px 12px 0 0",
             }}
           >
             <CardMedia
@@ -186,7 +188,7 @@ const ProductCard = ({
                 width: "100%",
                 height: "100%",
                 objectFit: "contain",
-                p: 3,
+                p: 2,
                 transition: "transform 0.3s",
                 "&:hover": {
                   transform: "scale(1.05)",
@@ -199,7 +201,7 @@ const ProductCard = ({
         {/* Product Content */}
         <CardContent
           sx={{
-            padding: "16px",
+            p: 2,
             flexGrow: 1,
             display: "flex",
             flexDirection: "column",

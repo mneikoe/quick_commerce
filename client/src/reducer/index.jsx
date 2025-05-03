@@ -9,6 +9,7 @@ import * as orderReducer from "./OrderReducer";
 import * as menuReducer from "./MenuReducer";
 import * as categoryReducer from "./CategoryReducer";
 import * as authReducer from "./AuthReducer";
+import * as subcategory from "./SubCategoryReducer";
 
 // Persist configuration
 const persistConfig = {
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
 
   // category
   category: categoryReducer.categoryReducer,
+  subCategory: subcategory.subCategoryReducer,
 });
 
 // Persisted Reducer

@@ -6,6 +6,7 @@ import { Constants } from "../constants/constants.js";
 import { ErrorHandler } from "../utils/errorHandler.js";
 import APIFeatures from "../utils/apiFeatures.js";
 import Category from "../models/Category.js";
+import SubCategory from "../models/SubCategory.js";
 
 export const getAllUsers = asyncHandler(async (req, res) => {
   try {
@@ -159,11 +160,115 @@ export const createCategory = asyncHandler(async (req, res) => {
   });
 });
 
-export const getAllCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find();
+export const createSubcategory = asyncHandler(async (req, res) => {
+  const { name, description, status, categoryId } = req.body;
+
+  // Ensure categoryId is provided
+  if (!categoryId) {
+    throw new ErrorHandler("Category ID is required", 400);
+  }
+
+  // Validate the existence of the parent category
+  const category = await Category.findById(categoryId);
+  if (!category) {
+    throw new ErrorHandler("Category not found", 404);
+  }
+
+  // Check for duplicate subcategory under the same category
+  const isDuplicate = await SubCategory.findOne({ name, category: categoryId });
+  if (isDuplicate) {
+    throw new ErrorHandler(
+      "Subcategory already exists under this category",
+      400
+    );
+  }
+
+  // Handle optional image upload
+  const imageUrl = req.file
+    ? `${req.protocol}://${req.get("host")}/uploads/category/${
+        req.file.filename
+      }`
+    : null;
+
+  // Create the subcategory
+  const newSubcategory = await SubCategory.create({
+    name,
+    description,
+    status,
+    image: imageUrl,
+    category: categoryId,
+  });
+
+  // Reverse link: Add subcategory to category's subcategory list
+  category.subcategory.push(newSubcategory._id);
+  await category.save();
+
+  // Populate category info in the subcategory response
+  const populatedSubcategory = await SubCategory.findById(
+    newSubcategory._id
+  ).populate("category", "name description status");
+
+  // Send response
+  res.status(201).json({
+    success: true,
+    message: "Subcategory created successfully",
+    data: populatedSubcategory,
+  });
+});
+
+export const deleteSubcategory = asyncHandler(async (req, res) => {
+  const subcategory = await SubCategory.findById(req.params.id);
+  if (!subcategory) throw new ErrorHandler("Subcategory not found", 404);
+
+  // Optional: check if it's linked to menu items or products before deleting
+  const menuItems = await Menu.find({ subcategory: subcategory._id });
+  if (menuItems.length > 0) {
+    throw new ErrorHandler(
+      "Cannot delete subcategory with associated menu items",
+      400
+    );
+  }
+
+  await subcategory.deleteOne();
 
   res.status(200).json({
     success: true,
+    message: "Subcategory deleted successfully",
+  });
+});
+
+export const getAllSubCategories = asyncHandler(async (req, res) => {
+  const { categoryId, page = 1, limit = 10 } = req.query;
+
+  const filter = categoryId ? { category: categoryId } : {};
+
+  const subcategories = await SubCategory.find(filter)
+    .populate("category", "name description status") // populate only necessary fields
+    .skip((Number(page) - 1) * Number(limit))
+    .limit(Number(limit));
+
+  const total = await SubCategory.countDocuments(filter);
+
+  res.status(200).json({
+    success: true,
+    message: "Subcategories fetched successfully",
+    currentPage: Number(page),
+    totalPages: Math.ceil(total / limit),
+    totalItems: total,
+    count: subcategories.length,
+    data: subcategories,
+  });
+});
+
+export const getAllCategories = asyncHandler(async (req, res) => {
+  const categories = await Category.find()
+    .populate("subcategory", "name description status image") // populate only necessary subcategory fields
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    message: "Categories fetched successfully",
+    count: categories.length,
     data: categories,
   });
 });
